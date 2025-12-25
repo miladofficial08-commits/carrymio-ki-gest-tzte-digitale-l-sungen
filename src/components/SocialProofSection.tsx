@@ -1,10 +1,9 @@
-import { Star, Users, Briefcase, Clock } from "lucide-react";
+import { Star, Users, Briefcase } from "lucide-react";
 
 const stats = [
-  { icon: Users, value: "120+", label: "Zufriedene Kunden" },
-  { icon: Briefcase, value: "200+", label: "Projekte abgeschlossen" },
+  { icon: Users, value: "50+", label: "Zufriedene Kunden" },
+  { icon: Briefcase, value: "80+", label: "Projekte abgeschlossen" },
   { icon: Star, value: "4.9", label: "Durchschnittsbewertung" },
-  { icon: Clock, value: "1+ Jahr", label: "Erfahrung" },
 ];
 
 const testimonials = [
@@ -33,7 +32,7 @@ export const SocialProofSection = () => {
     <section className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-20">
+        <div className="grid grid-cols-3 gap-8 mb-20">
           {stats.map((stat, index) => (
             <div
               key={index}
@@ -57,7 +56,7 @@ export const SocialProofSection = () => {
             Das sagen unsere Kunden
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Über 120 Unternehmen vertrauen bereits auf unsere digitalen Lösungen
+            Über 50 Unternehmen vertrauen bereits auf unsere digitalen Lösungen
           </p>
         </div>
 

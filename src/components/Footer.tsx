@@ -1,5 +1,4 @@
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
 
   return (
     <footer className="border-t border-border py-12">
@@ -28,7 +27,7 @@ const Footer = () => {
 
           {/* Copyright */}
           <p className="text-sm text-muted-foreground">
-            © {currentYear} Carrymio. Alle Rechte vorbehalten.
+            © 2024 Carrymio. Alle Rechte vorbehalten.
           </p>
         </div>
       </div>
