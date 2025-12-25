@@ -36,6 +36,14 @@ npm i
 npm run dev
 ```
 
+### Kontakt-API einrichten (SMTP)
+
+1) `.env.example` nach `.env` kopieren und SMTP-Daten setzen (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `CONTACT_TO_EMAIL`, optional `CONTACT_FROM_EMAIL`, `ENABLE_CONFIRMATION_EMAIL`).
+2) Abhängigkeiten installieren: `npm install`
+3) API starten: `npm run dev:api` (läuft standardmäßig auf Port 8787)
+4) Frontend starten: `npm run dev` (Port 8080). Der Vite-Proxy leitet `/api`-Aufrufe automatisch an die API weiter.
+5) Produktion: API als Node-Service mit denselben Umgebungsvariablen deployen und das gebaute Frontend (`npm run build`) auf einem Static Host ausliefern. Frontend-Aufrufe auf `/api` müssen auf die API-Domain zeigen (Proxy/Rewrite konfigurieren).
+
 **Edit a file directly in GitHub**
 
 - Navigate to the desired file(s).

@@ -17,19 +17,42 @@ export const ContactSection = () => {
     message: "",
   });
 
+  const API_ENDPOINT = "/api/contact";
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const response = await fetch(API_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    toast({
-      title: "Anfrage erfolgreich gesendet!",
-      description: "Wir melden uns innerhalb von 24 Stunden bei Ihnen.",
-    });
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        throw new Error(body.error || "Versand fehlgeschlagen");
+      }
+
+      setIsSubmitted(true);
+      toast({
+        title: "Anfrage erfolgreich gesendet!",
+        description: "Wir melden uns innerhalb von 24–48 Stunden bei Ihnen.",
+      });
+    } catch (error) {
+      console.error("Kontaktanfrage fehlgeschlagen", error);
+      toast({
+        variant: "destructive",
+        title: "Senden fehlgeschlagen",
+        description: "Bitte versuchen Sie es in Kürze erneut.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (
@@ -51,7 +74,7 @@ export const ContactSection = () => {
             </div>
             <h2 className="text-3xl font-bold mb-4">Vielen Dank für Ihre Anfrage!</h2>
             <p className="text-muted-foreground mb-8">
-              Wir haben Ihre Nachricht erhalten und melden uns innerhalb von 24 Stunden bei Ihnen.
+              Wir haben Ihre Nachricht erhalten und melden uns innerhalb von 24–48 Stunden bei Ihnen.
             </p>
             <Button variant="outline" onClick={() => setIsSubmitted(false)}>
               Neue Anfrage senden
