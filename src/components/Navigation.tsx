@@ -26,11 +26,8 @@ export const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">C</span>
-            </div>
-            <span className="text-xl font-bold text-foreground">Carrymio</span>
+          <a href="#" className="flex items-center">
+            <span className="text-xl md:text-2xl font-bold text-foreground tracking-wide">CARRY MIO</span>
           </a>
 
           {/* Desktop Navigation */}
