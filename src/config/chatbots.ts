@@ -3,7 +3,7 @@ export const CHATBOTS = {
     id: "faq",
     title: "FAQ-Bot",
     side: "left" as const,
-    embedUrl: "https://www.chatbase.co/embed/YOUR_FAQ_BOT_ID", // PASTE_CHATBASE_URL
+    embedUrl: "", // FAQ Bot noch nicht konfiguriert
     short: "Schnelle Antworten",
     badge: "FAQ",
   },
@@ -11,7 +11,7 @@ export const CHATBOTS = {
     id: "ai",
     title: "KI-Assistent",
     side: "right" as const,
-    embedUrl: "https://www.chatbase.co/embed/YOUR_AI_BOT_ID", // PASTE_CHATBASE_URL
+    embedUrl: "https://www.chatbase.co/chatbot-iframe/ppbutFQAUm_Yj4Rmvuf1y",
     short: "Individuelle Hilfe",
     badge: "AI",
   },
