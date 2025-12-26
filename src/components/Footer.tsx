@@ -5,10 +5,7 @@ const Footer = () => {
       <div className="container px-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">C</span>
-            </div>
+          <div className="flex items-center">
             <span className="text-xl font-bold">Carrymio</span>
           </div>
 
