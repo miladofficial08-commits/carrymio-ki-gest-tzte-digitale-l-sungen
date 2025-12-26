@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ChatbotModal } from "./ChatbotModal";
+import { ChatbotSidePanel } from "./ChatbotSidePanel";
 import { cn } from "@/lib/utils";
 
 interface ChatbotDeviceTeaserProps {
@@ -34,7 +34,7 @@ export const ChatbotDeviceTeaser = ({
 
   return (
     <>
-      <ChatbotModal
+      <ChatbotSidePanel
         isOpen={isModalOpen}
         title={title}
         embedUrl={embedUrl}
