@@ -9,10 +9,10 @@ export const CHATBOTS = {
   },
   ai: {
     id: "ai",
-    title: "KI-Assistent",
+    title: "CARRY MIO Support",
     side: "right" as const,
     embedUrl: "https://www.chatbase.co/chatbot-iframe/ppbutFQAUm_Yj4Rmvuf1y",
-    short: "Individuelle Hilfe",
+    short: "Professionelle Beratung",
     badge: "AI",
   },
 };

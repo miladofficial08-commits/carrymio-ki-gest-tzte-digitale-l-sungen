@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Bot, Share2, Globe, ArrowRight } from "lucide-react";
+import { Bot, Share2, Globe, Code2, ArrowRight } from "lucide-react";
 
 const services = [
   {
@@ -35,6 +35,17 @@ const services = [
       "Kontakt- & Anfrage-Systeme",
     ],
   },
+  {
+    icon: Code2,
+    title: "Softwarelösungen",
+    subtitle: "Individuelle Tools & Prozesse",
+    description: "Maßgeschneiderte Softwarelösungen für Ihre Anforderungen.",
+    features: [
+      "Interne Tools & Dashboards",
+      "Buchungs- & Verwaltungslösungen",
+      "System-Integrationen & Schnittstellen",
+    ],
+  },
 ];
 
 export const ServicesSection = () => {
@@ -54,16 +65,16 @@ export const ServicesSection = () => {
             Unsere Leistungen
           </span>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Drei Kernbereiche für Ihren digitalen Erfolg
+            Vier Kernbereiche für Ihren digitalen Erfolg
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Von intelligenten Chatbots über Social Media bis zur perfekten Website – 
+            Von intelligenten Chatbots über Social Media bis zur perfekten Website und individuellen Softwarelösungen – 
             wir bringen Ihr Unternehmen digital voran.
           </p>
         </div>
 
         {/* Service Cards */}
-        <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           {services.map((service, index) => (
             <div
               key={index}

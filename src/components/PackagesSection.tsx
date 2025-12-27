@@ -1,19 +1,22 @@
 import { Button } from "@/components/ui/button";
-import { Check, Bot, Share2, Globe } from "lucide-react";
+import { Check, Bot, Share2, Globe, Code2 } from "lucide-react";
 
 const packages = [
   {
     icon: Bot,
     name: "Chatbot Starter",
-    price: "499",
+    price: "599",
     period: "einmalig",
-    description: "Der perfekte Einstieg in automatisierte Kundenkommunikation.",
+    description: "Automatisierte Kundenkommunikation für Website oder Social Media.",
     features: [
-      "Website-Chatbot oder Social-Media-Bot",
+      "Einrichtung: 599 € einmalig",
+      "Betrieb & Hosting: 39 € / Monat",
+      "Website-Chatbot ODER Social-Media-Bot",
       "FAQ-Logik mit häufigen Fragen",
-      "Lead-Formular Integration",
+      "Lead- & Kontaktformular",
       "Weiterleitung an Mitarbeiter",
-      "Einrichtung & Schulung inklusive",
+      "Einrichtung & kurze Schulung",
+      "Hosting, Wartung & Updates inklusive",
     ],
     popular: false,
   },
@@ -25,25 +28,49 @@ const packages = [
     description: "Professionelle Social-Media-Betreuung für Ihre Marke.",
     features: [
       "Content-Plan & Strategie",
-      "Regelmäßige Posts (8-12 pro Monat)",
+      "8–12 Posts pro Monat",
       "KI-unterstützte Texterstellung",
       "Hashtag-Recherche & Optimierung",
       "Monatliches Reporting",
+      "Persönlicher Ansprechpartner",
+      "Hinweis: Kein Setup nötig",
+      "Hinweis: Monatlich kündbar",
     ],
     popular: true,
   },
   {
     icon: Globe,
     name: "Website Starter",
-    price: "899",
+    price: "999",
     period: "einmalig",
-    description: "Ihre moderne Landingpage für mehr Kundenanfragen.",
+    description: "Ihre moderne, schnelle & verkaufsstarke Landingpage.",
     features: [
+      "Einrichtung: 999 € einmalig",
+      "Hosting & Wartung: 49 € / Monat",
       "Individuelle Landingpage",
       "Mobil-optimiertes Design",
       "Kontaktformular mit Validierung",
       "SEO-Grundoptimierung",
-      "Schnelle Ladezeiten garantiert",
+      "Schnelle Ladezeiten",
+      "Hosting, SSL, Backups & Pflege",
+    ],
+    popular: false,
+  },
+  {
+    icon: Code2,
+    name: "Softwarelösung Custom",
+    price: "ab 2.499",
+    period: "einmalig",
+    description: "Individuelle Tools & Prozessautomatisierung für Unternehmen.",
+    features: [
+      "Einrichtung: ab 2.499 € einmalig",
+      "Betrieb & Support: ab 99 € / Monat",
+      "Anforderungsanalyse & Planung",
+      "Individuelle Softwarelösungen",
+      "Interne Tools & Dashboards",
+      "Buchungs- & Verwaltungssysteme",
+      "API- & System-Integrationen",
+      "Tests, Wartung & technischer Support",
     ],
     popular: false,
   },
@@ -66,10 +93,10 @@ export const PackagesSection = () => {
         {/* Section Header */}
         <div className="text-center mb-16">
           <span className="inline-block text-primary text-sm font-medium mb-4">
-            Transparente Preise
+            Preise & Pakete
           </span>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Klare Pakete – faire ab-Preise
+            💼 Unsere Pakete – fair, professionell & skalierbar
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Keine versteckten Kosten. Jedes Projekt beginnt mit einer kostenlosen Beratung, 
@@ -78,7 +105,7 @@ export const PackagesSection = () => {
         </div>
 
         {/* Package Cards */}
-        <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 max-w-6xl mx-auto">
           {packages.map((pkg, index) => (
             <div
               key={index}
