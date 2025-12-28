@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, Check, Mail, Phone, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import emailjs from "@emailjs/browser";
 
 export const ContactSection = () => {
   const { toast } = useToast();
@@ -12,33 +13,72 @@ export const ContactSection = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     company: "",
     service: "",
     message: "",
   });
 
-  const API_ENDPOINT = "/api/contact";
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    try {
-      const response = await fetch(API_ENDPOINT, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+    // Prüfe EmailJS Konfiguration
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
-      if (!response.ok) {
-        const body = await response.json().catch(() => ({}));
-        throw new Error(body.error || "Versand fehlgeschlagen");
-      }
+    if (!serviceId || !templateId || !publicKey) {
+      toast({
+        variant: "destructive",
+        title: "Konfigurationsfehler",
+        description: "E-Mail-Konfiguration ist nicht vollständig. Bitte kontaktieren Sie uns direkt.",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Frontend-Validierung für Pflichtfelder
+    if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim() || !formData.service || !formData.message.trim()) {
+      toast({
+        variant: "destructive",
+        title: "Unvollständige Eingaben",
+        description: "Bitte füllen Sie alle Pflichtfelder aus.",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      // Template-Parameter für EmailJS - KORRIGIERT
+      const templateParams = {
+        from_name: formData.name.trim(),
+        from_email: formData.email.trim(), // KORRIGIERT: war vorher reply_to
+        phone: formData.phone.trim(), // NEU: Telefonnummer
+        company: formData.company.trim() || "-",
+        subject: formData.service, // KORRIGIERT: explizit als subject
+        interest: formData.service, // Zusätzlich als interest für Kompatibilität
+        message: formData.message.trim(),
+        datetime: new Date().toLocaleString("de-DE", {
+          dateStyle: "short",
+          timeStyle: "short",
+          timeZone: "Europe/Berlin",
+        }),
+        page_url: window.location.href,
+      };
+
+      await emailjs.send(serviceId, templateId, templateParams, publicKey);
 
       setIsSubmitted(true);
+      // Formular zurücksetzen
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        company: "",
+        service: "",
+        message: "",
+      });
       toast({
         title: "Anfrage erfolgreich gesendet!",
         description: "Wir melden uns innerhalb von 24–48 Stunden bei Ihnen.",
@@ -109,28 +149,28 @@ export const ContactSection = () => {
               <h3 className="text-xl font-bold mb-6">Direkter Kontakt</h3>
               <div className="space-y-4">
                 <a
-                  href="mailto:info@carrymio.de"
+                  href="mailto:info@carrymio.gmail.com"
                   className="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors group"
                 >
                   <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                     <Mail className="w-5 h-5 text-primary" />
                   </div>
-                  <span>info@carrymio.de</span>
+                  <span>info@carrymio.gmail.com</span>
                 </a>
                 <a
-                  href="tel:+4912345678900"
+                  href="tel:+491631283971"
                   className="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors group"
                 >
                   <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                     <Phone className="w-5 h-5 text-primary" />
                   </div>
-                  <span>+49 123 456 789 00</span>
+                  <span>+49 1631283971</span>
                 </a>
                 <div className="flex items-center gap-4 text-muted-foreground">
                   <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center">
                     <MapPin className="w-5 h-5 text-primary" />
                   </div>
-                  <span>Deutschland</span>
+                  <span>Deutschland Düsseldorf</span>
                 </div>
               </div>
             </div>
@@ -183,6 +223,21 @@ export const ContactSection = () => {
 
             <div className="grid sm:grid-cols-2 gap-6 mb-6">
               <div>
+                <label htmlFor="phone" className="block text-sm font-medium mb-2">
+                  Telefonnummer *
+                </label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  required
+                  placeholder="+49 123 456789"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className="bg-background"
+                />
+              </div>
+              <div>
                 <label htmlFor="company" className="block text-sm font-medium mb-2">
                   Unternehmen
                 </label>
@@ -195,6 +250,9 @@ export const ContactSection = () => {
                   className="bg-background"
                 />
               </div>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-6 mb-6">
               <div>
                 <label htmlFor="service" className="block text-sm font-medium mb-2">
                   Interesse an *
@@ -208,11 +266,15 @@ export const ContactSection = () => {
                   className="w-full h-10 px-3 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                 >
                   <option value="">Bitte wählen...</option>
-                  <option value="chatbot">Chatbot</option>
-                  <option value="social-media">Social-Media-Management</option>
-                  <option value="website">Website-Erstellung</option>
-                  <option value="beratung">Allgemeine Beratung</option>
+                  <option value="Chatbot">Chatbot</option>
+                  <option value="Social-Media-Management">Social-Media-Management</option>
+                  <option value="Website-Erstellung">Website-Erstellung</option>
+                  <option value="Softwarelösung">Softwarelösung</option>
+                  <option value="Allgemeine Beratung">Allgemeine Beratung</option>
                 </select>
+              </div>
+              <div>
+                {/* Platzhalter für symmetrisches Layout */}
               </div>
             </div>
 
