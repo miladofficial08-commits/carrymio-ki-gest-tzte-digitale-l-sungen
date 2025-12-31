@@ -5,11 +5,11 @@ const packages = [
   {
     icon: Bot,
     name: "Chatbot Starter",
-    price: "99",
+    price: "149",
     period: "/ Monat",
     description: "Automatisierte Kundenkommunikation für Website oder Social Media.",
     features: [
-      "Setup: 299 € einmalig",
+      "Setup: 499 € einmalig",
       "Betrieb & Hosting inkl.",
       "Website-Chatbot ODER Social-Media-Bot",
       "FAQ-Logik (häufige Fragen)",
@@ -23,7 +23,7 @@ const packages = [
   {
     icon: Share2,
     name: "Social Media Starter",
-    price: "699",
+    price: "899",
     period: "/ Monat",
     description: "Professionelle Social-Media-Betreuung für Ihre Marke.",
     features: [
@@ -40,11 +40,11 @@ const packages = [
   {
     icon: Globe,
     name: "Website Starter",
-    price: "129",
+    price: "179",
     period: "/ Monat",
     description: "Ihre moderne, schnelle & verkaufsstarke Landingpage.",
     features: [
-      "Setup: 799 € einmalig",
+      "Setup: 999 € einmalig",
       "Individuelle Landingpage",
       "Mobil-optimiertes Design",
       "Kontaktformular mit Validierung",

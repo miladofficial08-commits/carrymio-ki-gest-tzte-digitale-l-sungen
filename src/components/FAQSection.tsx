@@ -14,7 +14,7 @@ const faqs = [
   {
     question: "Was kostet eine Website bei Carrymio?",
     answer:
-      "Ab 129 € / Monat, Setup 799 € einmalig. Der finale Preis hängt vom Umfang und den gewünschten Funktionen ab. In der kostenlosen Erstberatung klären wir Ihren Bedarf und erstellen ein transparentes, individuelles Angebot.",
+      "Ab 179 € / Monat, Setup 999 € einmalig. Der finale Preis hängt vom Umfang und den gewünschten Funktionen ab. In der kostenlosen Erstberatung klären wir Ihren Bedarf und erstellen ein transparentes, individuelles Angebot.",
   },
   {
     question: "Sind die Lösungen DSGVO-konform?",
