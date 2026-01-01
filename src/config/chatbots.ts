@@ -11,7 +11,7 @@ export const CHATBOTS = {
     id: "ai",
     title: "CARRY MIO Support",
     side: "right" as const,
-    embedUrl: "https://www.chatbase.co/chatbot-iframe/ppbutFQAUm_Yj4Rmvuf1y",
+    embedUrl: "", // FastBots wird über globales Script geladen
     short: "Professionelle Beratung",
     badge: "AI",
   },

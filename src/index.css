@@ -155,60 +155,27 @@
     box-shadow: 0 0 40px hsl(217 91% 60% / 0.5);
   }
 }
-/* Chatbot Teaser Animations */
-@keyframes scanline {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(100%);
-  }
+
+/* FastBots Widget Styling */
+.fastbots-container {
+  position: fixed !important;
+  right: 24px !important;
+  bottom: 24px !important;
+  z-index: 999 !important;
 }
 
-@keyframes wave {
-  0%, 100% {
-    transform: rotate(0deg) translateX(0);
-  }
-  25% {
-    transform: rotate(15deg) translateX(5px);
-  }
-  75% {
-    transform: rotate(-15deg) translateX(-5px);
-  }
+.fastbots-widget-button {
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 50% !important;
 }
 
-@keyframes device-slide-in {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.fastbots-chat-window {
+  max-width: 380px !important;
+  width: 380px !important;
+  max-height: 560px !important;
+  height: 560px !important;
+  border-radius: 12px !important;
 }
 
-@layer utilities {
-  .animate-scanline::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(255, 255, 255, 0.1) 50%,
-      transparent 100%
-    );
-    animation: scanline 3s linear infinite;
-    pointer-events: none;
-  }
-
-  .animate-wave {
-    animation: wave 0.6s ease-in-out infinite;
-    display: inline-block;
-  }
-
-  .animate-device-slide-in {
-    animation: device-slide-in 0.5s ease-out;
-  }
-}
+@layer utilities {}

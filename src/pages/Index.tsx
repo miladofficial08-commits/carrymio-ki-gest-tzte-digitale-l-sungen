@@ -7,7 +7,6 @@ import { ProcessSection } from "@/components/ProcessSection";
 import { FAQSection } from "@/components/FAQSection";
 import { ContactSection } from "@/components/ContactSection";
 import Footer from "@/components/Footer";
-import { ChatbotsDock } from "@/components/ChatbotsDock";
 
 const Index = () => {
   return (
@@ -23,7 +22,6 @@ const Index = () => {
         <ContactSection />
       </main>
       <Footer />
-      <ChatbotsDock />
     </div>
   );
 };
