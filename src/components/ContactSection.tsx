@@ -110,11 +110,11 @@ export const ContactSection = () => {
         <div className="container px-4">
           <div className="max-w-2xl mx-auto text-center">
             <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-8 animate-pulse-glow">
-              <Check className="w-10 h-10 text-primary" />
+              <Check className="w-10 h-10 text-primary" aria-hidden="true" />
             </div>
             <h2 className="text-3xl font-bold mb-4">Vielen Dank für Ihre Anfrage!</h2>
             <p className="text-muted-foreground mb-8">
-              Wir haben Ihre Nachricht erhalten und melden uns innerhalb von 24–48 Stunden bei Ihnen.
+              Wir haben Ihre Nachricht erhalten und melden uns innerhalb von 24–48 Stunden bei Ihnen. Unsere Spezialisten für Fahrdienst-Software und KI-Chatbots bearbeiten Ihre Anfrage persönlich.
             </p>
             <Button variant="outline" onClick={() => setIsSubmitted(false)}>
               Neue Anfrage senden
@@ -137,7 +137,7 @@ export const ContactSection = () => {
             Starten Sie jetzt – kostenlos und unverbindlich
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Schildern Sie uns Ihr Anliegen und wir erstellen Ihnen ein individuelles Angebot. 
+            Schildern Sie uns Ihr Anliegen für KI-Chatbots, Fahrdienst-Software oder andere digitale Lösungen in Düsseldorf und wir erstellen Ihnen ein individuelles Angebot. 
             Die Erstberatung ist für Sie komplett kostenlos.
           </p>
         </div>
@@ -151,43 +151,47 @@ export const ContactSection = () => {
                 <a
                   href="mailto:info@carrymio.gmail.com"
                   className="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors group"
+                  aria-label="E-Mail an info@carrymio.gmail.com senden"
                 >
                   <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <Mail className="w-5 h-5 text-primary" />
+                    <Mail className="w-5 h-5 text-primary" aria-hidden="true" />
                   </div>
                   <span>info@carrymio.gmail.com</span>
                 </a>
                 <a
                   href="tel:+491631283971"
                   className="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors group"
+                  aria-label="Anrufen unter +49 1631283971"
                 >
                   <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <Phone className="w-5 h-5 text-primary" />
+                    <Phone className="w-5 h-5 text-primary" aria-hidden="true" />
                   </div>
                   <span>+49 1631283971</span>
                 </a>
                 <div className="flex items-center gap-4 text-muted-foreground">
                   <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center">
-                    <MapPin className="w-5 h-5 text-primary" />
+                    <MapPin className="w-5 h-5 text-primary" aria-hidden="true" />
                   </div>
-                  <span>Deutschland Düsseldorf</span>
+                  <span>Düsseldorf, Deutschland</span>
                 </div>
               </div>
             </div>
 
-            <div className="p-6 rounded-2xl bg-gradient-card border border-border">
+            <article className="p-6 rounded-2xl bg-gradient-card border border-border">
               <h4 className="font-semibold mb-2">Schnelle Antwort garantiert</h4>
               <p className="text-sm text-muted-foreground">
                 Wir antworten auf alle Anfragen innerhalb von 24 Stunden – 
                 meist sogar deutlich schneller.
               </p>
-            </div>
+            </article>
           </div>
 
           {/* Contact Form */}
           <form
             onSubmit={handleSubmit}
             className="lg:col-span-3 bg-card border border-border rounded-2xl p-8"
+            noValidate
+            aria-label="Kontaktformular für Anfragen"
           >
             <div className="grid sm:grid-cols-2 gap-6 mb-6">
               <div>
@@ -264,12 +268,13 @@ export const ContactSection = () => {
                   value={formData.service}
                   onChange={handleChange}
                   className="w-full h-10 px-3 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  aria-label="Wählen Sie den Service, an dem Sie interessiert sind"
                 >
                   <option value="">Bitte wählen...</option>
-                  <option value="Chatbot">Chatbot</option>
+                  <option value="KI Chatbot">KI Chatbot</option>
+                  <option value="Fahrdienst-Software">Fahrdienst-Software</option>
                   <option value="Social-Media-Management">Social-Media-Management</option>
                   <option value="Website-Erstellung">Website-Erstellung</option>
-                  <option value="Softwarelösung">Softwarelösung</option>
                   <option value="Allgemeine Beratung">Allgemeine Beratung</option>
                 </select>
               </div>
@@ -300,19 +305,20 @@ export const ContactSection = () => {
               size="lg"
               className="w-full"
               disabled={isSubmitting}
+              aria-busy={isSubmitting}
             >
               {isSubmitting ? (
                 "Wird gesendet..."
               ) : (
                 <>
                   Kostenlose Anfrage senden
-                  <Send className="w-4 h-4 ml-2" />
+                  <Send className="w-4 h-4 ml-2" aria-hidden="true" />
                 </>
               )}
             </Button>
 
             <p className="text-xs text-muted-foreground text-center mt-4">
-              Mit dem Absenden stimmen Sie unserer Datenschutzerklärung zu. 
+              Mit dem Absenden stimmen Sie unserer <a href="/datenschutz" className="hover:underline" rel="nofollow">Datenschutzerklärung</a> zu. 
               Ihre Daten werden vertraulich behandelt.
             </p>
           </form>

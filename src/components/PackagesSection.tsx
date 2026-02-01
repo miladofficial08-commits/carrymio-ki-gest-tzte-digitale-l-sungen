@@ -4,10 +4,10 @@ import { Check, Bot, Share2, Globe, Code2 } from "lucide-react";
 const packages = [
   {
     icon: Bot,
-    name: "Chatbot Starter",
+    name: "KI Chatbot Starter",
     price: "149",
     period: "/ Monat",
-    description: "Automatisierte Kundenkommunikation für Website oder Social Media.",
+    description: "Automatisierte KI-Kundenkommunikation für Website oder Social Media in Düsseldorf.",
     features: [
       "Setup: 499 € einmalig",
       "Betrieb & Hosting inkl.",
@@ -25,7 +25,7 @@ const packages = [
     name: "Social Media Starter",
     price: "899",
     period: "/ Monat",
-    description: "Professionelle Social-Media-Betreuung für Ihre Marke.",
+    description: "Professionelle Social-Media-Betreuung für Fahrdienste und Transportservices.",
     features: [
       "Monatlich kündbar",
       "Content-Plan & Strategie",
@@ -39,33 +39,33 @@ const packages = [
   },
   {
     icon: Globe,
-    name: "Website Starter",
+    name: "Website Starter SEO",
     price: "179",
     period: "/ Monat",
-    description: "Ihre moderne, schnelle & verkaufsstarke Landingpage.",
+    description: "SEO-optimierte moderne Website für Fahrdienste und Transportservices in Düsseldorf.",
     features: [
       "Setup: 999 € einmalig",
       "Individuelle Landingpage",
       "Mobil-optimiertes Design",
       "Kontaktformular mit Validierung",
-      "SEO-Grundoptimierung",
-      "Schnelle Ladezeiten",
+      "Google SEO-Optimierung",
+      "Schnelle Ladezeiten (Lighthouse 95+)",
       "Hosting, SSL, Backups & Pflege inkl.",
     ],
     popular: false,
   },
   {
     icon: Code2,
-    name: "Softwarelösung Custom",
+    name: "Fahrdienst-Software Custom",
     price: "349",
     period: "/ Monat",
-    description: "Individuelle Tools & Prozessautomatisierung für Unternehmen.",
+    description: "Spezialisierte Software & Prozessautomatisierung für Transportdienste.",
     features: [
       "Setup: ab 3.500 € einmalig",
       "Anforderungsanalyse & Planung",
-      "Individuelle Softwarelösungen",
-      "Interne Tools & Dashboards",
-      "Buchungs- & Verwaltungssysteme",
+      "Booking-Systeme & Verwaltung",
+      "Fahrerapp & Echtzeitverfolgung",
+      "Kundenverwaltung & Rechnungssystem",
       "API- & System-Integrationen",
       "Tests, Wartung & technischer Support",
     ],
@@ -93,10 +93,10 @@ export const PackagesSection = () => {
             Preise & Pakete
           </span>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Unsere Pakete – fair, professionell & skalierbar
+            Transparente Pakete für KI-Chatbots, Fahrdienst-Software und mehr
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Keine versteckten Kosten. Jedes Projekt beginnt mit einer kostenlosen Beratung, 
+            Keine versteckten Kosten. Jedes Projekt für Transportdienste und Fahrdienste in Düsseldorf beginnt mit einer kostenlosen Beratung, 
             bei der wir Ihren genauen Bedarf ermitteln.
           </p>
         </div>

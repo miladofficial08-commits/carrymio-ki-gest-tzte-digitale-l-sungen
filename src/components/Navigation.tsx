@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
-  { href: "#leistungen", label: "Leistungen" },
+  { href: "#dienstleistungen", label: "Dienstleistungen" },
   { href: "#pakete", label: "Pakete" },
   { href: "#ablauf", label: "Ablauf" },
   { href: "#faq", label: "FAQ" },
@@ -22,11 +22,11 @@ export const Navigation = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass">
+    <nav className="fixed top-0 left-0 right-0 z-50 glass" role="navigation" aria-label="Hauptnavigation">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <a href="#" className="flex items-center">
+          <a href="https://carrymio.de/" className="flex items-center" aria-label="Carrymio - Startseite">
             <span className="text-xl md:text-2xl font-bold text-foreground tracking-wide">Carrymio</span>
           </a>
 
@@ -37,6 +37,7 @@ export const Navigation = () => {
                 key={link.href}
                 onClick={() => scrollToSection(link.href)}
                 className="text-muted-foreground hover:text-foreground transition-colors duration-200 text-sm font-medium"
+                aria-label={`Zu ${link.label} navigieren`}
               >
                 {link.label}
               </button>
@@ -49,6 +50,7 @@ export const Navigation = () => {
               variant="hero"
               size="default"
               onClick={() => scrollToSection("#kontakt")}
+              aria-label="Kostenlose Anfrage stellen"
             >
               Kostenlose Anfrage
             </Button>
@@ -58,6 +60,9 @@ export const Navigation = () => {
           <button
             className="md:hidden text-foreground p-2"
             onClick={() => setIsOpen(!isOpen)}
+            aria-label={isOpen ? "Menü schließen" : "Menü öffnen"}
+            aria-expanded={isOpen}
+            aria-controls="mobile-menu"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -65,13 +70,14 @@ export const Navigation = () => {
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="md:hidden pb-4 animate-fade-in">
+          <div className="md:hidden pb-4 animate-fade-in" id="mobile-menu" role="region" aria-label="Mobile Navigation">
             <div className="flex flex-col gap-2">
               {navLinks.map((link) => (
                 <button
                   key={link.href}
                   onClick={() => scrollToSection(link.href)}
                   className="text-muted-foreground hover:text-foreground transition-colors duration-200 py-2 text-left"
+                  aria-label={`Zu ${link.label} navigieren`}
                 >
                   {link.label}
                 </button>
@@ -80,6 +86,7 @@ export const Navigation = () => {
                 variant="hero"
                 className="mt-2"
                 onClick={() => scrollToSection("#kontakt")}
+                aria-label="Kostenlose Anfrage stellen"
               >
                 Kostenlose Anfrage
               </Button>

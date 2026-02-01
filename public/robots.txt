@@ -1,14 +1,41 @@
+# Global rules for all crawlers
+User-agent: *
+Allow: /
+Allow: /sitemap.xml
+Disallow: /.well-known
+Disallow: /admin
+Disallow: /private
+Disallow: /?
+Crawl-delay: 1
+Request-rate: 30/1m
+
+# Google
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 0
 
+# Google Mobile
+User-agent: Googlebot-Mobile
+Allow: /
+Crawl-delay: 0
+
+# Bing
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 1
 
+# Yandex
+User-agent: YandexBot
+Allow: /
+
+# Twitter
 User-agent: Twitterbot
 Allow: /
 
+# Facebook
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
-Allow: /
+# Sitemaps
+Sitemap: https://carrymio.de/sitemap.xml
+Sitemap: https://carrymio.de/sitemap-news.xml

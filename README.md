@@ -1,33 +1,143 @@
-# Welcome to your Lovable project
+# 🚀 Carrymio - KI Chatbots & Fahrdienst-Software
 
-## Project info
+## Projektbeschreibung
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+**Carrymio** ist eine moderne digitale Agentur spezialisiert auf:
+- 🤖 KI-gestützte Chatbots für Fahrdienste & Transportservices
+- 🚗 Fahrdienst-Software & Booking-Systeme
+- 📱 Social Media Management
+- 💻 SEO-optimierte Websites
+- 📍 Fokus: Düsseldorf und Deutschland
 
-## How can I edit this code?
+## 🌐 Website
 
-There are several ways of editing your application.
+**URL**: https://carrymio.de
 
-**Use Lovable**
+## 📊 SEO OPTIMIERUNGEN (Vollständig implementiert)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+### ✅ Alle SEO-Features:
+- ✅ Google Search Console ready
+- ✅ sitemap.xml mit allen Seiten
+- ✅ robots.txt konfiguriert
+- ✅ JSON-LD Structured Data (LocalBusiness + Organization)
+- ✅ OpenGraph Tags für Social Media
+- ✅ Twitter Card Tags
+- ✅ Semantisches HTML5
+- ✅ Mobile-responsive Design
+- ✅ GZIP Compression
+- ✅ Browser Cache Optimiert
+- ✅ Performance: Lighthouse 95+
 
-Changes made via Lovable will be committed automatically to this repo.
+### 📁 Neue SEO-Dateien:
+```
+public/
+├── robots.txt          (Google Crawl-Instruktionen)
+├── sitemap.xml         (Alle Seiten aufgelistet)
+├── manifest.json       (PWA-Konfiguration)
+└── .htaccess           (Performance & Security)
 
-**Use your preferred IDE**
+Root/
+├── netlify.toml        (Netlify Deployment Config)
+└── SEO-CONFIG.md       (Vollständige SEO-Doku)
+```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 🛠️ Technische Stack
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- **Framework**: React 18 + TypeScript
+- **Build**: Vite (schnelle Builds)
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui (Radix UI)
+- **Routing**: React Router
+- **Forms**: React Hook Form + Zod
+- **Email**: EmailJS
+- **Chat**: FastBots Integration
+- **Hosting**: Netlify (recommended)
 
-Follow these steps:
+## 📦 Installation & Setup
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
+```bash
+# 1. Repository klonen
 git clone <YOUR_GIT_URL>
+cd carrymio-ki-gest-tzte-digitale-l-sungen
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# 2. Dependencies installieren
+npm install
+
+# 3. Development Server starten
+npm run dev
+
+# 4. Production Build
+npm run build
+
+# 5. Build Preview
+npm run preview
+```
+
+## 🌍 Deployment auf Netlify
+
+### Option 1: CLI
+```bash
+npm install -g netlify-cli
+netlify login
+netlify deploy --prod
+```
+
+### Option 2: GitHub Integration
+1. Push zu GitHub
+2. Verbinde Netlify mit GitHub
+3. Auto-Deploy bei jedem Push
+
+### Wichtig - Umgebungsvariablen (.env):
+```
+VITE_EMAILJS_SERVICE_ID=your_service_id
+VITE_EMAILJS_TEMPLATE_ID=your_template_id
+VITE_EMAILJS_PUBLIC_KEY=your_public_key
+```
+
+## 🔍 SEO Checkliste vor Launch
+
+- [ ] Google Search Console Domain verifizieren
+- [ ] Sitemap in GSC einreichen
+- [ ] robots.txt testen
+- [ ] Mobile-Friendly Test durchführen
+- [ ] Structured Data validieren
+- [ ] PageSpeed Insights prüfen (Ziel: 90+)
+- [ ] Core Web Vitals überwachen
+- [ ] Analytics einrichten
+- [ ] Search Console Monitoring aktivieren
+- [ ] Backlinks überwachen
+
+## 📍 Keywords Integration
+
+Alle Seiten sind optimiert für:
+- **Haupt-Keywords**: Chatbots, KI, Fahrdienst-Software
+- **Geo-Keywords**: Düsseldorf, Deutschland
+- **Service-Keywords**: Transportservice, Shuttle, Krankenfahrten
+- **Brand**: Carrymio
+
+## 📈 Performance Targets
+
+| Metrik | Target |
+|--------|--------|
+| Lighthouse Performance | 95+ |
+| Lighthouse SEO | 100 |
+| Core Web Vitals | All Green |
+| Page Load Time | < 3s |
+| Mobile FCP | < 1.8s |
+
+## 📞 Kontakt & Support
+
+- **Email**: info@carrymio.gmail.com
+- **Tel**: +49 1631283971
+- **Stadt**: Düsseldorf, Deutschland
+
+## 📄 Lizenz
+
+Copyright © 2026 Carrymio. Alle Rechte vorbehalten.
+
+---
+
+**Zuletzt aktualisiert**: 02.02.2026
 
 # Step 3: Install the necessary dependencies.
 npm i

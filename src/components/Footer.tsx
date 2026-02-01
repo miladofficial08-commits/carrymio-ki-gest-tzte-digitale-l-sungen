@@ -10,21 +10,21 @@ const Footer = () => {
           </div>
 
           {/* Links */}
-          <div className="flex items-center gap-6 text-sm text-muted-foreground">
-            <a href="#" className="hover:text-foreground transition-colors">
+          <nav className="flex items-center gap-6 text-sm text-muted-foreground" role="navigation" aria-label="Footer Navigation">
+            <a href="/impressum" className="hover:text-foreground transition-colors" rel="nofollow">
               Impressum
             </a>
-            <a href="#" className="hover:text-foreground transition-colors">
+            <a href="/datenschutz" className="hover:text-foreground transition-colors" rel="nofollow">
               Datenschutz
             </a>
-            <a href="#" className="hover:text-foreground transition-colors">
+            <a href="/agb" className="hover:text-foreground transition-colors" rel="nofollow">
               AGB
             </a>
-          </div>
+          </nav>
 
           {/* Copyright */}
           <p className="text-sm text-muted-foreground">
-            © 2024 Carrymio. Alle Rechte vorbehalten.
+            © {new Date().getFullYear()} Carrymio. Alle Rechte vorbehalten. | Spezialist für Fahrdienst-Software und Chatbots in Düsseldorf.
           </p>
         </div>
       </div>
