@@ -4,7 +4,26 @@ command = "npm run build"
 publish = "dist"
 functions = "netlify/functions"
 
-# Netlify Redirects für SPA
+# Static File Rules - MUST BE FIRST!
+[[redirects]]
+from = "/robots.txt"
+to = "/robots.txt"
+status = 200
+force = false
+
+[[redirects]]
+from = "/sitemap.xml"
+to = "/sitemap.xml"
+status = 200
+force = false
+
+[[redirects]]
+from = "/manifest.json"
+to = "/manifest.json"
+status = 200
+force = false
+
+# SPA Fallback - MUST BE LAST
 [[redirects]]
 from = "/*"
 to = "/index.html"
