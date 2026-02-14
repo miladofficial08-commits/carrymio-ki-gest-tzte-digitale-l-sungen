@@ -50,9 +50,9 @@ export const Navigation = () => {
               variant="hero"
               size="default"
               onClick={() => scrollToSection("#kontakt")}
-              aria-label="Kostenlose Anfrage stellen"
+              aria-label="Anfrage stellen"
             >
-              Kostenlose Anfrage
+              Anfrage stellen
             </Button>
           </div>
 
@@ -86,9 +86,9 @@ export const Navigation = () => {
                 variant="hero"
                 className="mt-2"
                 onClick={() => scrollToSection("#kontakt")}
-                aria-label="Kostenlose Anfrage stellen"
+                aria-label="Anfrage stellen"
               >
-                Kostenlose Anfrage
+                Anfrage stellen
               </Button>
             </div>
           </div>

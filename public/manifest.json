@@ -45,9 +45,9 @@
   "categories": ["business", "productivity"],
   "shortcuts": [
     {
-      "name": "Beratung",
-      "short_name": "Beratung",
-      "description": "Kostenlose Beratung anfragen",
+      "name": "Anfrage",
+      "short_name": "Anfrage",
+      "description": "Anfrage stellen",
       "url": "https://carrymio.de/#kontakt",
       "icons": [
         {

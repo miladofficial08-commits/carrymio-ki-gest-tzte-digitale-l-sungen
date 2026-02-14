@@ -134,11 +134,10 @@ export const ContactSection = () => {
             Kontakt
           </span>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Starten Sie jetzt – kostenlos und unverbindlich
+            Starten Sie jetzt – wir beraten Sie gerne
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Schildern Sie uns Ihr Anliegen für KI-Chatbots, Fahrdienst-Software oder andere digitale Lösungen in Düsseldorf und wir erstellen Ihnen ein individuelles Angebot. 
-            Die Erstberatung ist für Sie komplett kostenlos.
+            Schildern Sie uns Ihr Anliegen für KI-Chatbots und digitale Lösungen und wir erstellen Ihnen ein individuelles Angebot. Nach Ihrer Anfrage melden wir uns innerhalb von 24 Stunden und besprechen Ihr Projekt im Detail.
           </p>
         </div>
 
@@ -275,7 +274,7 @@ export const ContactSection = () => {
                   <option value="Fahrdienst-Software">Fahrdienst-Software</option>
                   <option value="Social-Media-Management">Social-Media-Management</option>
                   <option value="Website-Erstellung">Website-Erstellung</option>
-                  <option value="Allgemeine Beratung">Allgemeine Beratung</option>
+                  <option value="Anfrage">Anfrage</option>
                 </select>
               </div>
               <div>
@@ -311,7 +310,7 @@ export const ContactSection = () => {
                 "Wird gesendet..."
               ) : (
                 <>
-                  Kostenlose Anfrage senden
+                  Anfrage senden
                   <Send className="w-4 h-4 ml-2" aria-hidden="true" />
                 </>
               )}

@@ -26,20 +26,20 @@ export const HeroSection = () => {
       <div className="container relative z-10 px-4 py-16 md:py-24">
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
-          <div className="animate-fade-up inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 mb-8" role="status" aria-label="KI-gestützte Digitallösungen">
+          <div className="animate-fade-up inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 mb-8" role="status" aria-label="KI-gestützte Softwarelösungen">
             <Bot className="w-4 h-4 text-primary" aria-hidden="true" />
-            <span className="text-sm text-muted-foreground">KI-gestützte Digitallösungen für Fahrdienste und Transport</span>
+            <span className="text-sm text-muted-foreground">KI-gestützte Softwarelösungen für Unternehmen</span>
           </div>
 
           {/* Main Headline - H1 einmal pro Seite */}
           <h1 className="animate-fade-up-delay-1 text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-            KI Chatbots & Fahrdienst-Software für Düsseldorf –{" "}
-            <span className="text-gradient">professionell, schnell</span> und skalierbar.
+            KI-Chatbots & Softwarelösungen für Unternehmen{" "}
+            <span className="text-gradient">Professionell. Schnell.</span> Skalierbar.
           </h1>
 
           {/* Subheadline */}
           <p className="animate-fade-up-delay-2 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
-            Intelligente Chatbots, Social-Media-Management und moderne Websites speziell für Transportdienste und Fahrdienste in Düsseldorf und ganz Deutschland.
+            Intelligente Chatbots, Social-Media-Management und moderne Webseiten für Unternehmen jeder Branche – in ganz Deutschland.
           </p>
 
           {/* CTA Buttons */}
@@ -48,9 +48,9 @@ export const HeroSection = () => {
               variant="hero"
               size="xl"
               onClick={() => scrollToSection("#kontakt")}
-              aria-label="Kostenlose Beratung für Fahrdienst-Software anfragen"
+              aria-label="Anfrage stellen"
             >
-              Kostenlose Anfrage
+              Anfrage stellen
             </Button>
             <Button
               variant="heroOutline"

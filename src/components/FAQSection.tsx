@@ -9,12 +9,12 @@ const faqs = [
   {
     question: "Wie läuft eine Zusammenarbeit mit Carrymio ab?",
     answer:
-      "Nach Ihrer kostenlosen Anfrage melden wir uns innerhalb von 24 Stunden bei Ihnen. In einem unverbindlichen Gespräch klären wir Ihre Anforderungen und erstellen Ihnen ein individuelles Angebot. Nach Ihrer Zusage starten wir mit der Umsetzung.",
+      "Nach Ihrer Anfrage melden wir uns innerhalb von 24 Stunden bei Ihnen. In einem Beratungsgespräch klären wir Ihre Anforderungen und erstellen Ihnen ein individuelles Angebot. Nach Ihrer Zusage starten wir mit der Umsetzung.",
   },
   {
     question: "Was kostet eine Website bei Carrymio?",
     answer:
-      "Ab 179 € / Monat, Setup 999 € einmalig. Der finale Preis hängt vom Umfang und den gewünschten Funktionen ab. In der kostenlosen Erstberatung klären wir Ihren Bedarf und erstellen ein transparentes, individuelles Angebot.",
+      "Ab 179 € / Monat, Setup 999 € einmalig. Der finale Preis hängt vom Umfang und den gewünschten Funktionen ab. In einem Beratungsgespräch klären wir Ihren Bedarf und erstellen ein transparentes, individuelles Angebot.",
   },
   {
     question: "Sind die Lösungen DSGVO-konform?",

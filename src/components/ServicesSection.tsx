@@ -6,7 +6,7 @@ const services = [
     icon: Bot,
     title: "Chatbots",
     subtitle: "Website & Social Media",
-    description: "KI-gestützte Kundenkommunikation für Ihre digitalen Kanäle. Ideale Lösung für Fahrdienste und Transportservices in Düsseldorf.",
+    description: "KI-gestützte Kundenkommunikation für Ihre digitalen Kanäle. Automatisierung für alle Branchen.",
     features: [
       "Automatische Beantwortung häufiger Fragen",
       "Lead-Erfassung & Qualifizierung",
@@ -17,7 +17,7 @@ const services = [
     icon: Share2,
     title: "Social-Media-Management",
     subtitle: "Content & Wachstum",
-    description: "Professionelle Betreuung Ihrer Social-Media-Präsenz mit Fokus auf Fahrdienste und Transportlösungen.",
+    description: "Professionelle Betreuung Ihrer Social-Media-Präsenz für organisches Wachstum.",
     features: [
       "Content-Planung & regelmäßiges Posting",
       "KI-Unterstützung für Texte & Ideen",
@@ -28,21 +28,21 @@ const services = [
     icon: Globe,
     title: "Website-Erstellung",
     subtitle: "Modern & Conversion-stark",
-    description: "SEO-optimierte Websites für Fahrdienste und Transportservices, die Besucher in Kunden verwandeln.",
+    description: "SEO-optimierte Websites, die Besucher in Kunden verwandeln und Ihr Business online präsentieren.",
     features: [
       "Modernes, responsives Design",
       "Mobil-optimiert & Google SEO-Optimierung",
-      "Kontakt- & Anfrage-Systeme mit Buchungsfunktion",
+      "Kontakt- & Anfrage-Systeme",
     ],
   },
   {
     icon: Code2,
-    title: "Fahrdienst-Software",
-    subtitle: "Spezialisierte Tools & Prozesse",
-    description: "Maßgeschneiderte Softwarelösungen speziell für Transportdienste und Fahrdienst-Management.",
+    title: "Maßgeschneiderte Softwarelösungen",
+    subtitle: "Individuelle Systeme & Automation",
+    description: "Spezialisierte Softwarelösungen zur Prozessautomatisierung und Digitalisierung Ihres Unternehmens.",
     features: [
-      "Booking- & Verwaltungssysteme",
-      "Fahrerplattformen & Echtzeitverfolgung",
+      "Individuelle Systeme & Dashboards",
+      "Prozessautomatisierung für Effizienz",
       "Integrations- & Schnittstellen",
     ],
   },
@@ -65,11 +65,11 @@ export const ServicesSection = () => {
             Unsere Dienstleistungen
           </span>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Vier Kernbereiche für Ihren digitalen Erfolg in Düsseldorf
+            Vier Kernbereiche für digitalen Erfolg
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Von intelligenten Chatbots über Social Media bis zur SEO-optimierten Website und Fahrdienst-Software – 
-            wir bringen Ihr Transportgeschäft digital voran. Spezialisiert auf Fahrdienste, Shuttle Services und Krankenfahrten.
+            Von intelligenten Chatbots über Social Media bis zur modernen Website und maßgeschneiderten Softwarelösungen – 
+            wir bringen Ihr Unternehmen digital voran. Spezialisiert auf individuelle Lösungen für alle Branchen.
           </p>
         </div>
 
@@ -111,9 +111,9 @@ export const ServicesSection = () => {
                 variant="outline"
                 className="w-full group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all duration-300"
                 onClick={scrollToContact}
-                aria-label={`Kostenlose Beratung für ${service.title} anfragen`}
+                aria-label={`Anfrage für ${service.title} stellen`}
               >
-                Kostenlose Anfrage
+                Anfrage stellen
               </Button>
             </article>
           ))}

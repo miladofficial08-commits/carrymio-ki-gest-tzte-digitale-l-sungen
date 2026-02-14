@@ -7,7 +7,7 @@ const packages = [
     name: "KI Chatbot Starter",
     price: "149",
     period: "/ Monat",
-    description: "Automatisierte KI-Kundenkommunikation für Website oder Social Media in Düsseldorf.",
+    description: "Automatisierte KI-Kundenkommunikation für Website oder Social Media.",
     features: [
       "Setup: 499 € einmalig",
       "Betrieb & Hosting inkl.",
@@ -25,7 +25,7 @@ const packages = [
     name: "Social Media Starter",
     price: "899",
     period: "/ Monat",
-    description: "Professionelle Social-Media-Betreuung für Fahrdienste und Transportservices.",
+    description: "Professionelle Social-Media-Betreuung für Ihr Unternehmen.",
     features: [
       "Monatlich kündbar",
       "Content-Plan & Strategie",
@@ -42,7 +42,7 @@ const packages = [
     name: "Website Starter SEO",
     price: "179",
     period: "/ Monat",
-    description: "SEO-optimierte moderne Website für Fahrdienste und Transportservices in Düsseldorf.",
+    description: "SEO-optimierte moderne Website für Ihr Unternehmen.",
     features: [
       "Setup: 999 € einmalig",
       "Individuelle Landingpage",
@@ -56,16 +56,16 @@ const packages = [
   },
   {
     icon: Code2,
-    name: "Fahrdienst-Software Custom",
+    name: "Softwarelösung Custom",
     price: "349",
     period: "/ Monat",
-    description: "Spezialisierte Software & Prozessautomatisierung für Transportdienste.",
+    description: "Spezialisierte Softwarelösungen & Prozessautomatisierung für Ihr Unternehmen.",
     features: [
       "Setup: ab 3.500 € einmalig",
       "Anforderungsanalyse & Planung",
-      "Booking-Systeme & Verwaltung",
-      "Fahrerapp & Echtzeitverfolgung",
-      "Kundenverwaltung & Rechnungssystem",
+      "Individuelle Softwarelösungen",
+      "Digitalisierung & Automatisierung",
+      "Benutzerverwaltung & Schnittstellen",
       "API- & System-Integrationen",
       "Tests, Wartung & technischer Support",
     ],
@@ -93,11 +93,10 @@ export const PackagesSection = () => {
             Preise & Pakete
           </span>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Transparente Pakete für KI-Chatbots, Fahrdienst-Software und mehr
+            Transparente Pakete für KI-Chatbots, Websites und Softwarelösungen
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Keine versteckten Kosten. Jedes Projekt für Transportdienste und Fahrdienste in Düsseldorf beginnt mit einer kostenlosen Beratung, 
-            bei der wir Ihren genauen Bedarf ermitteln.
+            Keine versteckten Kosten. Nach Ihrer Anfrage besprechen wir Ihre Anforderungen und erstellen ein maßgeschneidertes Angebot für Ihr Projekt.
           </p>
         </div>
 
@@ -160,7 +159,7 @@ export const PackagesSection = () => {
                 className="w-full"
                 onClick={scrollToContact}
               >
-                Kostenlose Anfrage
+                Anfrage stellen
               </Button>
             </div>
           ))}

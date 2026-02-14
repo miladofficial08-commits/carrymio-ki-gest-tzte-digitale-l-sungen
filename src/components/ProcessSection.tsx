@@ -6,14 +6,14 @@ const steps = [
     number: "01",
     title: "Anfrage senden",
     description:
-      "Füllen Sie unser kurzes Formular aus und schildern Sie Ihr Anliegen. Völlig kostenlos und unverbindlich.",
+      "Füllen Sie unser kurzes Formular aus und schildern Sie Ihr Anliegen.",
   },
   {
     icon: FileSearch,
     number: "02",
-    title: "Kostenlose Beratung",
+    title: "Beratungsgespräch",
     description:
-      "Wir melden uns innerhalb von 24 Stunden bei Ihnen und besprechen Ihre Anforderungen im Detail.",
+      "Nach Ihrer Anfrage melden wir uns innerhalb von 24 Stunden bei Ihnen. In einem verbindlichen Beratungsgespräch klären wir alle Anforderungen.",
   },
   {
     icon: Wrench,
