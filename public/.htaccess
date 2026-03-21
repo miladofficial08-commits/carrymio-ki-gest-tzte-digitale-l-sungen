@@ -5,7 +5,7 @@
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/plain
     AddOutputFilterByType DEFLATE text/html
-    AddOutputFilterByType DEFLATE text/xml    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    AddOutputFilterByType DEFLATE text/xml
     AddOutputFilterByType DEFLATE text/css
     AddOutputFilterByType DEFLATE text/javascript
     AddOutputFilterByType DEFLATE application/xml
@@ -50,6 +50,8 @@
     Header set X-Frame-Options "SAMEORIGIN"
     Header set X-XSS-Protection "1; mode=block"
     Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header unset Content-Security-Policy
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://app.fastbots.ai https://*.fastbots.ai; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://app.fastbots.ai https://*.fastbots.ai wss://*.fastbots.ai; frame-src 'self' https://app.fastbots.ai https://*.fastbots.ai; child-src 'self' https://app.fastbots.ai https://*.fastbots.ai; media-src 'self' data: blob: https://app.fastbots.ai https://*.fastbots.ai; manifest-src 'self'"
 </IfModule>
 
 # Redirect HTTP to HTTPS
