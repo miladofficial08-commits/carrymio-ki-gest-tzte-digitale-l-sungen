@@ -1,7 +1,7 @@
 const Footer = () => {
 
   return (
-    <footer className="border-t border-white/10 bg-card/40 py-14">
+    <footer className="border-t border-border bg-muted/30 py-14">
       <div className="container px-4">
         <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
           <div>
@@ -40,7 +40,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-10 border-t border-white/10 pt-6">
+        <div className="mt-10 border-t border-border pt-6">
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} Tawano. Alle Rechte vorbehalten.
           </p>

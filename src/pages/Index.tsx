@@ -1,9 +1,21 @@
-import { useEffect, useMemo, useState } from "react";
-import { Bot, Sparkles, Workflow, CircleDollarSign, Users, Clock3, CheckCircle2, Mail, BrainCircuit, MessagesSquare, ChevronDown, XCircle } from "lucide-react";
+﻿import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import {
+  Bot, Sparkles, Workflow, CircleDollarSign, Users, Clock3,
+  CheckCircle2, MessagesSquare, XCircle, ArrowRight,
+} from "lucide-react";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { FAQSection } from "@/components/FAQSection";
 import { ContactSection } from "@/components/ContactSection";
+import { WorkflowAnimation } from "@/components/WorkflowAnimation";
+import { ScrollReveal } from "@/components/motion/ScrollReveal";
+import { StaggerContainer, StaggerItem } from "@/components/motion/StaggerContainer";
+import { GradientBlob } from "@/components/motion/GradientBlob";
+import { TypingHero } from "@/components/motion/TypingHero";
+import { BackgroundActivity } from "@/components/motion/BackgroundActivity";
+import { useCountUp } from "@/hooks/useCountUp";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 import Footer from "@/components/Footer";
 
 const navItems = [
@@ -42,432 +54,430 @@ const euro = new Intl.NumberFormat("de-DE", {
 
 const animateValue = (from: number, to: number, speed = 0.18) => from + (to - from) * speed;
 
-const processSteps = [
-  { icon: Mail, title: "Anfrage kommt rein" },
-  { icon: BrainCircuit, title: "System erkennt das Thema" },
-  { icon: MessagesSquare, title: "Antwort wird erstellt" },
-  { icon: Users, title: "Bei Bedarf geht es an Ihr Team" },
-  { icon: CheckCircle2, title: "Anfrage ist gelöst" },
-] as const;
+const AnimatedStat = ({ value, suffix = "", prefix = "" }: { value: number; suffix?: string; prefix?: string }) => {
+  const { ref, isInView } = useScrollReveal();
+  const count = useCountUp(value, isInView, 2200);
+  return <span ref={ref}>{prefix}{count}{suffix}</span>;
+};
 
 const Index = () => {
+  const [introComplete, setIntroComplete] = useState(false);
   const [selectedScenario, setSelectedScenario] = useState<keyof typeof scenarios>("support");
-  const [activeStep, setActiveStep] = useState(0);
   const [employees, setEmployees] = useState(6);
   const [salary, setSalary] = useState(3200);
   const [displayYearlyCost, setDisplayYearlyCost] = useState(0);
   const [displaySavings, setDisplaySavings] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  const handleIntroComplete = useCallback(() => setIntroComplete(true), []);
 
   const activeScenario = useMemo(() => scenarios[selectedScenario], [selectedScenario]);
+  const heroRef = useRef<HTMLDivElement>(null);
 
   const yearlyCost = useMemo(() => employees * salary * 12, [employees, salary]);
   const savingsRate = useMemo(() => (selectedScenario === "support" ? 0.34 : selectedScenario === "sales" ? 0.29 : 0.31), [selectedScenario]);
   const yearlySavings = useMemo(() => Math.round(yearlyCost * savingsRate), [yearlyCost, savingsRate]);
+
+  const { scrollY } = useScroll();
+  const heroY = useTransform(scrollY, [0, 600], [0, 150]);
+  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
 
   useEffect(() => {
     const interval = window.setInterval(() => {
       setDisplayYearlyCost((prev) => animateValue(prev, yearlyCost));
       setDisplaySavings((prev) => animateValue(prev, yearlySavings));
     }, 16);
-
     return () => window.clearInterval(interval);
   }, [yearlyCost, yearlySavings]);
 
   useEffect(() => {
-    const timer = window.setInterval(() => {
-      setActiveStep((prev) => (prev + 1) % processSteps.length);
-    }, 2400);
-
-    return () => window.clearInterval(timer);
+    const handleScroll = () => {
+      const doc = document.documentElement;
+      const total = doc.scrollHeight - doc.clientHeight;
+      setScrollProgress(total > 0 ? Math.min(100, (doc.scrollTop / total) * 100) : 0);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollTo = (id: string) => {
     const element = document.querySelector(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
+    if (element) element.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     <div className="min-h-screen bg-background">
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-background/80 backdrop-blur-2xl">
+      {/* Typing Intro */}
+      <TypingHero onComplete={handleIntroComplete} />
+
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/60 bg-white/80 backdrop-blur-2xl backdrop-saturate-150">
+        <div className="absolute left-0 top-0 h-[2px] bg-gradient-primary transition-all duration-200" style={{ width: `${scrollProgress}%` }} aria-hidden="true" />
         <div className="container px-4">
           <div className="flex h-16 items-center justify-between gap-6 md:h-20">
-            <button onClick={() => scrollTo("#home")} className="flex items-center gap-3 md:gap-4" aria-label="Tawano Home">
-              <span className="logo-orb flex h-10 w-10 items-center justify-center rounded-full border border-primary/30 bg-primary/10 text-sm font-semibold text-primary">TW</span>
+            <button onClick={() => scrollTo("#home")} className="flex items-center gap-3 md:gap-4 group" aria-label="Tawano Home">
+              <span className="logo-orb flex h-10 w-10 items-center justify-center rounded-full border border-primary/30 bg-primary/10 text-sm font-semibold text-primary transition-transform duration-300 group-hover:scale-110">TW</span>
               <span className="text-left">
                 <span className="block text-xl font-semibold tracking-[0.01em] text-foreground md:text-[1.8rem] md:leading-7">Tawano</span>
-                <span className="hidden text-[10px] uppercase tracking-[0.22em] text-primary/80 md:block">Digitale Mitarbeiter & Automation</span>
+                <span className="hidden text-[10px] uppercase tracking-[0.22em] text-primary/60 md:block">Digitale Mitarbeiter & Automation</span>
               </span>
             </button>
-
             <div className="hidden items-center gap-7 md:flex">
               {navItems.map((item) => (
-                <button
-                  key={item.href}
-                  onClick={() => scrollTo(item.href)}
-                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-                >
+                <button key={item.href} onClick={() => scrollTo(item.href)} className="relative text-sm font-medium text-muted-foreground transition-colors hover:text-foreground group">
                   {item.label}
+                  <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full" />
                 </button>
               ))}
             </div>
-
-            <Button size="sm" variant="hero" onClick={() => scrollTo("#kontakt")}>
+            <Button size="sm" variant="hero" onClick={() => scrollTo("#kontakt")} className="group">
               Kontakt aufnehmen
+              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
             </Button>
           </div>
         </div>
       </nav>
 
       <main>
-        <header id="home" className="relative overflow-hidden pt-28 md:pt-36">
+        {/* HERO */}
+        <header id="home" className="relative overflow-hidden pt-28 md:pt-36" ref={heroRef}>
           <div className="absolute inset-0 bg-gradient-hero-premium" aria-hidden="true" />
           <div className="absolute inset-0 aurora-bg" aria-hidden="true" />
           <div className="absolute inset-0 soft-grid opacity-30" aria-hidden="true" />
-          <div className="container relative z-10 px-4 pb-20 pt-10 md:pb-24">
-            <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+          <GradientBlob className="top-[-100px] left-[-200px]" color1="hsl(217, 91%, 50%)" color2="hsl(200, 91%, 45%)" size={600} duration={25} />
+          <GradientBlob className="top-[200px] right-[-150px]" color1="hsl(277, 82%, 68%)" color2="hsl(200, 91%, 50%)" size={500} duration={30} />
+          <BackgroundActivity />
+
+          <motion.div style={{ y: heroY, opacity: heroOpacity }} className="container relative z-10 px-4 pb-24 pt-10 md:pb-32">
+            <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
               <div>
-                <span className="section-kicker mb-6">
+                <motion.span initial={{ opacity: 0, y: 20, filter: "blur(8px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ duration: 0.6 }} className="section-kicker mb-6">
                   <Bot className="h-4 w-4" aria-hidden="true" />
                   Digitale Mitarbeiter für Unternehmen
-                </span>
-                <h1 className="text-4xl font-semibold leading-[1.02] md:text-6xl xl:text-7xl">
+                </motion.span>
+                <motion.h1 initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }} className="text-4xl font-semibold leading-[1.02] md:text-6xl xl:text-7xl">
                   Automatisieren Sie Support,
-                  <span className="display-serif block text-gradient">E-Mails und Anfragen.</span>
-                </h1>
-                <p className="mt-7 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
-                  Tawano baut digitale Mitarbeiter, die tägliche Aufgaben automatisch erledigen -
-                  damit Ihr Team mehr Zeit für wichtige Arbeit hat.
-                </p>
-
-                <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-                  <Button variant="hero" size="xl" onClick={() => scrollTo("#kontakt")}>Jetzt automatisieren</Button>
+                  <motion.span initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="display-serif block text-gradient">
+                    E-Mails und Anfragen.
+                  </motion.span>
+                </motion.h1>
+                <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.5 }} className="mt-7 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
+                  Tawano baut digitale Mitarbeiter, die tägliche Aufgaben automatisch erledigen — damit Ihr Team mehr Zeit für wichtige Arbeit hat.
+                </motion.p>
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.65 }} className="mt-10 flex flex-col gap-4 sm:flex-row">
+                  <Button variant="hero" size="xl" onClick={() => scrollTo("#kontakt")} className="group">
+                    Jetzt automatisieren
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </Button>
                   <Button variant="heroOutline" size="xl" onClick={() => scrollTo("#kostenrechner")}>Einsparung berechnen</Button>
-                </div>
-
-                <div className="mt-9 flex flex-wrap gap-3 text-sm text-muted-foreground">
-                  <span className="data-pill">Weniger manuelle Arbeit</span>
-                  <span className="data-pill">Schnellere Antworten</span>
-                  <span className="data-pill">Mehr Zeit fürs Team</span>
-                </div>
-
-                <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                  <div className="stat-chip">
-                    <p className="text-xs uppercase tracking-[0.14em] text-primary/80">Support-Antworten</p>
-                    <p className="mt-1 text-xl font-semibold">Automatisch beantwortet</p>
-                  </div>
-                  <div className="stat-chip">
-                    <p className="text-xs uppercase tracking-[0.14em] text-primary/80">E-Mails</p>
-                    <p className="mt-1 text-xl font-semibold">Sortiert & beantwortet</p>
-                  </div>
-                  <div className="stat-chip">
-                    <p className="text-xs uppercase tracking-[0.14em] text-primary/80">Leads</p>
-                    <p className="mt-1 text-xl font-semibold">Sofort erkannt</p>
-                  </div>
-                </div>
+                </motion.div>
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.85 }} className="mt-9 flex flex-wrap gap-3 text-sm text-muted-foreground">
+                  {["Weniger manuelle Arbeit", "Schnellere Antworten", "Mehr Zeit fürs Team"].map((text, i) => (
+                    <motion.span key={text} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4, delay: 0.9 + i * 0.1 }} className="data-pill">{text}</motion.span>
+                  ))}
+                </motion.div>
+                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 1.1 }} className="mt-8 grid gap-3 sm:grid-cols-3">
+                  {[
+                    { label: "Support-Antworten", value: "Automatisch beantwortet" },
+                    { label: "E-Mails", value: "Sortiert & beantwortet" },
+                    { label: "Leads", value: "Sofort erkannt" },
+                  ].map((stat) => (
+                    <motion.div key={stat.label} whileHover={{ y: -4, boxShadow: "0 12px 40px hsl(217 91% 50% / 0.08)" }} transition={{ type: "spring", stiffness: 300, damping: 20 }} className="stat-chip cursor-default">
+                      <p className="text-xs uppercase tracking-[0.14em] text-primary">{stat.label}</p>
+                      <p className="mt-1 text-xl font-semibold">{stat.value}</p>
+                    </motion.div>
+                  ))}
+                </motion.div>
               </div>
 
-              <aside className="premium-panel p-7 md:p-9">
+              {/* Interactive panel */}
+              <motion.aside initial={{ opacity: 0, x: 60, rotateY: -5 }} animate={{ opacity: 1, x: 0, rotateY: 0 }} transition={{ duration: 0.9, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }} className="premium-panel p-7 md:p-9">
                 <div className="relative z-10">
                   <p className="text-sm text-muted-foreground">Schneller Blick auf den Nutzen</p>
                   <h2 className="mt-2 text-2xl font-semibold">Was Tawano für Ihr Team übernimmt</h2>
-
                   <div className="mt-6 grid gap-2 sm:grid-cols-3">
-                    <button onClick={() => setSelectedScenario("support")} className={`interactive-ring rounded-xl border px-3 py-2 text-xs ${selectedScenario === "support" ? "border-primary/50 bg-primary/10 text-foreground" : "border-white/10 bg-white/5 text-muted-foreground"}`}>Support & E-Mails</button>
-                    <button onClick={() => setSelectedScenario("sales")} className={`interactive-ring rounded-xl border px-3 py-2 text-xs ${selectedScenario === "sales" ? "border-primary/50 bg-primary/10 text-foreground" : "border-white/10 bg-white/5 text-muted-foreground"}`}>Leads & Anfragen</button>
-                    <button onClick={() => setSelectedScenario("operations")} className={`interactive-ring rounded-xl border px-3 py-2 text-xs ${selectedScenario === "operations" ? "border-primary/50 bg-primary/10 text-foreground" : "border-white/10 bg-white/5 text-muted-foreground"}`}>Interne Abläufe</button>
+                    {(["support", "sales", "operations"] as const).map((key) => (
+                      <motion.button key={key} onClick={() => setSelectedScenario(key)} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className={`interactive-ring rounded-xl border px-3 py-2 text-xs transition-all duration-300 ${selectedScenario === key ? "border-primary/40 bg-primary/8 text-foreground shadow-lg shadow-primary/5" : "border-border bg-muted/50 text-muted-foreground"}`}>
+                        {key === "support" ? "Support & E-Mails" : key === "sales" ? "Leads & Anfragen" : "Interne Abläufe"}
+                      </motion.button>
+                    ))}
                   </div>
-
-                  <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-5">
-                    <p className="text-sm text-primary/80">{activeScenario.title}</p>
-                    <p className="mt-2 text-lg font-semibold">{activeScenario.hours}</p>
-                    <p className="text-sm text-emerald-300">{activeScenario.impact}</p>
-                    <p className="mt-3 text-sm leading-6 text-muted-foreground">{activeScenario.summary}</p>
-                  </div>
-
+                  <AnimatePresence mode="wait">
+                    <motion.div key={selectedScenario} initial={{ opacity: 0, y: 10, filter: "blur(4px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} exit={{ opacity: 0, y: -10, filter: "blur(4px)" }} transition={{ duration: 0.35 }} className="mt-6 rounded-2xl border border-border bg-muted/30 p-5">
+                      <p className="text-sm text-primary/80">{activeScenario.title}</p>
+                      <p className="mt-2 text-lg font-semibold">{activeScenario.hours}</p>
+                      <p className="text-sm text-emerald-600">{activeScenario.impact}</p>
+                      <p className="mt-3 text-sm leading-6 text-muted-foreground">{activeScenario.summary}</p>
+                    </motion.div>
+                  </AnimatePresence>
                   <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                    <div className="rounded-xl border border-white/10 bg-black/10 p-4">
-                      <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Merkt sich frühere Fälle</p>
-                      <p className="mt-2 text-sm text-foreground/85">Berücksichtigt frühere Anfragen und arbeitet dadurch präziser.</p>
-                    </div>
-                    <div className="rounded-xl border border-white/10 bg-black/10 p-4">
-                      <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Wird mit der Zeit besser</p>
-                      <p className="mt-2 text-sm text-foreground/85">Wird mit jeder Interaktion besser und stabiler.</p>
-                    </div>
+                    {[
+                      { title: "Merkt sich frühere Fälle", desc: "Berücksichtigt frühere Anfragen und arbeitet dadurch präziser." },
+                      { title: "Wird mit der Zeit besser", desc: "Wird mit jeder Interaktion besser und stabiler." },
+                    ].map((item) => (
+                      <motion.div key={item.title} whileHover={{ borderColor: "hsl(217 91% 50% / 0.3)", y: -2 }} className="rounded-xl border border-border bg-muted/30 p-4 transition-all duration-300">
+                        <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">{item.title}</p>
+                        <p className="mt-2 text-sm text-foreground/85">{item.desc}</p>
+                      </motion.div>
+                    ))}
                   </div>
                 </div>
-              </aside>
+              </motion.aside>
             </div>
-          </div>
+          </motion.div>
+
+          {/* Scroll indicator */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10">
+            <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} className="flex flex-col items-center gap-2">
+              <span className="text-xs text-muted-foreground/60 uppercase tracking-widest">Scrollen</span>
+              <div className="w-5 h-8 rounded-full border border-border flex justify-center pt-1.5">
+                <motion.div animate={{ y: [0, 10, 0], opacity: [1, 0.3, 1] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} className="w-1 h-1.5 rounded-full bg-primary/60" />
+              </div>
+            </motion.div>
+          </motion.div>
         </header>
 
-        <section id="kostenrechner" className="py-24">
-          <div className="container px-4">
-            <div className="mx-auto max-w-6xl premium-panel p-8 md:p-10">
-              <div className="relative z-10">
-                <div className="mx-auto max-w-3xl text-center">
-                  <span className="section-kicker mb-6">Kostenrechner</span>
-                  <h2 className="section-title">Was kosten Support und Routineaufgaben wirklich?</h2>
-                  <p className="mt-4 section-copy">
-                    Zwei Eingaben – sofort Ihr Ergebnis.
-                  </p>
-                </div>
-
-                <div className="mt-10 grid gap-6 lg:grid-cols-2 lg:items-stretch">
-                  <article className="rounded-2xl border border-white/10 bg-white/5 p-6">
-                    <p className="text-sm font-medium text-foreground">Eingaben</p>
-                    <div className="mt-6 space-y-7">
-                      <div>
-                        <div className="mb-3 flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">Anzahl Mitarbeiter</span>
-                          <span className="font-semibold text-foreground">{employees}</span>
-                        </div>
-                        <Slider min={1} max={50} step={1} value={[employees]} onValueChange={(v) => setEmployees(v[0])} />
-                      </div>
-
-                      <div>
-                        <div className="mb-3 flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">Monatsgehalt</span>
-                          <span className="font-semibold text-foreground">{euro.format(salary)}</span>
-                        </div>
-                        <Slider min={1800} max={9000} step={100} value={[salary]} onValueChange={(v) => setSalary(v[0])} />
-                      </div>
-                    </div>
-                  </article>
-
-                  <article className="rounded-2xl border border-primary/30 bg-primary/10 p-6">
-                    <p className="text-sm font-medium text-foreground">Ergebnis</p>
-                    <div className="mt-5 rounded-xl border border-white/10 bg-black/10 p-4">
-                      <div className="flex items-center gap-2 text-primary">
-                        <CircleDollarSign className="h-4 w-4" aria-hidden="true" />
-                        <p className="text-sm">Jährliche Kosten</p>
-                      </div>
-                      <p className="mt-2 text-4xl font-semibold text-rose-300 md:text-5xl">{euro.format(Math.round(displayYearlyCost))}</p>
-                    </div>
-
-                    <div className="mt-4 rounded-xl border border-emerald-300/30 bg-emerald-400/10 p-4">
-                      <div className="flex items-center gap-2 text-emerald-300">
-                        <Sparkles className="h-4 w-4" aria-hidden="true" />
-                        <p className="text-sm">Mögliche Einsparung</p>
-                      </div>
-                      <p className="mt-2 text-4xl font-semibold text-emerald-300 md:text-5xl">{euro.format(Math.round(displaySavings))}</p>
-                    </div>
-                  </article>
-                </div>
-
-                <div className="mx-auto mt-8 grid max-w-3xl gap-4 sm:grid-cols-3">
-                  <article className="rounded-xl border border-white/10 bg-black/10 p-4 text-center">
-                    <Users className="mx-auto h-4 w-4 text-primary" aria-hidden="true" />
-                    <p className="mt-2 text-xl font-semibold">{employees}</p>
-                    <p className="text-xs text-muted-foreground">Mitarbeiter</p>
-                  </article>
-                  <article className="rounded-xl border border-white/10 bg-black/10 p-4 text-center">
-                    <Clock3 className="mx-auto h-4 w-4 text-primary" aria-hidden="true" />
-                    <p className="mt-2 text-xl font-semibold">24/7</p>
-                    <p className="text-xs text-muted-foreground">System</p>
-                  </article>
-                  <article className="rounded-xl border border-white/10 bg-black/10 p-4 text-center">
-                    <Workflow className="mx-auto h-4 w-4 text-primary" aria-hidden="true" />
-                    <p className="mt-2 text-xl font-semibold">{Math.round(savingsRate * 100)}%</p>
-                    <p className="text-xs text-muted-foreground">Potenzial</p>
-                  </article>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="py-24">
-          <div className="container px-4">
-            <div className="mx-auto max-w-5xl text-center">
-              <span className="section-kicker mb-6">Der Unterschied</span>
-              <h2 className="section-title">Manuelle Arbeit vs. digitale Mitarbeiter</h2>
-              <p className="section-copy mx-auto mt-4 max-w-2xl">
-                Wie digitale Mitarbeiter Ihr Unternehmen entlasten.
-              </p>
-            </div>
-
-            <div className="mx-auto mt-12 grid max-w-6xl gap-6 lg:grid-cols-2 lg:items-start">
-              <article className="rounded-3xl border border-rose-400/30 bg-rose-400/10 p-6 md:p-7">
-                <p className="text-sm font-medium uppercase tracking-[0.12em] text-rose-200">Ohne Automation</p>
-                <div className="mt-4 space-y-3">
+        {/* SOCIAL PROOF BAR */}
+        <ScrollReveal>
+          <div className="py-12 border-y border-border/60">
+            <div className="container px-4">
+              <div className="mx-auto grid max-w-4xl grid-cols-2 gap-8 md:grid-cols-4 text-center">
                 {[
-                  "Support-Anfragen bleiben lange offen",
-                  "Kunden warten auf Antworten",
-                  "Leads gehen verloren",
-                  "Aufgaben stapeln sich im Team",
-                  "Hohe Personalkosten",
-                ].map((item) => (
-                    <div key={item} className="flex items-start gap-3 rounded-xl border border-rose-300/25 bg-black/10 px-4 py-3">
-                      <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-200" aria-hidden="true" />
-                      <p className="text-sm leading-6 text-foreground/90">{item}</p>
-                    </div>
-                  ))}
-                </div>
-              </article>
-
-              <article className="premium-panel p-6 md:p-7">
-                <div className="relative z-10">
-                  <p className="text-sm font-medium uppercase tracking-[0.12em] text-emerald-300">Mit Tawano</p>
-                  <div className="mt-4 space-y-3">
-                    {[
-                      "Support läuft 24/7 ohne Ausfall",
-                      "Kunden erhalten sofort Antworten",
-                      "Leads werden automatisch erkannt",
-                      "Aufgaben laufen automatisch im Hintergrund",
-                      "Geringere Kosten für Ihr Unternehmen",
-                    ].map((item) => (
-                      <div key={item} className="flex items-start gap-3 rounded-xl border border-emerald-300/25 bg-emerald-400/10 px-4 py-3">
-                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" aria-hidden="true" />
-                        <p className="text-sm leading-6 text-foreground">{item}</p>
-                      </div>
-                    ))}
-                  </div>
-
-                </div>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        <section id="automation" className="py-24">
-          <div className="container px-4">
-            <div className="mx-auto max-w-6xl premium-panel p-8 md:p-10">
-              <div className="relative z-10">
-                <span className="section-kicker mb-6">So funktioniert es</span>
-                <h2 className="section-title">Jede Anfrage – ein klarer Ablauf</h2>
-
-                <div className="mx-auto mt-10 max-w-4xl">
-                  <div className="workflow-line" aria-hidden="true" />
-                  <div className="grid gap-5 md:grid-cols-5 md:items-start">
-                    {processSteps.map((step, index) => (
-                      <article
-                        key={step.title}
-                        onMouseEnter={() => setActiveStep(index)}
-                        className={`workflow-step ${activeStep === index ? "workflow-step-active" : ""}`}
-                      >
-                        <step.icon className="mx-auto h-5 w-5 text-primary" aria-hidden="true" />
-                        <p className="mt-3 text-center text-sm leading-6 text-foreground/90">{step.title}</p>
-                        {index < processSteps.length - 1 ? <ChevronDown className="mx-auto mt-2 h-7 w-7 text-primary md:hidden" aria-hidden="true" /> : null}
-                      </article>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="websites" className="py-24">
-          <div className="container px-4">
-            <div className="mx-auto max-w-6xl premium-panel p-7 md:p-10">
-              <div className="relative z-10">
-                <div className="mx-auto max-w-3xl text-center">
-                  <span className="section-kicker mb-6">Leistungen von Tawano</span>
-                  <h2 className="section-title">Unsere Lösungen</h2>
-                  <p className="section-copy mt-4">
-                    Für jedes Ziel die passende Lösung.
-                  </p>
-                </div>
-
-                <div className="mt-10 grid items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                  <article className="surface-elevated hover-lift flex h-full flex-col rounded-2xl p-6">
-                    <div className="flex items-center gap-3">
-                      <span className="rounded-xl border border-primary/30 bg-primary/10 p-2">
-                        <MessagesSquare className="h-4 w-4 text-primary" aria-hidden="true" />
-                      </span>
-                      <p className="text-xl font-semibold text-foreground">Chatbots</p>
-                    </div>
-                    <p className="mt-4 text-sm leading-6 text-muted-foreground">
-                      Antwortet sofort auf Fragen und nimmt neue Anfragen auf.
+                  { value: 24, suffix: "/7", label: "Verfügbarkeit" },
+                  { value: 85, suffix: "%", label: "Automatisierungsrate" },
+                  { value: 42, suffix: "h", label: "Zeitersparnis / Woche" },
+                  { value: 7, suffix: "+", label: "Sprachen" },
+                ].map((stat) => (
+                  <motion.div key={stat.label} whileHover={{ scale: 1.05 }} className="cursor-default">
+                    <p className="text-3xl font-bold text-foreground md:text-4xl">
+                      <AnimatedStat value={stat.value} suffix={stat.suffix} />
                     </p>
-                    <p className="mt-4 text-xs uppercase tracking-[0.12em] text-muted-foreground">Startpreis</p>
-                    <p className="mt-1 text-base font-semibold text-primary">500 EUR</p>
-                  </article>
-
-                  <article className="surface-elevated hover-lift flex h-full flex-col rounded-2xl p-6">
-                    <div className="flex items-center gap-3">
-                      <span className="rounded-xl border border-primary/30 bg-primary/10 p-2">
-                        <Workflow className="h-4 w-4 text-primary" aria-hidden="true" />
-                      </span>
-                      <p className="text-xl font-semibold text-foreground">Websites</p>
-                    </div>
-                    <p className="mt-4 text-sm leading-6 text-muted-foreground">
-                      Klare Seiten, die Vertrauen aufbauen und neue Kunden bringen.
-                    </p>
-                    <p className="mt-4 text-xs uppercase tracking-[0.12em] text-muted-foreground">Startpreis</p>
-                    <p className="mt-1 text-base font-semibold text-primary">990 EUR</p>
-                  </article>
-
-                  <article className="premium-panel flex h-full flex-col p-6">
-                    <div className="relative z-10">
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="flex items-center gap-3">
-                          <span className="rounded-xl border border-primary/30 bg-primary/10 p-2">
-                            <Bot className="h-4 w-4 text-primary" aria-hidden="true" />
-                          </span>
-                          <p className="text-xl font-semibold text-foreground">Digitaler Mitarbeiter</p>
-                        </div>
-                        <span className="inline-flex rounded-full border border-primary/40 bg-primary/15 px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] text-primary">Beliebt</span>
-                      </div>
-
-                      <ul className="mt-4 space-y-2 text-sm text-foreground/90">
-                        <li className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />erkennt automatisch Support-Anfragen und Leads</li>
-                        <li className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />beantwortet E-Mails automatisch</li>
-                        <li className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />arbeitet in bis zu 7 Sprachen</li>
-                        <li className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />merkt sich frühere Gespräche (Memory)</li>
-                        <li className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />verbessert sich durch Lernsystem</li>
-                        <li className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />erkennt und korrigiert Fehler</li>
-                      </ul>
-                      <p className="mt-4 text-sm font-semibold text-primary">Preis je nach Umfang</p>
-                    </div>
-                  </article>
-
-                  <article className="surface-elevated hover-lift flex h-full flex-col rounded-2xl p-6">
-                    <div className="flex items-center gap-3">
-                      <span className="rounded-xl border border-primary/30 bg-primary/10 p-2">
-                        <Sparkles className="h-4 w-4 text-primary" aria-hidden="true" />
-                      </span>
-                      <p className="text-xl font-semibold text-foreground">Custom Automation</p>
-                    </div>
-                    <p className="mt-4 text-sm leading-6 text-muted-foreground">
-                      Individuelle Automatisierung für Ihr Unternehmen.
-                    </p>
-                    <p className="mt-4 text-sm font-medium text-foreground/90">individuelles Projekt</p>
-                    <p className="mt-2 text-sm text-muted-foreground">Wir bauen genau den Ablauf, den Ihr Team braucht.</p>
-                  </article>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="about" className="py-24">
-          <div className="container px-4">
-            <div className="mx-auto max-w-6xl grid gap-5 lg:grid-cols-[1fr_1fr]">
-              <article className="premium-panel p-8 md:p-10">
-                <div className="relative z-10">
-                  <span className="section-kicker mb-5">Zusammenarbeit mit Tawano</span>
-                  <h2 className="section-title">Warum Firmen mit uns arbeiten</h2>
-                  <p className="mt-4 section-copy">
-                    Echte Ansprechpartner, die Ihre Abläufe verstehen und Systeme bauen, die wirklich funktionieren.
-                  </p>
-                </div>
-              </article>
-
-              <div className="grid gap-5 sm:grid-cols-2">
-                {[
-                  "Keine Standardlösung – Ihr Ablauf im Mittelpunkt.",
-                  "Klare Umsetzung von Anfang bis Ende.",
-                  "Systeme, die Ihr Team wirklich nutzt.",
-                  "Betreuung von der Planung bis zum Betrieb.",
-                ].map((point) => (
-                  <article key={point} className="surface-elevated hover-lift rounded-2xl p-6">
-                    <p className="text-sm leading-6 text-foreground/90">{point}</p>
-                  </article>
+                    <p className="mt-1 text-xs uppercase tracking-[0.14em] text-muted-foreground">{stat.label}</p>
+                  </motion.div>
                 ))}
               </div>
+            </div>
+          </div>
+        </ScrollReveal>
+
+        {/* WORKFLOW ANIMATION */}
+        <WorkflowAnimation />
+
+        {/* COST CALCULATOR */}
+        <section id="kostenrechner" className="py-28">
+          <div className="container px-4">
+            <ScrollReveal>
+              <div className="mx-auto max-w-6xl premium-panel p-8 md:p-12 relative overflow-hidden">
+                <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full bg-primary/5 blur-[80px] pointer-events-none" />
+                <div className="relative z-10">
+                  <div className="mx-auto max-w-3xl text-center">
+                    <span className="section-kicker mb-6">Kostenrechner</span>
+                    <h2 className="section-title">Was kosten Support und Routineaufgaben wirklich?</h2>
+                    <p className="mt-4 section-copy">Zwei Eingaben – sofort Ihr Ergebnis.</p>
+                  </div>
+                  <div className="mt-12 grid gap-8 lg:grid-cols-2 lg:items-stretch">
+                    <article className="rounded-2xl border border-border bg-muted/30 p-6">
+                      <p className="text-sm font-medium text-foreground">Eingaben</p>
+                      <div className="mt-6 space-y-7">
+                        <div>
+                          <div className="mb-3 flex items-center justify-between text-sm">
+                            <span className="text-muted-foreground">Anzahl Mitarbeiter</span>
+                            <motion.span key={employees} initial={{ scale: 1.3, color: "hsl(217 91% 50%)" }} animate={{ scale: 1, color: "hsl(222 47% 11%)" }} className="font-semibold text-foreground">{employees}</motion.span>
+                          </div>
+                          <Slider min={1} max={50} step={1} value={[employees]} onValueChange={(v) => setEmployees(v[0])} />
+                        </div>
+                        <div>
+                          <div className="mb-3 flex items-center justify-between text-sm">
+                            <span className="text-muted-foreground">Monatsgehalt</span>
+                            <motion.span key={salary} initial={{ scale: 1.3, color: "hsl(217 91% 50%)" }} animate={{ scale: 1, color: "hsl(222 47% 11%)" }} className="font-semibold text-foreground">{euro.format(salary)}</motion.span>
+                          </div>
+                          <Slider min={1800} max={9000} step={100} value={[salary]} onValueChange={(v) => setSalary(v[0])} />
+                        </div>
+                      </div>
+                    </article>
+                    <ScrollReveal direction="right" delay={0.2}>
+                      <article className="rounded-2xl border border-primary/30 bg-primary/10 p-6 h-full">
+                        <p className="text-sm font-medium text-foreground">Ergebnis</p>
+                        <div className="mt-5 rounded-xl border border-border bg-muted/30 p-4">
+                          <div className="flex items-center gap-2 text-primary">
+                            <CircleDollarSign className="h-4 w-4" aria-hidden="true" />
+                            <p className="text-sm">Jährliche Kosten</p>
+                          </div>
+                          <p className="mt-2 text-4xl font-semibold text-rose-600 md:text-5xl tabular-nums">{euro.format(Math.round(displayYearlyCost))}</p>
+                        </div>
+                        <div className="mt-4 rounded-xl border border-emerald-500/30 bg-emerald-50 p-4">
+                          <div className="flex items-center gap-2 text-emerald-600">
+                            <Sparkles className="h-4 w-4" aria-hidden="true" />
+                            <p className="text-sm">Mögliche Einsparung</p>
+                          </div>
+                          <p className="mt-2 text-4xl font-semibold text-emerald-600 md:text-5xl tabular-nums">{euro.format(Math.round(displaySavings))}</p>
+                        </div>
+                      </article>
+                    </ScrollReveal>
+                  </div>
+                  <StaggerContainer staggerDelay={0.12} className="mx-auto mt-10 grid max-w-3xl gap-4 sm:grid-cols-3">
+                    {[
+                      { icon: Users, value: String(employees), label: "Mitarbeiter" },
+                      { icon: Clock3, value: "24/7", label: "System" },
+                      { icon: Workflow, value: `${Math.round(savingsRate * 100)}%`, label: "Potenzial" },
+                    ].map((item) => (
+                      <StaggerItem key={item.label}>
+                        <motion.article whileHover={{ y: -4, borderColor: "hsl(217 91% 50% / 0.3)" }} className="rounded-xl border border-border bg-muted/30 p-4 text-center transition-all">
+                          <item.icon className="mx-auto h-4 w-4 text-primary" aria-hidden="true" />
+                          <p className="mt-2 text-xl font-semibold">{item.value}</p>
+                          <p className="text-xs text-muted-foreground">{item.label}</p>
+                        </motion.article>
+                      </StaggerItem>
+                    ))}
+                  </StaggerContainer>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+
+        {/* COMPARISON */}
+        <section className="py-28 relative">
+          <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+            <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[900px] h-[1px] bg-gradient-to-r from-transparent via-primary/15 to-transparent" />
+          </div>
+          <div className="container px-4">
+            <ScrollReveal>
+              <div className="mx-auto max-w-5xl text-center">
+                <span className="section-kicker mb-6">Der Unterschied</span>
+                <h2 className="section-title">Manuelle Arbeit vs. digitale Mitarbeiter</h2>
+                <p className="section-copy mx-auto mt-4 max-w-2xl">Wie digitale Mitarbeiter Ihr Unternehmen entlasten.</p>
+              </div>
+            </ScrollReveal>
+            <div className="mx-auto mt-14 grid max-w-6xl gap-8 lg:grid-cols-2 lg:items-start">
+              <ScrollReveal direction="left">
+                <article className="rounded-3xl border border-rose-300/40 bg-rose-50 p-6 md:p-7">
+                  <p className="text-sm font-medium uppercase tracking-[0.12em] text-rose-700">Ohne Automation</p>
+                  <div className="mt-4 space-y-3">
+                    {["Support-Anfragen bleiben lange offen", "Kunden warten auf Antworten", "Leads gehen verloren", "Aufgaben stapeln sich im Team", "Hohe Personalkosten"].map((item, i) => (
+                      <motion.div key={item} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08, duration: 0.4 }} className="flex items-start gap-3 rounded-xl border border-rose-200 bg-white px-4 py-3">
+                        <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-500" aria-hidden="true" />
+                        <p className="text-sm leading-6 text-foreground/90">{item}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </article>
+              </ScrollReveal>
+              <ScrollReveal direction="right" delay={0.15}>
+                <article className="premium-panel p-6 md:p-7">
+                  <div className="relative z-10">
+                    <p className="text-sm font-medium uppercase tracking-[0.12em] text-emerald-600">Mit Tawano</p>
+                    <div className="mt-4 space-y-3">
+                      {["Support läuft 24/7 ohne Ausfall", "Kunden erhalten sofort Antworten", "Leads werden automatisch erkannt", "Aufgaben laufen automatisch im Hintergrund", "Geringere Kosten für Ihr Unternehmen"].map((item, i) => (
+                        <motion.div key={item} initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08, duration: 0.4 }} whileHover={{ x: 4, borderColor: "hsl(152 69% 40% / 0.4)" }} className="flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 transition-colors">
+                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" aria-hidden="true" />
+                          <p className="text-sm leading-6 text-foreground">{item}</p>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              </ScrollReveal>
+            </div>
+          </div>
+        </section>
+
+        {/* SERVICES */}
+        <section id="automation" className="py-28 relative">
+          <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-violet-500/3 blur-[120px]" />
+            <div className="absolute right-0 top-1/3 w-[300px] h-[300px] rounded-full bg-cyan-500/3 blur-[100px]" />
+          </div>
+          <div className="container px-4 relative z-10">
+            <ScrollReveal>
+              <div className="mx-auto max-w-3xl text-center">
+                <span className="section-kicker mb-6">Leistungen von Tawano</span>
+                <h2 className="section-title">Unsere Lösungen</h2>
+                <p className="section-copy mt-4">Für jedes Ziel die passende Lösung.</p>
+              </div>
+            </ScrollReveal>
+            <StaggerContainer staggerDelay={0.12} className="mt-14 mx-auto max-w-6xl grid items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              <StaggerItem>
+                <motion.article whileHover={{ y: -8, boxShadow: "0 24px 60px hsl(222 47% 11% / 0.08)" }} transition={{ type: "spring", stiffness: 300, damping: 20 }} className="surface-elevated flex h-full flex-col rounded-2xl p-6 cursor-default">
+                  <div className="flex items-center gap-3">
+                    <span className="rounded-xl border border-primary/20 bg-primary/8 p-2"><MessagesSquare className="h-4 w-4 text-primary" aria-hidden="true" /></span>
+                    <p className="text-xl font-semibold text-foreground">Chatbots</p>
+                  </div>
+                  <p className="mt-4 text-sm leading-6 text-muted-foreground">Antwortet sofort auf Fragen und nimmt neue Anfragen auf.</p>
+                  <p className="mt-auto pt-4 text-xs uppercase tracking-[0.12em] text-muted-foreground">Startpreis</p>
+                  <p className="mt-1 text-base font-semibold text-primary">500 EUR</p>
+                </motion.article>
+              </StaggerItem>
+              <StaggerItem>
+                <motion.article whileHover={{ y: -8, boxShadow: "0 24px 60px hsl(222 47% 11% / 0.08)" }} transition={{ type: "spring", stiffness: 300, damping: 20 }} className="surface-elevated flex h-full flex-col rounded-2xl p-6 cursor-default">
+                  <div className="flex items-center gap-3">
+                    <span className="rounded-xl border border-primary/20 bg-primary/8 p-2"><Workflow className="h-4 w-4 text-primary" aria-hidden="true" /></span>
+                    <p className="text-xl font-semibold text-foreground">Websites</p>
+                  </div>
+                  <p className="mt-4 text-sm leading-6 text-muted-foreground">Klare Seiten, die Vertrauen aufbauen und neue Kunden bringen.</p>
+                  <p className="mt-auto pt-4 text-xs uppercase tracking-[0.12em] text-muted-foreground">Startpreis</p>
+                  <p className="mt-1 text-base font-semibold text-primary">990 EUR</p>
+                </motion.article>
+              </StaggerItem>
+              <StaggerItem>
+                <motion.article whileHover={{ y: -8, boxShadow: "0 24px 60px hsl(217 91% 50% / 0.08)" }} transition={{ type: "spring", stiffness: 300, damping: 20 }} className="premium-panel flex h-full flex-col p-6 cursor-default">
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <span className="rounded-xl border border-primary/20 bg-primary/8 p-2"><Bot className="h-4 w-4 text-primary" aria-hidden="true" /></span>
+                        <p className="text-xl font-semibold text-foreground">Digitaler Mitarbeiter</p>
+                      </div>
+                      <motion.span animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 2, repeat: Infinity }} className="inline-flex rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] text-primary">Beliebt</motion.span>
+                    </div>
+                    <ul className="mt-4 space-y-2 text-sm text-foreground/90">
+                      {["erkennt automatisch Support-Anfragen und Leads", "beantwortet E-Mails automatisch", "arbeitet in bis zu 7 Sprachen", "merkt sich frühere Gespräche (Memory)", "verbessert sich durch Lernsystem", "erkennt und korrigiert Fehler"].map((feat) => (
+                        <li key={feat} className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />{feat}</li>
+                      ))}
+                    </ul>
+                    <p className="mt-4 text-sm font-semibold text-primary">Preis je nach Umfang</p>
+                  </div>
+                </motion.article>
+              </StaggerItem>
+              <StaggerItem>
+                <motion.article whileHover={{ y: -8, boxShadow: "0 24px 60px hsl(222 47% 11% / 0.08)" }} transition={{ type: "spring", stiffness: 300, damping: 20 }} className="surface-elevated flex h-full flex-col rounded-2xl p-6 cursor-default">
+                  <div className="flex items-center gap-3">
+                    <span className="rounded-xl border border-primary/20 bg-primary/8 p-2"><Sparkles className="h-4 w-4 text-primary" aria-hidden="true" /></span>
+                    <p className="text-xl font-semibold text-foreground">Custom Automation</p>
+                  </div>
+                  <p className="mt-4 text-sm leading-6 text-muted-foreground">Individuelle Automatisierung für Ihr Unternehmen.</p>
+                  <p className="mt-auto pt-4 text-sm font-medium text-foreground/90">individuelles Projekt</p>
+                  <p className="mt-2 text-sm text-muted-foreground">Wir bauen genau den Ablauf, den Ihr Team braucht.</p>
+                </motion.article>
+              </StaggerItem>
+            </StaggerContainer>
+          </div>
+        </section>
+
+        {/* WHY TAWANO */}
+        <section id="about" className="py-28 relative">
+          <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+            <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[900px] h-[1px] bg-gradient-to-r from-transparent via-border to-transparent" />
+          </div>
+          <div className="container px-4">
+            <div className="mx-auto max-w-6xl grid gap-6 lg:grid-cols-[1fr_1fr]">
+              <ScrollReveal direction="left">
+                <article className="premium-panel p-8 md:p-10 h-full">
+                  <div className="relative z-10">
+                    <span className="section-kicker mb-5">Zusammenarbeit mit Tawano</span>
+                    <h2 className="section-title">Warum Firmen mit uns arbeiten</h2>
+                    <p className="mt-4 section-copy">Echte Ansprechpartner, die Ihre Abläufe verstehen und Systeme bauen, die wirklich funktionieren.</p>
+                  </div>
+                </article>
+              </ScrollReveal>
+              <StaggerContainer staggerDelay={0.1} className="grid gap-5 sm:grid-cols-2">
+                {["Keine Standardlösung – Ihr Ablauf im Mittelpunkt.", "Klare Umsetzung von Anfang bis Ende.", "Systeme, die Ihr Team wirklich nutzt.", "Betreuung von der Planung bis zum Betrieb."].map((point) => (
+                  <StaggerItem key={point}>
+                    <motion.article whileHover={{ y: -4, borderColor: "hsl(217 91% 50% / 0.2)" }} className="surface-elevated rounded-2xl p-6 h-full transition-all">
+                      <p className="text-sm leading-6 text-foreground/90">{point}</p>
+                    </motion.article>
+                  </StaggerItem>
+                ))}
+              </StaggerContainer>
             </div>
           </div>
         </section>

@@ -5,6 +5,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 const faqs = [
   {
@@ -49,7 +50,13 @@ export const FAQSection = () => {
 
       <div className="container px-4 relative">
         {/* Section Header */}
-        <div className="text-center mb-16 max-w-3xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="text-center mb-16 max-w-3xl mx-auto"
+        >
           <span className="section-kicker mb-5">
             Häufige Fragen
           </span>
@@ -60,35 +67,48 @@ export const FAQSection = () => {
             Hier finden Sie klare Antworten für eine schnelle Entscheidung.
             Wenn etwas offen bleibt, klären wir es direkt im Gespräch.
           </p>
-        </div>
+        </motion.div>
 
         {/* FAQ Accordion */}
         <div className="max-w-3xl mx-auto">
           <Accordion type="single" collapsible className="space-y-4">
             {faqs.map((faq, index) => (
-              <AccordionItem
+              <motion.div
                 key={index}
-                value={`item-${index}`}
-                className="bg-card border border-border rounded-xl px-6 data-[state=open]:border-primary/50 transition-colors duration-200"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.5, delay: index * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
               >
-                <AccordionTrigger className="text-left hover:no-underline py-5 text-base font-medium">
-                  {faq.question}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pb-5">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
+                <AccordionItem
+                  value={`item-${index}`}
+                  className="bg-card border border-border rounded-xl px-6 data-[state=open]:border-primary/50 transition-colors duration-200"
+                >
+                  <AccordionTrigger className="text-left hover:no-underline py-5 text-base font-medium">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground pb-5">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              </motion.div>
             ))}
           </Accordion>
 
-          <div className="mt-10 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="mt-10 text-center"
+          >
             <p className="text-sm text-muted-foreground mb-5">
               Sie haben einen konkreten Engpass? Wir geben Ihnen eine klare Empfehlung.
             </p>
             <Button variant="heroOutline" size="lg" onClick={scrollToContact}>
               Beratung anfragen
             </Button>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, Check, Mail, Phone, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { motion } from "framer-motion";
 import emailjs from "@emailjs/browser";
 
 export const ContactSection = () => {
@@ -130,7 +131,13 @@ export const ContactSection = () => {
     <section id="kontakt" className="py-24 relative">
       <div className="container px-4">
         {/* Section Header */}
-        <div className="text-center mb-16 max-w-3xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="text-center mb-16 max-w-3xl mx-auto"
+        >
           <span className="section-kicker mb-5">
             Kontakt
           </span>
@@ -141,11 +148,17 @@ export const ContactSection = () => {
             Schreiben Sie uns kurz, welche Prozesse aktuell Zeit oder Geld kosten.
             Tawano zeigt Ihnen, wo ein digitaler Mitarbeiter den größten Hebel hat.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid lg:grid-cols-5 gap-12 max-w-6xl mx-auto">
           {/* Contact Info */}
-          <div className="lg:col-span-2 space-y-8">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="lg:col-span-2 space-y-8"
+          >
             <div>
               <h3 className="text-xl font-bold mb-6">Direkter Kontakt</h3>
               <div className="space-y-4">
@@ -196,10 +209,14 @@ export const ContactSection = () => {
                 <li>Transparente Einordnung zu Aufwand, Nutzen und nächsten Schritten</li>
               </ul>
             </article>
-          </div>
+          </motion.div>
 
           {/* Contact Form */}
-          <form
+          <motion.form
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.6, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
             onSubmit={handleSubmit}
             className="lg:col-span-3 surface-elevated rounded-2xl p-8 hover-lift"
             noValidate
@@ -328,7 +345,7 @@ export const ContactSection = () => {
             <p className="text-xs text-muted-foreground text-center mt-2">
               Kostenloses Erstgespräch, kein Newsletter, kein Spam.
             </p>
-          </form>
+          </motion.form>
         </div>
       </div>
     </section>
