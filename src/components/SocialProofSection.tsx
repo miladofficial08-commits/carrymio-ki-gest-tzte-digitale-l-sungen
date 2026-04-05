@@ -1,93 +1,93 @@
-import { Star, Users, Briefcase } from "lucide-react";
+import { ArrowRight, Quote } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-const stats = [
-  { icon: Users, value: "50+", label: "Zufriedene Kunden" },
-  { icon: Briefcase, value: "80+", label: "Projekte abgeschlossen" },
-  { icon: Star, value: "4.9", label: "Durchschnittsbewertung" },
-];
-
-const testimonials = [
+const proofCards = [
   {
-    name: "Michael Weber",
-    company: "Weber Consulting GmbH",
-    text: "Carrymio hat unseren Kundenservice revolutioniert. Der Chatbot beantwortet 70% der Anfragen automatisch – unsere Mitarbeiter können sich auf wichtigere Aufgaben konzentrieren.",
-    rating: 5,
+    title: "Vorher/Nachher",
+    text: "Vorher: manuelle Bearbeitung in Silos. Nachher: automatisierte Prozesskette mit klaren Uebergaben und messbarer Geschwindigkeit.",
   },
   {
-    name: "Sarah Müller",
-    company: "Müller & Partner",
-    text: "Endlich eine Agentur, die versteht was wir brauchen. Unsere neue Website hat die Anfragen verdreifacht. Absolute Empfehlung!",
-    rating: 5,
+    title: "Fuehrungsebene",
+    text: "Entscheider sehen jederzeit, welche Workflows Kosten sparen, wo Engpaesse entstehen und wie sich die Leistung entwickelt.",
   },
   {
-    name: "Thomas Schmidt",
-    company: "Schmidt Immobilien",
-    text: "Das Social Media Management von Carrymio ist erstklassig. Unsere Reichweite hat sich in 6 Monaten verfünffacht. Professionell und zuverlässig.",
-    rating: 5,
+    title: "Team-Sicht",
+    text: "Mitarbeitende verlieren weniger Zeit durch Routineaufgaben und koennen sich auf Kunden und Problemloesung konzentrieren.",
   },
 ];
 
 export const SocialProofSection = () => {
+  const scrollToContact = () => {
+    const element = document.querySelector("#kontakt");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <section className="py-20 bg-muted/30">
+    <section className="py-24">
       <div className="container mx-auto px-4">
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-8 mb-20">
-          {stats.map((stat, index) => (
-            <div
-              key={index}
-              className="text-center animate-fade-in"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-4">
-                <stat.icon className="w-7 h-7 text-primary" />
+        <div className="premium-panel p-8 md:p-10 lg:p-12">
+          <div className="relative z-10">
+            <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-3xl">
+                <span className="section-kicker mb-6">Vertrauen</span>
+                <h2 className="section-title md:text-[2.6rem]">
+                  Vertrauen entsteht durch
+                  <span className="display-serif block text-gradient">klare Kennzahlen statt Bauchgefuehl.</span>
+                </h2>
               </div>
-              <div className="text-3xl md:text-4xl font-bold text-foreground mb-1">
-                {stat.value}
-              </div>
-              <div className="text-muted-foreground text-sm">{stat.label}</div>
+              <p className="max-w-xl text-base leading-7 text-muted-foreground">
+                Tabanu fokussiert auf Wirkung im Betrieb: weniger Prozesskosten, schnellere Reaktionszeiten,
+                hoehere Servicequalitaet und belastbare Automationsstandards.
+              </p>
             </div>
-          ))}
-        </div>
 
-        {/* Testimonials */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Das sagen unsere Kunden
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Über 50 Unternehmen vertrauen bereits auf unsere digitalen Lösungen
-          </p>
-        </div>
+            <div className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+              <article className="rounded-[26px] border border-primary/20 bg-gradient-to-br from-primary/12 via-transparent to-transparent p-8 md:p-10">
+                <div className="mb-6 flex items-center gap-3 text-primary">
+                  <Quote className="h-5 w-5" aria-hidden="true" />
+                  <span className="text-sm font-medium">Operatives Realbild</span>
+                </div>
+                <p className="display-serif text-2xl leading-tight text-foreground md:text-[2.15rem]">
+                  "Digitale Mitarbeiter sind nicht nur ein Chatfenster. Sie sind ein operativer Kostenhebel,
+                  der aus manuellen Routinen einen planbaren, skalierbaren Prozess macht."
+                </p>
+                <div className="mt-8 editorial-rule" aria-hidden="true" />
+                <div className="mt-8 grid gap-4 md:grid-cols-2">
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <p className="text-sm font-medium mb-2">Vorher</p>
+                    <p className="text-sm leading-6 text-muted-foreground">Hoher manueller Aufwand, verzoegerte Antworten und intransparente Bearbeitungsstaende.</p>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <p className="text-sm font-medium mb-2">Nachher</p>
+                    <p className="text-sm leading-6 text-muted-foreground">Automatisierte Priorisierung, schnelle Verarbeitung und saubere Uebergabe an Ihr Team.</p>
+                  </div>
+                </div>
+              </article>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {testimonials.map((testimonial, index) => (
-            <div
-              key={index}
-              className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl p-6 animate-fade-in"
-              style={{ animationDelay: `${index * 150}ms` }}
-            >
-              <div className="flex gap-1 mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="w-5 h-5 fill-primary text-primary"
-                  />
+              <div className="grid gap-6">
+                {proofCards.map((card) => (
+                  <article key={card.title} className="rounded-[24px] border border-white/10 bg-white/5 p-6 hover-lift">
+                    <div className="mb-4 flex items-center justify-between">
+                      <p className="font-medium text-foreground">{card.title}</p>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    </div>
+                    <p className="text-base leading-7 text-foreground/88">{card.text}</p>
+                  </article>
                 ))}
               </div>
-              <p className="text-foreground/90 mb-6 leading-relaxed">
-                "{testimonial.text}"
-              </p>
-              <div>
-                <div className="font-semibold text-foreground">
-                  {testimonial.name}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {testimonial.company}
-                </div>
-              </div>
             </div>
-          ))}
+          </div>
+        </div>
+
+        <div className="mt-12 text-center">
+          <p className="text-sm text-muted-foreground mb-5">
+            Sie wollen wissen, welches Einsparpotenzial in Ihren Prozessen steckt?
+          </p>
+          <Button variant="hero" size="lg" onClick={scrollToContact}>
+            Potenzial analysieren
+          </Button>
         </div>
       </div>
     </section>

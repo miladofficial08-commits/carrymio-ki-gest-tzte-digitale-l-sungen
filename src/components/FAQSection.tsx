@@ -4,41 +4,44 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 
 const faqs = [
   {
-    question: "Wie läuft eine Zusammenarbeit mit Carrymio ab?",
+    question: "Welche Aufgaben kann ein digitaler Mitarbeiter übernehmen?",
     answer:
-      "Nach Ihrer Anfrage melden wir uns innerhalb von 24 Stunden bei Ihnen. In einem Beratungsgespräch klären wir Ihre Anforderungen und erstellen Ihnen ein individuelles Angebot. Nach Ihrer Zusage starten wir mit der Umsetzung.",
+      "Typische Aufgaben sind Support-Antworten, E-Mails, Lead-Erkennung und einfache Abläufe im Backoffice.",
   },
   {
-    question: "Was kostet eine Website bei Carrymio?",
+    question: "Wie schnell kann ein Unternehmen starten?",
     answer:
-      "Ab 179 € / Monat, Setup 999 € einmalig. Der finale Preis hängt vom Umfang und den gewünschten Funktionen ab. In einem Beratungsgespräch klären wir Ihren Bedarf und erstellen ein transparentes, individuelles Angebot.",
+        "Ein erster Ablauf kann oft in wenigen Wochen starten. Das hängt vom Umfang und von Ihren Systemen ab.",
   },
   {
-    question: "Sind die Lösungen DSGVO-konform?",
+    question: "Für welche Firmen lohnt sich Automatisierung besonders?",
     answer:
-      "Ja, alle unsere Lösungen werden nach den aktuellen Datenschutzrichtlinien erstellt. Wir berücksichtigen die DSGVO bei der Entwicklung und beraten Sie zu den notwendigen rechtlichen Hinweisen.",
+      "Besonders für Firmen mit vielen wiederkehrenden Aufgaben, vielen Kundenanfragen oder langen Antwortzeiten.",
   },
   {
-    question: "Wie lange dauert die Umsetzung eines Projekts?",
+    question: "Kann das System bestehende Software integrieren?",
     answer:
-      "Eine Landingpage ist in der Regel innerhalb von 1-2 Wochen fertig. Chatbots können wir oft in wenigen Tagen einrichten. Bei Social-Media-Management starten wir nach der Content-Planung sofort mit dem Posting.",
+      "Ja. Wir binden Ihr CRM, Ticketsystem oder andere Tools an, damit alles sauber zusammenarbeitet.",
   },
   {
-    question: "Kann ich die Lösungen selbst verwalten?",
+    question: "Wie erkennt das System Support-Anfragen oder Leads?",
     answer:
-      "Ja, wir übergeben Ihnen alle Zugänge und schulen Sie bei Bedarf in der Nutzung. Bei Websites erhalten Sie ein einfach zu bedienendes Content-Management-System.",
-  },
-  {
-    question: "Bietet Carrymio auch laufenden Support?",
-    answer:
-      "Selbstverständlich. Nach der Projektübergabe stehen wir Ihnen für Fragen, Anpassungen und Erweiterungen zur Verfügung. Für Social-Media-Management und Chatbots bieten wir auch Wartungspakete an.",
+      "Das System prüft Inhalte und Absicht der Nachricht und ordnet sie automatisch richtig ein.",
   },
 ];
 
 export const FAQSection = () => {
+  const scrollToContact = () => {
+    const element = document.querySelector("#kontakt");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section id="faq" className="py-24 relative">
       {/* Background */}
@@ -46,16 +49,16 @@ export const FAQSection = () => {
 
       <div className="container px-4 relative">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <span className="inline-block text-primary text-sm font-medium mb-4">
+        <div className="text-center mb-16 max-w-3xl mx-auto">
+          <span className="section-kicker mb-5">
             Häufige Fragen
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Antworten auf Ihre Fragen
+          <h2 className="section-title mb-4">
+            Häufige Fragen, klar beantwortet
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Hier finden Sie Antworten auf die häufigsten Fragen. 
-            Haben Sie weitere Fragen? Kontaktieren Sie uns einfach.
+          <p className="section-copy">
+            Hier finden Sie klare Antworten für eine schnelle Entscheidung.
+            Wenn etwas offen bleibt, klären wir es direkt im Gespräch.
           </p>
         </div>
 
@@ -77,6 +80,15 @@ export const FAQSection = () => {
               </AccordionItem>
             ))}
           </Accordion>
+
+          <div className="mt-10 text-center">
+            <p className="text-sm text-muted-foreground mb-5">
+              Sie haben einen konkreten Engpass? Wir geben Ihnen eine klare Empfehlung.
+            </p>
+            <Button variant="heroOutline" size="lg" onClick={scrollToContact}>
+              Beratung anfragen
+            </Button>
+          </div>
         </div>
       </div>
     </section>

@@ -1,30 +1,48 @@
 const Footer = () => {
 
   return (
-    <footer className="border-t border-border py-12">
+    <footer className="border-t border-white/10 bg-card/40 py-14">
       <div className="container px-4">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          {/* Logo */}
-          <div className="flex items-center">
-            <span className="text-xl font-bold">Carrymio</span>
+        <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
+          <div>
+            <span className="text-xl font-bold text-foreground">Tawano</span>
+            <p className="mt-4 max-w-md text-sm leading-6 text-muted-foreground">
+              Wir bauen digitale Mitarbeiter, die Support, E-Mails und Routine-Aufgaben automatisch erledigen.
+            </p>
+            <p className="mt-3 text-sm text-foreground/90">
+              Klar. Verlässlich. Für den Alltag in Unternehmen.
+            </p>
           </div>
 
-          {/* Links */}
-          <nav className="flex items-center gap-6 text-sm text-muted-foreground" role="navigation" aria-label="Footer Navigation">
-            <a href="/impressum" className="hover:text-foreground transition-colors" rel="nofollow">
-              Impressum
-            </a>
-            <a href="/datenschutz" className="hover:text-foreground transition-colors" rel="nofollow">
-              Datenschutz
-            </a>
-            <a href="/agb" className="hover:text-foreground transition-colors" rel="nofollow">
-              AGB
-            </a>
-          </nav>
+          <div>
+            <p className="text-sm font-semibold text-foreground">Leistungen</p>
+            <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
+              <li>Digitale Mitarbeiter</li>
+              <li>Chatbots</li>
+              <li>Websites</li>
+              <li>Custom Automation</li>
+            </ul>
+          </div>
 
-          {/* Copyright */}
+          <div>
+            <p className="text-sm font-semibold text-foreground">Rechtliches</p>
+            <nav className="mt-4 flex flex-col gap-2 text-sm text-muted-foreground" role="navigation" aria-label="Footer Navigation">
+              <a href="/impressum" className="transition-colors hover:text-foreground" rel="nofollow">
+                Impressum
+              </a>
+              <a href="/datenschutz" className="transition-colors hover:text-foreground" rel="nofollow">
+                Datenschutz
+              </a>
+              <a href="/agb" className="transition-colors hover:text-foreground" rel="nofollow">
+                AGB
+              </a>
+            </nav>
+          </div>
+        </div>
+
+        <div className="mt-10 border-t border-white/10 pt-6">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Carrymio. Alle Rechte vorbehalten. | Spezialist für Fahrdienst-Software und Chatbots in Düsseldorf.
+            © {new Date().getFullYear()} Tawano. Alle Rechte vorbehalten.
           </p>
         </div>
       </div>

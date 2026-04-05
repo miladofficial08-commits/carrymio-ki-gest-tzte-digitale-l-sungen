@@ -39,11 +39,11 @@ export const ContactSection = () => {
     }
 
     // Frontend-Validierung für Pflichtfelder
-    if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim() || !formData.service || !formData.message.trim()) {
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
       toast({
         variant: "destructive",
         title: "Unvollständige Eingaben",
-        description: "Bitte füllen Sie alle Pflichtfelder aus.",
+        description: "Bitte füllen Sie Name, E-Mail und Nachricht aus.",
       });
       setIsSubmitting(false);
       return;
@@ -54,10 +54,10 @@ export const ContactSection = () => {
       const templateParams = {
         from_name: formData.name.trim(),
         from_email: formData.email.trim(), // KORRIGIERT: war vorher reply_to
-        phone: formData.phone.trim(), // NEU: Telefonnummer
+        phone: formData.phone.trim() || "-", // optional
         company: formData.company.trim() || "-",
-        subject: formData.service, // KORRIGIERT: explizit als subject
-        interest: formData.service, // Zusätzlich als interest für Kompatibilität
+        subject: formData.service || "Gesprächsanfrage",
+        interest: formData.service || "Automation Anfrage",
         message: formData.message.trim(),
         datetime: new Date().toLocaleString("de-DE", {
           dateStyle: "short",
@@ -114,7 +114,8 @@ export const ContactSection = () => {
             </div>
             <h2 className="text-3xl font-bold mb-4">Vielen Dank für Ihre Anfrage!</h2>
             <p className="text-muted-foreground mb-8">
-              Wir haben Ihre Nachricht erhalten und melden uns innerhalb von 24–48 Stunden bei Ihnen. Unsere Spezialisten für Fahrdienst-Software und KI-Chatbots bearbeiten Ihre Anfrage persönlich.
+              Wir haben Ihre Nachricht erhalten und melden uns schnellstmöglich bei Ihnen.
+              Ihr Vorhaben wird persönlich geprüft und mit klaren nächsten Schritten beantwortet.
             </p>
             <Button variant="outline" onClick={() => setIsSubmitted(false)}>
               Neue Anfrage senden
@@ -129,15 +130,16 @@ export const ContactSection = () => {
     <section id="kontakt" className="py-24 relative">
       <div className="container px-4">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <span className="inline-block text-primary text-sm font-medium mb-4">
+        <div className="text-center mb-16 max-w-3xl mx-auto">
+          <span className="section-kicker mb-5">
             Kontakt
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Starten Sie jetzt – wir beraten Sie gerne
+          <h2 className="section-title mb-4">
+            Lassen Sie uns Ihre Automation priorisieren
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Schildern Sie uns Ihr Anliegen für KI-Chatbots und digitale Lösungen und wir erstellen Ihnen ein individuelles Angebot. Nach Ihrer Anfrage melden wir uns innerhalb von 24 Stunden und besprechen Ihr Projekt im Detail.
+          <p className="section-copy">
+            Schreiben Sie uns kurz, welche Prozesse aktuell Zeit oder Geld kosten.
+            Tawano zeigt Ihnen, wo ein digitaler Mitarbeiter den größten Hebel hat.
           </p>
         </div>
 
@@ -148,14 +150,14 @@ export const ContactSection = () => {
               <h3 className="text-xl font-bold mb-6">Direkter Kontakt</h3>
               <div className="space-y-4">
                 <a
-                  href="mailto:info@carrymio.gmail.com"
+                  href="mailto:info.carrymio@gmail.com"
                   className="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors group"
-                  aria-label="E-Mail an info@carrymio.gmail.com senden"
+                  aria-label="E-Mail an info.carrymio@gmail.com senden"
                 >
                   <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                     <Mail className="w-5 h-5 text-primary" aria-hidden="true" />
                   </div>
-                  <span>info@carrymio.gmail.com</span>
+                  <span>info.carrymio@gmail.com</span>
                 </a>
                 <a
                   href="tel:+491631283971"
@@ -176,19 +178,30 @@ export const ContactSection = () => {
               </div>
             </div>
 
-            <article className="p-6 rounded-2xl bg-gradient-card border border-border">
-              <h4 className="font-semibold mb-2">Schnelle Antwort garantiert</h4>
-              <p className="text-sm text-muted-foreground">
-                Wir antworten auf alle Anfragen innerhalb von 24 Stunden – 
-                meist sogar deutlich schneller.
+            <article className="p-6 rounded-2xl border border-primary/30 bg-primary/10">
+              <h4 className="font-semibold mb-3">Schneller Weg zum Termin</h4>
+              <p className="text-sm text-foreground/85 leading-6">
+                Schreiben Sie uns kurz Ihr Ziel. Wir melden uns mit einem Terminvorschlag für ein 30-Minuten-Gespräch.
               </p>
+              <Button variant="hero" size="sm" className="mt-4 w-full" onClick={() => window.open("tel:+491631283971", "_self")}>
+                Jetzt direkt anrufen
+              </Button>
+            </article>
+
+            <article className="p-6 rounded-2xl surface-elevated">
+              <h4 className="font-semibold mb-3">Was Sie nach der Anfrage erhalten</h4>
+              <ul className="space-y-3 text-sm text-muted-foreground">
+                <li>Antwort in der Regel innerhalb von 24 Stunden</li>
+                <li>Konkrete Priorisierung Ihrer besten Automationshebel</li>
+                <li>Transparente Einordnung zu Aufwand, Nutzen und nächsten Schritten</li>
+              </ul>
             </article>
           </div>
 
           {/* Contact Form */}
           <form
             onSubmit={handleSubmit}
-            className="lg:col-span-3 bg-card border border-border rounded-2xl p-8"
+            className="lg:col-span-3 surface-elevated rounded-2xl p-8 hover-lift"
             noValidate
             aria-label="Kontaktformular für Anfragen"
           >
@@ -227,14 +240,13 @@ export const ContactSection = () => {
             <div className="grid sm:grid-cols-2 gap-6 mb-6">
               <div>
                 <label htmlFor="phone" className="block text-sm font-medium mb-2">
-                  Telefonnummer *
+                  Telefonnummer
                 </label>
                 <Input
                   id="phone"
                   name="phone"
                   type="tel"
-                  required
-                  placeholder="+49 123 456789"
+                  placeholder="Optional"
                   value={formData.phone}
                   onChange={handleChange}
                   className="bg-background"
@@ -247,7 +259,7 @@ export const ContactSection = () => {
                 <Input
                   id="company"
                   name="company"
-                  placeholder="Ihr Unternehmen"
+                  placeholder="Optional"
                   value={formData.company}
                   onChange={handleChange}
                   className="bg-background"
@@ -255,31 +267,24 @@ export const ContactSection = () => {
               </div>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label htmlFor="service" className="block text-sm font-medium mb-2">
-                  Interesse an *
-                </label>
-                <select
-                  id="service"
-                  name="service"
-                  required
-                  value={formData.service}
-                  onChange={handleChange}
-                  className="w-full h-10 px-3 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                  aria-label="Wählen Sie den Service, an dem Sie interessiert sind"
-                >
-                  <option value="">Bitte wählen...</option>
-                  <option value="KI Chatbot">KI Chatbot</option>
-                  <option value="Fahrdienst-Software">Fahrdienst-Software</option>
-                  <option value="Social-Media-Management">Social-Media-Management</option>
-                  <option value="Website-Erstellung">Website-Erstellung</option>
-                  <option value="Anfrage">Anfrage</option>
-                </select>
-              </div>
-              <div>
-                {/* Platzhalter für symmetrisches Layout */}
-              </div>
+            <div className="mb-6">
+              <label htmlFor="service" className="block text-sm font-medium mb-2">
+                Interesse an
+              </label>
+              <select
+                id="service"
+                name="service"
+                value={formData.service}
+                onChange={handleChange}
+                className="w-full h-10 px-3 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                aria-label="Wählen Sie den Service, an dem Sie interessiert sind"
+              >
+                <option value="">Bitte wählen...</option>
+                <option value="Digitale Mitarbeiter">Digitale Mitarbeiter</option>
+                <option value="Automationslösungen">Automationslösungen</option>
+                <option value="Softwarelösungen">Softwarelösungen</option>
+                <option value="Automationsberatung">Automationsberatung</option>
+              </select>
             </div>
 
             <div className="mb-6">
@@ -310,7 +315,7 @@ export const ContactSection = () => {
                 "Wird gesendet..."
               ) : (
                 <>
-                  Anfrage senden
+                  Automations-Check anfragen
                   <Send className="w-4 h-4 ml-2" aria-hidden="true" />
                 </>
               )}
@@ -319,6 +324,9 @@ export const ContactSection = () => {
             <p className="text-xs text-muted-foreground text-center mt-4">
               Mit dem Absenden stimmen Sie unserer <a href="/datenschutz" className="hover:underline" rel="nofollow">Datenschutzerklärung</a> zu. 
               Ihre Daten werden vertraulich behandelt.
+            </p>
+            <p className="text-xs text-muted-foreground text-center mt-2">
+              Kostenloses Erstgespräch, kein Newsletter, kein Spam.
             </p>
           </form>
         </div>

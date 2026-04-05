@@ -63,7 +63,7 @@ export const ChatbotsDock = () => {
         embedUrl={CHATBOTS.ai.embedUrl}
         isVisible={aiVisible}
         showBubble={aiBubble}
-        bubbleText="Willkommen bei Carrymio – wie können wir Ihnen helfen?"
+        bubbleText="Willkommen bei Tawano - wie können wir Ihnen helfen?"
       />
     </>
   );

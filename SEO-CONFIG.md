@@ -1,228 +1,89 @@
-# 🚀 Carrymio - SEO & Performance Optimierungen
+# Carrymio SEO Konfiguration
 
-## ✅ Implementierte SEO-Maßnahmen
+## Zielbild
 
-### 1. **META TAGS & HEAD OPTIMIERUNGEN** ✓
-- ✅ Title mit Keywords: "Carrymio – KI Chatbots & Digitale Lösungen Düsseldorf | Fahrdienst Software"
-- ✅ Meta Description mit Keywords (Düsseldorf, Fahrdienst, Transport, DSGVO)
-- ✅ Meta Keywords für relevante Suchbegriffe
-- ✅ Canonical Tag auf https://carrymio.de/
-- ✅ Viewport & Charset Meta Tags
-- ✅ Robots Meta: "index, follow" + erweiterte Optionen
-- ✅ Language: de (German)
-- ✅ Theme Color für Browser
+Die Landingpage positioniert Carrymio als Anbieter fuer:
 
-### 2. **OPEN GRAPH & TWITTER CARDS** ✓
-- ✅ og:title, og:description, og:image, og:url
-- ✅ og:type: business.business
-- ✅ og:site_name: Carrymio
-- ✅ og:locale: de_DE
-- ✅ Twitter Card (summary_large_image)
-- ✅ Twitter Creator Tags
+- CARRYMIO Inbox Sentinel als Hauptprodukt
+- KI-Chatbots als Ergaenzung
+- Websites als zweites Begleitangebot
 
-### 3. **STRUKTURIERTE DATEN (JSON-LD)** ✓
-Implementiert:
-- ✅ LocalBusiness Schema (mit Düsseldorf als areaServed)
-- ✅ Organization Schema
-- ✅ ProfessionalService Schema
-- ✅ Kontaktpunkte und Social Media Links
+Der SEO-Fokus liegt auf klarer B2B-Kommunikation, lokaler Verortung in Duesseldorf und konsistenten Kontaktdaten.
 
-### 4. **TECHNISCHE SEO** ✓
-- ✅ robots.txt (korrekt konfiguriert mit Sitemap-Referenz)
-- ✅ sitemap.xml (alle 6 Hauptseiten + Sections)
-- ✅ manifest.json (PWA-ready)
-- ✅ .htaccess (GZIP Compression, Cache Headers, Security)
-- ✅ HTTPS-Redirect vorkonfiguriert
-- ✅ Preconnect zu Google Fonts und FastBots
-- ✅ DNS Prefetch optimiert
+## Aktueller Meta- und Schema-Stand
 
-### 5. **SEMANTISCHES HTML** ✓
-- ✅ `<header>` statt `<section>` für HeroSection
-- ✅ `<main>` Tag in Index.tsx
-- ✅ `<section>` mit ID Attributen (anchor links)
-- ✅ `<article>` Tags für Service & Package Cards
-- ✅ `<nav>` für Navigation
-- ✅ `<footer>` mit korrektnen Links
-- ✅ H1 nur EINMAL pro Seite (HeroSection)
-- ✅ H2 für Section Headings
-- ✅ H3 für Subsection Headings
+In index.html gepflegt:
 
-### 6. **KEYWORDS INTEGRATION** ✓
-Natürliche Integration von:
-- Fahrdienst Düsseldorf
-- Transportservice Düsseldorf
-- Krankenfahrten
-- Shuttle Service
-- Taxi Alternative
-- KI Chatbots
-- Fahrdienst-Software
-- Social Media Management
-- Website-Erstellung
+- Title und Description fuer Inbox Automation, Chatbots und Websites
+- Open Graph und Twitter Tags
+- Canonical auf der Startseite
+- JSON-LD fuer LocalBusiness, Organization und ProfessionalService
 
-### 7. **BARRIEREFREIHEIT & A11Y** ✓
-- ✅ ARIA Labels auf allen Links
-- ✅ ARIA Labels auf Buttons
-- ✅ role="navigation" auf Nav Elementen
-- ✅ aria-label auf Icon Elemente (aria-hidden="true")
-- ✅ aria-busy auf async Buttons
-- ✅ aria-expanded auf Mobile Menu
-- ✅ alt Attribute auf Bildern
-- ✅ Proper Heading Hierarchy
+Aktuell verwendete Kontaktdaten:
 
-### 8. **PERFORMANCE OPTIMIERUNGEN** ✓
-- ✅ Lazy Loading für Bilder
-- ✅ defer Attribute auf Scripts
-- ✅ Preload kritischer Ressourcen
-- ✅ GZIP Compression in .htaccess
-- ✅ Browser Caching Konfiguriert (1 Jahr für Assets)
-- ✅ Minified CSS/JS (Terser konfiguriert)
-- ✅ Code Splitting in vite.config.ts
-- ✅ CSS-in-JS Optimierungen
+- E-Mail: info.carrymio@gmail.com
+- Telefon: +49 1631283971
+- Ort: Duesseldorf, Deutschland
 
-### 9. **NETLIFY DEPLOYMENT READY** ✓
-- ✅ robots.txt erreichbar unter /robots.txt
-- ✅ sitemap.xml erreichbar unter /sitemap.xml
-- ✅ manifest.json für PWA
-- ✅ Keine serverseitigen Abhängigkeiten
-- ✅ Static hosting kompatibel
-- ✅ .htaccess für Rewrite Rules
+## Technische SEO-Dateien
 
-### 10. **GOOGLE INDEXIERUNG** ✓
-Sichergestellt:
-- ✅ Keine noindex Tags
-- ✅ Keine blockierenden Headers
-- ✅ Saubere URL Struktur
-- ✅ Mobile-first Design
-- ✅ Responsiv auf allen Devices
-- ✅ Fast Loading Times
-- ✅ Proper Sitemap
+Vorhanden und aktiv:
 
----
+- public/robots.txt
+- public/sitemap.xml
+- public/manifest.json
+- netlify.toml
 
-## 📁 NEUE DATEIEN ERSTELLT
+Die Sitemap enthaelt derzeit:
 
-```
-public/
-├── robots.txt          ✓ SEO Crawler Instruktionen
-├── sitemap.xml         ✓ Alle Seiten & Sections gelistet
-├── manifest.json       ✓ PWA Konfiguration
-└── .htaccess           ✓ Performance & Security Header
+- /
+- /impressum
+- /datenschutz
+- /agb
 
-index.html             ✓ Vollständig optimiert mit JSON-LD
-vite.config.ts         ✓ Build Optimierungen
-SEO-CONFIG.md          ✓ Diese Datei
-```
+## Inhaltlicher SEO-Fokus
 
----
+Primare Themen:
 
-## 🎯 KEYWORDS NACH SEKTION
+- Inbox Automation
+- digitaler Mitarbeiter fuer den E-Mail-Eingang
+- KI-Chatbots
+- Websites
+- Duesseldorf
 
-### HeroSection
-- KI Chatbots Düsseldorf
-- Fahrdienst-Software
-- Digitale Lösungen
-- Transportservice
+Sekundaere Begriffe sollten nur verwendet werden, wenn sie zur aktuellen Positionierung passen.
+Veraltete Themen wie Fahrdienst, Social Media Management oder Custom Software gehoeren nicht mehr in Meta-Daten, Strukturdaten oder Landingpage-Texten.
 
-### ServicesSection
-- KI Chatbots
-- Fahrdienst-Software
-- Social Media Management (für Fahrdienste)
-- Website Erstellung (SEO-optimiert)
+## On-Page-Struktur
 
-### PackagesSection
-- KI Chatbot Starter
-- Fahrdienst-Software Pakete
-- Website SEO
-- Pricing Düsseldorf
+Die aktuelle Seitenlogik folgt diesem Funnel:
 
-### ContactSection
-- Kostenlose Beratung
-- Fahrdienst Düsseldorf
-- Transportservice Anfrage
+1. Hero
+2. Problem
+3. Produkt erklaeren
+4. Weitere Loesungen
+5. Angebote und Preislogik
+6. Warum Carrymio
+7. Trust Layer
+8. FAQ
+9. Kontakt
 
----
+## Wichtige Pruefpunkte vor Launch
 
-## 🔍 GOOGLE SEARCH CONSOLE SETUP
+- Build erfolgreich mit npm run build
+- Alle Footer-Links erreichbar
+- Kontaktangaben in UI, Meta-Tags und JSON-LD konsistent
+- sitemap.xml und robots.txt auf Produktionsdomain erreichbar
+- Kontaktformular mit gueltigen EmailJS-Werten getestet
 
-1. **Domain verifizieren:** https://carrymio.de
-2. **Sitemap einreichen:** https://carrymio.de/sitemap.xml
-3. **robots.txt testen:** https://carrymio.de/robots.txt
-4. **Mobile usability prüfen**
-5. **Structured Data testen:** JSON-LD ist validiert
-6. **Core Web Vitals monitorieren**
+## Manuelle Nacharbeiten ausserhalb des Codes
 
----
+- Search Console Property verifizieren
+- Sitemap bei Google einreichen
+- Structured Data Validator pruefen
+- Rechtstexte fachlich pruefen
 
-## 🚀 NETLIFY DEPLOYMENT
+## Letzte Aktualisierung
 
-**Deploy Voraussetzungen erfüllt:**
-- ✅ Static site (nur HTML/CSS/JS/Assets)
-- ✅ robots.txt & sitemap.xml in public/
-- ✅ manifest.json vorhanden
-- ✅ keine Node.js Abhängigkeiten in Production
-- ✅ 404.html bereit (für SPA Routing)
-
-**Deploy Command:**
-```bash
-npm run build
-```
-
-**Publish Directory:**
-```
-dist/
-```
-
----
-
-## 📊 LIGHTHOUSE TARGETS
-
-- **Performance:** 95+
-- **Accessibility:** 95+
-- **Best Practices:** 95+
-- **SEO:** 100
-- **PWA:** ✓ Installable
-
----
-
-## ✨ KEYWORD OPTIMIERUNGEN PRO KOMPONENTE
-
-| Komponente | Haupt-Keywords | Integration |
-|-----------|---------------|----|
-| HeroSection | KI Chatbots Düsseldorf, Fahrdienst-Software | H1, Badge, Meta Description |
-| ServicesSection | Dienstleistungen Fahrdienste, Social Media, Website | H2, Section IDs, Card Descriptions |
-| PackagesSection | Preise, Pakete, Software, Website SEO | Package Names, Price Table |
-| ContactSection | Kostenlose Beratung, Kontakt Düsseldorf | Section Title, Form Labels |
-| Navigation | Dienstleistungen, Pakete, FAQ | Nav Links |
-| Footer | Copyright, Düsseldorf, Spezialist | Footer Text |
-
----
-
-## 🔗 WICHTIGE LINKS ZUM TESTEN
-
-- **Homepage:** https://carrymio.de
-- **robots.txt:** https://carrymio.de/robots.txt
-- **sitemap.xml:** https://carrymio.de/sitemap.xml
-- **manifest.json:** https://carrymio.de/manifest.json
-- **Canonical:** https://carrymio.de/
-
----
-
-## ✅ CHECKLISTE FÜR PRODUCTION
-
-- [ ] Domain bei Google Search Console verifizieren
-- [ ] Sitemap bei GSC einreichen
-- [ ] robots.txt Test in GSC durchführen
-- [ ] Mobile-Friendly Test durchführen
-- [ ] Structured Data Markup Validator nutzen
-- [ ] PageSpeed Insights prüfen
-- [ ] Core Web Vitals monitoren
-- [ ] Alt-Texte auf allen Bildern überprüfen
-- [ ] Alle Links testen (internal + external)
-- [ ] 404-Fehlerseite testen
-- [ ] Tracking-Codes konfigurieren
-- [ ] Email-Konfiguration für Contact Form überprüfen
-
----
-
-Zuletzt aktualisiert: **02.02.2026**
+Diese Datei beschreibt den Stand nach der Umstellung auf Inbox Sentinel als Hauptprodukt.
 

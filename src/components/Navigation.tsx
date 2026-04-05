@@ -1,17 +1,55 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
-  { href: "#dienstleistungen", label: "Dienstleistungen" },
-  { href: "#pakete", label: "Pakete" },
-  { href: "#ablauf", label: "Ablauf" },
-  { href: "#faq", label: "FAQ" },
-  { href: "#kontakt", label: "Kontakt" },
+  { href: "#digital-employees", label: "Digitale Mitarbeiter" },
+  { href: "#automation-solutions", label: "Automationsloesungen" },
+  { href: "#software-solutions", label: "Softwareloesungen" },
+  { href: "#automation-consulting", label: "Automationsberatung" },
 ];
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeHash, setActiveHash] = useState("#digital-employees");
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const sections = navLinks
+      .map((link) => document.querySelector(link.href))
+      .filter(Boolean) as Element[];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveHash(`#${entry.target.id}`);
+          }
+        });
+      },
+      {
+        rootMargin: "-30% 0px -55% 0px",
+        threshold: 0.1,
+      }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    const handleScroll = () => {
+      const doc = document.documentElement;
+      const total = doc.scrollHeight - doc.clientHeight;
+      const progress = total > 0 ? (doc.scrollTop / total) * 100 : 0;
+      setScrollProgress(Math.min(100, Math.max(0, progress)));
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
@@ -22,12 +60,17 @@ export const Navigation = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass" role="navigation" aria-label="Hauptnavigation">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/8 bg-background/80 backdrop-blur-2xl" role="navigation" aria-label="Hauptnavigation">
+      <div className="absolute left-0 top-0 h-[2px] bg-gradient-primary transition-all duration-200" style={{ width: `${scrollProgress}%` }} aria-hidden="true" />
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <a href="https://carrymio.de/" className="flex items-center" aria-label="Carrymio - Startseite">
-            <span className="text-xl md:text-2xl font-bold text-foreground tracking-wide">Carrymio</span>
+          <a href="/" className="flex items-center gap-3" aria-label="Tabanu - Startseite">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full border border-primary/30 bg-primary/10 text-xs font-semibold text-primary">TA</span>
+            <div className="flex flex-col">
+              <span className="text-lg md:text-xl font-semibold text-foreground tracking-wide">Tabanu</span>
+              <span className="hidden md:block text-[10px] uppercase tracking-[0.24em] text-muted-foreground">Digitale Mitarbeiter</span>
+            </div>
           </a>
 
           {/* Desktop Navigation */}
@@ -36,7 +79,11 @@ export const Navigation = () => {
               <button
                 key={link.href}
                 onClick={() => scrollToSection(link.href)}
-                className="text-muted-foreground hover:text-foreground transition-colors duration-200 text-sm font-medium"
+                className={
+                  link.href === activeHash
+                    ? "text-foreground transition-colors duration-200 text-sm font-semibold px-3 py-1.5 rounded-full border border-primary/40 bg-primary/10 hover:bg-primary/20"
+                    : "text-muted-foreground hover:text-foreground transition-colors duration-200 text-sm font-medium"
+                }
                 aria-label={`Zu ${link.label} navigieren`}
               >
                 {link.label}
@@ -50,9 +97,9 @@ export const Navigation = () => {
               variant="hero"
               size="default"
               onClick={() => scrollToSection("#kontakt")}
-              aria-label="Anfrage stellen"
+              aria-label="Automations-Check anfragen"
             >
-              Anfrage stellen
+              Automations-Check
             </Button>
           </div>
 
@@ -86,9 +133,9 @@ export const Navigation = () => {
                 variant="hero"
                 className="mt-2"
                 onClick={() => scrollToSection("#kontakt")}
-                aria-label="Anfrage stellen"
+                aria-label="Automation-Check anfragen"
               >
-                Anfrage stellen
+                Automations-Check
               </Button>
             </div>
           </div>

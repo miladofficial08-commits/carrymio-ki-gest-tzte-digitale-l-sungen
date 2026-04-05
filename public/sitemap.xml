@@ -4,4 +4,16 @@
     <loc>https://carrymio.de/</loc>
     <priority>1.0</priority>
   </url>
+  <url>
+    <loc>https://carrymio.de/impressum</loc>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://carrymio.de/datenschutz</loc>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://carrymio.de/agb</loc>
+    <priority>0.3</priority>
+  </url>
 </urlset>

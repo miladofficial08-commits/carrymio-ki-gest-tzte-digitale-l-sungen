@@ -1,73 +1,54 @@
 import { Button } from "@/components/ui/button";
-import { Check, Bot, Share2, Globe, Code2 } from "lucide-react";
+import { Check, Database, Gauge, LayoutDashboard } from "lucide-react";
 
 const packages = [
   {
-    icon: Bot,
-    name: "KI Chatbot Starter",
-    price: "149",
-    period: "/ Monat",
-    description: "Automatisierte KI-Kundenkommunikation für Website oder Social Media.",
+    icon: LayoutDashboard,
+    name: "Automations-Steuerzentrale",
+    bestFor: "Fuer Teams mit mehreren automatisierten Prozessen",
+    pricePrefix: "",
+    price: "Projektbasiert",
+    period: "inkl. Einrichtung und Rollout",
+    description: "Zentrales Dashboard fuer Monitoring, Steuerung und Freigabe Ihrer digitalen Mitarbeiter.",
     features: [
-      "Setup: 499 € einmalig",
-      "Betrieb & Hosting inkl.",
-      "Website-Chatbot ODER Social-Media-Bot",
-      "FAQ-Logik (häufige Fragen)",
-      "Lead- & Kontaktformular",
-      "Weiterleitung an Mitarbeiter",
-      "Einrichtung & kurze Schulung",
-      "Updates & Optimierung inkl.",
-    ],
-    popular: false,
-  },
-  {
-    icon: Share2,
-    name: "Social Media Starter",
-    price: "899",
-    period: "/ Monat",
-    description: "Professionelle Social-Media-Betreuung für Ihr Unternehmen.",
-    features: [
-      "Monatlich kündbar",
-      "Content-Plan & Strategie",
-      "12–16 Posts / Monat",
-      "KI-unterstützte Texterstellung",
-      "Hashtag-Recherche & Optimierung",
-      "Monatliches Reporting",
-      "Persönlicher Ansprechpartner",
+      "Kennzahlen-Tracking fuer Effizienz und Kosten",
+      "Live-Status aller Automationen",
+      "Rollenbasierte Dashboards fuer Teams",
+      "Auditierbare Prozesshistorie",
     ],
     popular: true,
   },
   {
-    icon: Globe,
-    name: "Website Starter SEO",
-    price: "179",
-    period: "/ Monat",
-    description: "SEO-optimierte moderne Website für Ihr Unternehmen.",
+    icon: Database,
+    name: "Integrationsschicht",
+    bestFor: "Fuer Unternehmen mit fragmentierter Tool-Landschaft",
+    pricePrefix: "ab",
+    price: "3900",
+    period: " einmalig",
+    description: "Sichere Schnittstellen fuer Datenfluss zwischen CRM, ERP, Helpdesk und Kollaborationstools.",
     features: [
-      "Setup: 999 € einmalig",
-      "Individuelle Landingpage",
-      "Mobil-optimiertes Design",
-      "Kontaktformular mit Validierung",
-      "Google SEO-Optimierung",
-      "Schnelle Ladezeiten (Lighthouse 95+)",
-      "Hosting, SSL, Backups & Pflege inkl.",
+      "Systemuebergreifende Datenharmonisierung",
+      "Ereignisbasierte Automations-Trigger",
+      "Validierungsregeln gegen Datenfehler",
+      "Dokumentierte API- und Prozesslogik",
+      "Optionales SLA-gestuetztes Monitoring",
     ],
     popular: false,
   },
   {
-    icon: Code2,
-    name: "Softwarelösung Custom",
-    price: "349",
-    period: "/ Monat",
-    description: "Spezialisierte Softwarelösungen & Prozessautomatisierung für Ihr Unternehmen.",
+    icon: Gauge,
+    name: "Leistungs-Bots",
+    bestFor: "Fuer wiederkehrende Kernprozesse mit hohem Volumen",
+    pricePrefix: "ab",
+    price: "690",
+    period: " / Monat",
+    description: "Digitale Mitarbeiter fuer spezifische Aufgaben wie Reporting, Nachverfolgung oder Ticket-Vorbereitung.",
     features: [
-      "Setup: ab 3.500 € einmalig",
-      "Anforderungsanalyse & Planung",
-      "Individuelle Softwarelösungen",
-      "Digitalisierung & Automatisierung",
-      "Benutzerverwaltung & Schnittstellen",
-      "API- & System-Integrationen",
-      "Tests, Wartung & technischer Support",
+      "Stabile Ausfuehrung nach klaren Regeln",
+      "Automatisches Error Handling mit Selbstkorrektur",
+      "Fortlaufende Lernschleife aus Echtbetrieb",
+      "Mehrsprachige Kommunikation inklusive",
+      "Monatliche Optimierungsreports",
     ],
     popular: false,
   },
@@ -82,93 +63,117 @@ export const PackagesSection = () => {
   };
 
   return (
-    <section id="pakete" className="py-24 relative">
-      {/* Background */}
+    <section id="software-solutions" className="py-24 relative">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-secondary/30 to-transparent" />
       
       <div className="container px-4 relative">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <span className="inline-block text-primary text-sm font-medium mb-4">
-            Preise & Pakete
-          </span>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Transparente Pakete für KI-Chatbots, Websites und Softwarelösungen
+        <div className="text-center mb-16 max-w-3xl mx-auto">
+          <span className="section-kicker mb-6">Softwareloesungen</span>
+          <h2 className="section-title mb-5 md:text-[2.6rem]">
+            Individuelle Software,
+            <span className="display-serif block text-gradient">gebaut fuer automatisierte Unternehmen.</span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Keine versteckten Kosten. Nach Ihrer Anfrage besprechen wir Ihre Anforderungen und erstellen ein maßgeschneidertes Angebot für Ihr Projekt.
+          <p className="section-copy">
+            Wenn Standardtools nicht ausreichen, entwickelt Tabanu passgenaue Systeme,
+            die Ihre digitalen Mitarbeiter in bestehende Geschaeftsprozesse einbetten.
           </p>
         </div>
 
-        {/* Package Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 max-w-6xl mx-auto">
-          {packages.map((pkg, index) => (
-            <div
+        <div className="max-w-6xl mx-auto mb-8">
+          {packages.filter((pkg) => pkg.popular).map((pkg, index) => (
+            <article
               key={index}
-              className={`relative rounded-2xl p-8 transition-all duration-300 ${
-                pkg.popular
-                  ? "bg-gradient-card border-2 border-primary shadow-glow scale-105"
-                  : "bg-card border border-border hover:border-primary/50"
-              }`}
+              className="premium-panel p-8 md:p-10 hover-lift"
             >
-              {/* Popular Badge */}
-              {pkg.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <span className="bg-gradient-primary text-primary-foreground text-xs font-semibold px-4 py-1.5 rounded-full">
-                    Beliebt
-                  </span>
+              <div className="relative z-10">
+                <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+                  <span className="section-kicker">Individueller Aufbau</span>
+                  <span className="text-sm text-primary/80">Auf Ihre Prozesse abgestimmt</span>
                 </div>
-              )}
 
-              {/* Icon */}
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
+                <div className="mb-8 grid gap-8 md:grid-cols-[minmax(0,1fr)_220px] md:items-end">
+                  <div>
+                    <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10">
+                      <pkg.icon className="h-7 w-7 text-primary" />
+                    </div>
+                    <h3 className="text-3xl font-semibold mb-3">{pkg.name}</h3>
+                    <p className="text-sm text-primary/80 mb-4">{pkg.bestFor}</p>
+                    <p className="max-w-2xl text-base leading-7 text-muted-foreground">{pkg.description}</p>
+                  </div>
+                  <div className="rounded-[24px] border border-white/10 bg-black/10 p-6 md:text-right">
+                    <p className="text-sm text-muted-foreground">Preis</p>
+                    <div className="mt-3 text-4xl font-semibold md:text-5xl">{pkg.price}</div>
+                    <p className="mt-2 text-sm text-primary/80">{pkg.period}</p>
+                  </div>
+                </div>
+
+                <ul className="grid gap-3 md:grid-cols-2 mb-8">
+                  {pkg.features.map((feature, featureIndex) => (
+                    <li
+                      key={featureIndex}
+                      className="flex items-start gap-3 rounded-2xl border border-white/8 bg-white/5 px-4 py-4 text-sm"
+                    >
+                      <Check className="w-5 h-5 text-primary shrink-0" />
+                      <span className="text-muted-foreground">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mb-8 rounded-2xl border border-white/10 bg-white/5 p-5">
+                  <h4 className="font-semibold mb-2">Warum projektbasiert?</h4>
+                  <p className="text-sm leading-6 text-muted-foreground">
+                    Weil Datenmodelle, Integrationen und Prozesslogik stark variieren.
+                    Sie erhalten eine Loesung, die exakt zu Ihrer operativen Realitaet passt.
+                  </p>
+                </div>
+
+                <Button
+                  variant="hero"
+                  className="w-full md:w-auto md:min-w-56"
+                  onClick={scrollToContact}
+                >
+                  Projekt anfragen
+                </Button>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto">
+          {packages.filter((pkg) => !pkg.popular).map((pkg, index) => (
+            <article key={index} className="rounded-[24px] border border-white/10 bg-card/70 p-7 backdrop-blur-xl hover-lift">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-5">
                 <pkg.icon className="w-6 h-6 text-primary" />
               </div>
-
-              {/* Header */}
-              <h3 className="text-xl font-bold mb-2">{pkg.name}</h3>
-              <p className="text-muted-foreground text-sm mb-6">
-                {pkg.description}
-              </p>
-
-              {/* Price */}
-              <div className="mb-8">
-                <span className="text-sm text-muted-foreground">ab </span>
-                <span className="text-4xl font-bold">{pkg.price} €</span>
-                <span className="text-muted-foreground text-sm ml-1">
-                  {pkg.period}
-                </span>
+              <h3 className="text-xl font-semibold mb-2">{pkg.name}</h3>
+              <p className="text-sm text-primary/80 mb-4">{pkg.bestFor}</p>
+              <p className="text-sm leading-7 text-muted-foreground mb-6">{pkg.description}</p>
+              <div className="mb-6">
+                {pkg.pricePrefix ? <span className="text-sm text-muted-foreground">{pkg.pricePrefix} </span> : null}
+                <span className="text-3xl font-semibold">{pkg.price} €</span>
+                <span className="ml-1 text-sm text-muted-foreground">{pkg.period}</span>
               </div>
-
-              {/* Features */}
-              <ul className="space-y-3 mb-8">
-                {pkg.features.map((feature, featureIndex) => (
-                  <li
-                    key={featureIndex}
-                    className="flex items-start gap-3 text-sm"
-                  >
-                    <Check className="w-5 h-5 text-primary shrink-0" />
+              <ul className="space-y-3 mb-6">
+                {pkg.features.slice(0, 4).map((feature, featureIndex) => (
+                  <li key={featureIndex} className="flex items-start gap-3 text-sm">
+                    <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                     <span className="text-muted-foreground">{feature}</span>
                   </li>
                 ))}
               </ul>
-
-              {/* CTA */}
               <Button
-                variant={pkg.popular ? "hero" : "outline"}
+                variant="outline"
                 className="w-full"
                 onClick={scrollToContact}
               >
-                Anfrage stellen
+                Projekt anfragen
               </Button>
-            </div>
+            </article>
           ))}
         </div>
 
-        {/* Note */}
         <p className="text-center text-sm text-muted-foreground mt-12">
-          * Alle Preise verstehen sich als Mindestpreise. Der finale Preis wird nach dem 
-          Erstgespräch individuell kalkuliert.
+          * Richtwerte dienen der Einordnung. Der finale Umfang wird nach kurzer Prozessanalyse definiert.
         </p>
       </div>
     </section>

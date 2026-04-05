@@ -1,49 +1,38 @@
 import { Button } from "@/components/ui/button";
-import { Bot, Share2, Globe, Code2, ArrowRight } from "lucide-react";
+import { ArrowRight, MailCheck, MessagesSquare, Workflow } from "lucide-react";
 
 const services = [
   {
-    icon: Bot,
-    title: "Chatbots",
-    subtitle: "Website & Social Media",
-    description: "KI-gestützte Kundenkommunikation für Ihre digitalen Kanäle. Automatisierung für alle Branchen.",
+    icon: MailCheck,
+    title: "E-Mail-Automation",
+    subtitle: "Weniger Ticket-Stau, schnellere Antworten",
+    description: "Digitale Mitarbeiter priorisieren eingehende E-Mails, beantworten Standardfaelle und uebergeben kritische Themen sauber an Ihr Team.",
     features: [
-      "Automatische Beantwortung häufiger Fragen",
-      "Lead-Erfassung & Qualifizierung",
-      "Weiterleitung an Mitarbeiter bei Bedarf",
+      "Automatische Kategorisierung und Priorisierung",
+      "Kontextbezogene Antwortvorschlaege oder Direktantworten",
+      "SLA-orientierte Eskalationslogik",
     ],
   },
   {
-    icon: Share2,
-    title: "Social-Media-Management",
-    subtitle: "Content & Wachstum",
-    description: "Professionelle Betreuung Ihrer Social-Media-Präsenz für organisches Wachstum.",
+    icon: MessagesSquare,
+    title: "Anfragebearbeitung",
+    subtitle: "Mehr qualifizierte Gespraeche, weniger Leerlauf",
+    description: "Anfragen werden in Echtzeit geprueft, angereichert und fuer Vertrieb oder Beratung vorbereitet.",
     features: [
-      "Content-Planung & regelmäßiges Posting",
-      "KI-Unterstützung für Texte & Ideen",
-      "Wachstumsstrategie & Markenaufbau",
+      "Qualifizierung nach Branche, Bedarf und Dringlichkeit",
+      "Routing in CRM mit sauberem Datensatz",
+      "Terminlogik fuer passende Ansprechpartner",
     ],
   },
   {
-    icon: Globe,
-    title: "Website-Erstellung",
-    subtitle: "Modern & Conversion-stark",
-    description: "SEO-optimierte Websites, die Besucher in Kunden verwandeln und Ihr Business online präsentieren.",
+    icon: Workflow,
+    title: "Ablauf-Automation",
+    subtitle: "Operative Prozesse ohne manuelle Schleifen",
+    description: "Von Freigaben bis Berichten: Tabanu automatisiert wiederkehrende interne Aufgaben ueber Ihre bestehende Tool-Landschaft hinweg.",
     features: [
-      "Modernes, responsives Design",
-      "Mobil-optimiert & Google SEO-Optimierung",
-      "Kontakt- & Anfrage-Systeme",
-    ],
-  },
-  {
-    icon: Code2,
-    title: "Maßgeschneiderte Softwarelösungen",
-    subtitle: "Individuelle Systeme & Automation",
-    description: "Spezialisierte Softwarelösungen zur Prozessautomatisierung und Digitalisierung Ihres Unternehmens.",
-    features: [
-      "Individuelle Systeme & Dashboards",
-      "Prozessautomatisierung für Effizienz",
-      "Integrations- & Schnittstellen",
+      "Integrationen mit CRM, ERP, Helpdesk und Kollaborationstools",
+      "Automatische Datenuebergabe zwischen Systemen",
+      "Monitoring und Selbstkorrektur bei Ausnahmen",
     ],
   },
 ];
@@ -57,66 +46,66 @@ export const ServicesSection = () => {
   };
 
   return (
-    <section id="dienstleistungen" className="py-24 relative">
+    <section id="automation-solutions" className="py-24 relative">
       <div className="container px-4">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <span className="inline-block text-primary text-sm font-medium mb-4">
-            Unsere Dienstleistungen
-          </span>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Vier Kernbereiche für digitalen Erfolg
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Von intelligenten Chatbots über Social Media bis zur modernen Website und maßgeschneiderten Softwarelösungen – 
-            wir bringen Ihr Unternehmen digital voran. Spezialisiert auf individuelle Lösungen für alle Branchen.
-          </p>
-        </div>
+        <div className="grid gap-10 lg:grid-cols-[minmax(280px,0.75fr)_minmax(0,1.25fr)] lg:gap-16 max-w-6xl mx-auto">
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <span className="section-kicker mb-6">Automationsloesungen</span>
+            <h2 className="section-title mb-5 md:text-[2.6rem]">
+              Automation, die Routine-Aufgaben
+              <span className="display-serif block text-gradient">systematisch ersetzt.</span>
+            </h2>
+            <p className="section-copy max-w-md">
+              Tabanu entwickelt keine isolierten Features, sondern automatisierte Prozessketten.
+              Ziel ist immer derselbe Hebel: weniger operative Last, mehr Tempo, niedrigere Kosten.
+            </p>
+          </div>
 
-        {/* Service Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+          <div className="space-y-5">
           {services.map((service, index) => (
             <article
               key={index}
-              className="group relative bg-gradient-card rounded-2xl p-8 border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-glow"
+              className="group premium-panel p-7 md:p-8 hover-lift"
             >
-              {/* Icon */}
-              <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors duration-300">
-                <service.icon className="w-7 h-7 text-primary" aria-hidden="true" />
+              <div className="relative z-10 grid gap-8 md:grid-cols-[auto_minmax(0,1fr)_auto] md:items-start">
+                <div className="flex items-center gap-4 md:block">
+                  <span className="text-sm font-semibold text-primary/70">0{index + 1}</span>
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 md:mt-5">
+                    <service.icon className="h-6 w-6 text-primary" aria-hidden="true" />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="mb-5">
+                    <h3 className="text-2xl font-semibold mb-2">{service.title}</h3>
+                    <span className="text-sm text-primary/80">{service.subtitle}</span>
+                  </div>
+                  <p className="mb-6 max-w-2xl text-base leading-7 text-muted-foreground">{service.description}</p>
+                  <ul className="grid gap-3 md:grid-cols-2">
+                    {service.features.map((feature, featureIndex) => (
+                      <li
+                        key={featureIndex}
+                        className="flex items-start gap-3 rounded-2xl border border-white/8 bg-white/5 px-4 py-3 text-sm text-muted-foreground"
+                      >
+                        <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <Button
+                  variant="outline"
+                  className="w-full md:w-auto md:min-w-40 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground"
+                  onClick={scrollToContact}
+                  aria-label={`Anfrage für ${service.title} stellen`}
+                >
+                  Loesung besprechen
+                </Button>
               </div>
-
-              {/* Content */}
-              <div className="mb-6">
-                <h3 className="text-xl font-bold mb-1">{service.title}</h3>
-                <span className="text-sm text-primary">{service.subtitle}</span>
-              </div>
-
-              <p className="text-muted-foreground mb-6">{service.description}</p>
-
-              {/* Features */}
-              <ul className="space-y-3 mb-8">
-                {service.features.map((feature, featureIndex) => (
-                  <li
-                    key={featureIndex}
-                    className="flex items-start gap-3 text-sm text-muted-foreground"
-                  >
-                    <ArrowRight className="w-4 h-4 text-primary mt-0.5 shrink-0" aria-hidden="true" />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              {/* CTA */}
-              <Button
-                variant="outline"
-                className="w-full group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all duration-300"
-                onClick={scrollToContact}
-                aria-label={`Anfrage für ${service.title} stellen`}
-              >
-                Anfrage stellen
-              </Button>
             </article>
           ))}
+          </div>
         </div>
       </div>
     </section>
