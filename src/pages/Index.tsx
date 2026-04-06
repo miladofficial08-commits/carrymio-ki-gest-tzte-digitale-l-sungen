@@ -302,19 +302,19 @@ const Index = () => {
         <WorkflowAnimation />
 
         {/* COST CALCULATOR */}
-        <section id="kostenrechner" className="py-16 md:py-28">
+        <section id="kostenrechner" className="py-16 md:py-28 overflow-hidden">
           <div className="container px-4">
             <ScrollReveal className="w-full">
               <div className="mx-auto max-w-6xl premium-panel p-5 md:p-12 relative overflow-hidden">
                 <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full bg-primary/5 blur-[80px] pointer-events-none" />
-                <div className="relative z-10">
+                <div className="relative z-10 w-full min-w-0">
                   <div className="mx-auto max-w-3xl flex flex-col items-center text-center">
                     <span className="section-kicker mb-6">Kostenrechner</span>
                     <h2 className="section-title text-center">Was kosten Support und Routineaufgaben wirklich?</h2>
                     <p className="mt-4 section-copy text-center">Finden Sie heraus, wie viel manuelle Arbeit Ihr Unternehmen jedes Jahr kostet.</p>
                   </div>
-                  <div className="mt-8 grid gap-5 lg:grid-cols-2 lg:items-stretch md:mt-12">
-                    <article className="rounded-2xl border border-border bg-muted/30 p-5 md:p-6">
+                  <div className="mt-8 grid gap-5 lg:grid-cols-2 lg:items-stretch md:mt-12 w-full">
+                    <article className="rounded-2xl border border-border bg-muted/30 p-5 md:p-6 min-w-0 overflow-hidden">
                       <p className="text-sm font-medium text-foreground">Eingaben</p>
                       <div className="mt-6 space-y-7">
                         <div>
