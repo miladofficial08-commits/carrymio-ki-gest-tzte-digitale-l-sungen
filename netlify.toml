@@ -4,12 +4,6 @@ command = "npm run build"
 publish = "dist"
 functions = "netlify/functions"
 
-[functions]
-included_files = [
-	"netlify/functions/prompt.txt",
-	"netlify/functions/knowledge.txt"
-]
-
 # Static File Rules - MUST BE FIRST!
 [[redirects]]
 from = "/robots.txt"
