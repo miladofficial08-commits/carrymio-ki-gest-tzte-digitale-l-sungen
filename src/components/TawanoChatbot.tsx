@@ -22,6 +22,7 @@ import {
   updateSessionMeta,
   incrementMessageCount,
   saveLead,
+  testSupabaseConnection,
   type ChatSession,
   type SessionMeta,
 } from "@/lib/supabase";
@@ -336,6 +337,9 @@ export const TawanoChatbot = () => {
     if (initCalled.current) return;
     initCalled.current = true;
     setIsLoadingSessions(true);
+
+    // Run diagnostic on first open
+    testSupabaseConnection();
 
     const savedSessionId = localStorage.getItem("tawano-active-session-id");
 
@@ -778,18 +782,18 @@ export const TawanoChatbot = () => {
             }}
           >
             {/* ─── Header ─── */}
-            <div className="relative flex items-center gap-3 px-4 py-3.5 overflow-hidden"
-              style={{ background: "linear-gradient(135deg, hsl(221 83% 32%) 0%, hsl(217 91% 42%) 45%, hsl(207 90% 48%) 100%)" }}
+            <div className="relative flex items-center gap-2.5 px-3 py-3 sm:px-4 sm:py-3.5 overflow-hidden"
+              style={{ background: "linear-gradient(135deg, hsl(221 83% 28%) 0%, hsl(217 91% 40%) 50%, hsl(207 90% 48%) 100%)" }}
             >
               {/* Subtle inner glow */}
-              <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(circle at 30% 50%, rgba(255,255,255,0.06), transparent 60%)" }} />
+              <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(circle at 20% 40%, rgba(255,255,255,0.08), transparent 55%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.04), transparent 40%)" }} />
 
               {/* History / Back */}
               <motion.button
-                whileHover={{ backgroundColor: "rgba(255,255,255,0.12)" }}
+                whileHover={{ backgroundColor: "rgba(255,255,255,0.15)" }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setShowHistory((p) => !p)}
-                className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-white/80 transition-colors"
+                className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white/70 hover:text-white transition-colors"
                 aria-label={showHistory ? "Chat anzeigen" : "Verlauf"}
                 title={showHistory ? "Zurück zum Chat" : "Chat-Verlauf"}
               >
@@ -801,27 +805,27 @@ export const TawanoChatbot = () => {
               </motion.button>
 
               {/* Bot avatar */}
-              <div className="relative z-10 h-9 w-9 shrink-0 rounded-xl bg-white/15 flex items-center justify-center ring-1 ring-white/20">
-                <Bot className="h-[18px] w-[18px] text-white" />
-                <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-400 ring-2 ring-[hsl(217_91%_42%)]" />
+              <div className="relative z-10 h-10 w-10 shrink-0 rounded-xl bg-white/[0.12] flex items-center justify-center ring-1 ring-white/[0.15] backdrop-blur-sm">
+                <Bot className="h-5 w-5 text-white" />
+                <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-400 ring-[1.5px] ring-[hsl(217_91%_40%)]" />
               </div>
 
               {/* Title */}
-              <div className="relative z-10 flex-1 min-w-0">
+              <div className="relative z-10 flex-1 min-w-0 ml-0.5">
                 <p className="text-[14px] font-semibold text-white leading-tight tracking-[-0.01em]">
                   Tawano KI
                 </p>
-                <p className="text-[11px] text-white/60 leading-tight mt-0.5">
+                <p className="text-[10.5px] text-white/55 leading-tight mt-0.5 tracking-wide">
                   Digitaler Assistent · Immer online
                 </p>
               </div>
 
               {/* New Chat */}
               <motion.button
-                whileHover={{ backgroundColor: "rgba(255,255,255,0.12)" }}
+                whileHover={{ backgroundColor: "rgba(255,255,255,0.15)" }}
                 whileTap={{ scale: 0.9 }}
                 onClick={handleNewChat}
-                className="relative z-10 flex h-8 w-8 items-center justify-center rounded-xl text-white/80 transition-colors"
+                className="relative z-10 flex h-8 w-8 items-center justify-center rounded-lg text-white/70 hover:text-white transition-colors"
                 aria-label="Neues Gespräch"
                 title="Neues Gespräch starten"
               >
@@ -830,10 +834,10 @@ export const TawanoChatbot = () => {
 
               {/* Close */}
               <motion.button
-                whileHover={{ backgroundColor: "rgba(255,255,255,0.12)" }}
+                whileHover={{ backgroundColor: "rgba(255,255,255,0.15)" }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setIsOpen(false)}
-                className="relative z-10 flex h-8 w-8 items-center justify-center rounded-xl text-white/80 transition-colors"
+                className="relative z-10 flex h-8 w-8 items-center justify-center rounded-lg text-white/70 hover:text-white transition-colors"
                 aria-label="Schließen"
               >
                 <X className="h-4 w-4" />

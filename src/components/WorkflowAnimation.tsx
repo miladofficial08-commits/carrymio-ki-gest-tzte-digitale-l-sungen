@@ -185,17 +185,17 @@ export const WorkflowAnimation = () => {
         </div>
 
         {/* Mobile flow — vertical with animated arrows */}
-        <div className="md:hidden mx-auto max-w-xs space-y-1">
+        <div className="md:hidden flex flex-col items-center mx-auto max-w-xs space-y-1">
           {steps.map((step, i) => {
             const isActive = activeStep >= i;
             const arrowActive = activeStep > i;
             return (
-              <div key={step.label}>
+              <div key={step.label} className="w-full">
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={isActive ? { opacity: 1, x: 0 } : {}}
                   transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-                  className="flex items-center gap-4"
+                  className="flex items-center gap-4 justify-center"
                 >
                   <motion.div
                     className="relative shrink-0"
@@ -229,7 +229,7 @@ export const WorkflowAnimation = () => {
                   </motion.div>
                 </motion.div>
                 {i < steps.length - 1 && (
-                  <div className="flex flex-col items-center py-1 pl-6">
+                  <div className="flex flex-col items-center py-1">
                     <motion.div
                       className={`w-[2px] rounded-full bg-gradient-to-b ${lineColors[i]}`}
                       initial={{ height: 0, opacity: 0 }}

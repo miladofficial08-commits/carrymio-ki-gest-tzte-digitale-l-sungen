@@ -305,7 +305,7 @@ const Index = () => {
         <section id="kostenrechner" className="py-16 md:py-28 overflow-hidden">
           <div className="container px-4">
             <ScrollReveal className="w-full">
-              <div className="mx-auto max-w-6xl premium-panel p-5 md:p-12 relative overflow-hidden">
+              <div className="mx-auto max-w-6xl rounded-2xl md:rounded-[28px] border border-border bg-white/90 backdrop-blur-xl p-4 md:p-12 relative overflow-hidden" style={{ boxShadow: '0 22px 60px hsl(222 47% 11% / 0.07), inset 0 1px 0 hsl(0 0% 100% / 0.8)' }}>
                 <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full bg-primary/5 blur-[80px] pointer-events-none" />
                 <div className="relative z-10 w-full min-w-0">
                   <div className="mx-auto max-w-3xl flex flex-col items-center text-center">
@@ -313,8 +313,8 @@ const Index = () => {
                     <h2 className="section-title text-center">Was kosten Support und Routineaufgaben wirklich?</h2>
                     <p className="mt-4 section-copy text-center">Finden Sie heraus, wie viel manuelle Arbeit Ihr Unternehmen jedes Jahr kostet.</p>
                   </div>
-                  <div className="mt-8 grid gap-5 lg:grid-cols-2 lg:items-stretch md:mt-12 w-full">
-                    <article className="rounded-2xl border border-border bg-muted/30 p-5 md:p-6 min-w-0 overflow-hidden">
+                  <div className="mt-6 grid gap-4 lg:grid-cols-2 lg:items-stretch md:mt-12 w-full">
+                    <article className="rounded-xl md:rounded-2xl border border-border bg-muted/30 p-4 md:p-6 min-w-0 overflow-hidden">
                       <p className="text-sm font-medium text-foreground">Eingaben</p>
                       <div className="mt-6 space-y-7">
                         <div>
@@ -334,16 +334,16 @@ const Index = () => {
                       </div>
                       <p className="mt-6 text-xs leading-relaxed text-muted-foreground">Berechnen Sie in wenigen Sekunden, wie viel Ihr Unternehmen jährlich für Support und Routineaufgaben ausgibt.</p>
                     </article>
-                    <ScrollReveal direction="right" delay={0.2} className="flex flex-col h-full">
-                      <article className="rounded-2xl border border-primary/30 bg-primary/10 p-6 h-full flex flex-col">
+                    <ScrollReveal direction="right" delay={0.2} className="flex flex-col h-full min-w-0">
+                      <article className="rounded-xl md:rounded-2xl border border-primary/30 bg-primary/10 p-4 md:p-6 h-full flex flex-col min-w-0 overflow-hidden">
                         <p className="text-sm font-medium text-foreground">Ergebnis</p>
-                        <div className="mt-5 rounded-xl border border-rose-200 bg-rose-50/50 p-5">
-                          <div className="flex items-center gap-2 text-rose-600">
-                            <CircleDollarSign className="h-4 w-4" aria-hidden="true" />
-                            <p className="text-sm font-medium">Geschätzte jährliche Kosten für manuellen Support</p>
+                        <div className="mt-4 rounded-xl border border-rose-200 bg-rose-50/50 p-3 md:p-5 overflow-hidden">
+                          <div className="flex items-start gap-2 text-rose-600">
+                            <CircleDollarSign className="h-4 w-4 shrink-0 mt-0.5" aria-hidden="true" />
+                            <p className="text-sm font-medium leading-snug">Geschätzte jährliche Kosten für manuellen Support</p>
                           </div>
                           <p className="mt-1 text-xs text-muted-foreground">{employees} Mitarbeiter × {euro.format(salary)}/Mo × 12 Monate</p>
-                          <p className="mt-3 text-2xl font-semibold text-rose-600 md:text-4xl tabular-nums">{euro.format(Math.round(displayYearlyCost))} <span className="text-sm font-normal text-rose-400 md:text-base">pro Jahr</span></p>
+                          <p className="mt-3 text-xl font-semibold text-rose-600 md:text-4xl tabular-nums break-words">{euro.format(Math.round(displayYearlyCost))} <span className="text-xs font-normal text-rose-400 md:text-base">pro Jahr</span></p>
                         </div>
                         <p className="mt-4 text-sm leading-relaxed text-muted-foreground">Viele Unternehmen geben jedes Jahr hohe Summen für Support- und Routineaufgaben aus, obwohl ein Großteil davon automatisiert werden kann.</p>
                         <div className="mt-auto pt-5">

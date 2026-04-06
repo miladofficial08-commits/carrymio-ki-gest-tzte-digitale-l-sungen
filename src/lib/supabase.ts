@@ -119,7 +119,7 @@ export async function saveMessage(
   sessionId: string,
   role: "user" | "assistant",
   content: string
-): Promise<void> {
+): Promise<boolean> {
   try {
     const { error } = await supabase.from("chat_messages").insert({
       session_id: sessionId,
@@ -128,26 +128,30 @@ export async function saveMessage(
     });
     if (error) {
       console.error("[Supabase] saveMessage failed:", error.message, "(code:", error.code, ")");
+      return false;
     }
+    return true;
   } catch (e) {
     console.error("[Supabase] saveMessage exception:", e);
+    return false;
   }
 }
 
 export async function updateSessionTitle(sessionId: string, title: string): Promise<void> {
   try {
-    await supabase
+    const { error } = await supabase
       .from("chat_sessions")
       .update({ title })
       .eq("id", sessionId);
+    if (error) console.error("[Supabase] updateSessionTitle failed:", error.message, "(code:", error.code, ")");
   } catch (e) {
-    console.error("Failed to update session title:", e);
+    console.error("[Supabase] updateSessionTitle exception:", e);
   }
 }
 
 export async function updateSessionMeta(sessionId: string, meta: SessionMeta): Promise<void> {
   try {
-    await supabase
+    const { error } = await supabase
       .from("chat_sessions")
       .update({
         service_interest: meta.service_interest,
@@ -156,19 +160,21 @@ export async function updateSessionMeta(sessionId: string, meta: SessionMeta): P
         requested_contact: meta.requested_contact,
       })
       .eq("id", sessionId);
+    if (error) console.error("[Supabase] updateSessionMeta failed:", error.message, "(code:", error.code, ")");
   } catch (e) {
-    console.error("Failed to update session meta:", e);
+    console.error("[Supabase] updateSessionMeta exception:", e);
   }
 }
 
 export async function incrementMessageCount(sessionId: string, count: number): Promise<void> {
   try {
-    await supabase
+    const { error } = await supabase
       .from("chat_sessions")
       .update({ message_count: count })
       .eq("id", sessionId);
+    if (error) console.error("[Supabase] incrementMessageCount failed:", error.message, "(code:", error.code, ")");
   } catch (e) {
-    console.error("Failed to update message count:", e);
+    console.error("[Supabase] incrementMessageCount exception:", e);
   }
 }
 
@@ -185,10 +191,37 @@ export async function logChat(data: ChatLog) {
 export async function saveLead(data: Lead) {
   try {
     const { error } = await supabase.from("leads").insert(data);
-    if (error) throw error;
+    if (error) {
+      console.error("[Supabase] saveLead failed:", error.message, "(code:", error.code, ")");
+      throw error;
+    }
     return true;
   } catch (e) {
-    console.error("Failed to save lead:", e);
+    console.error("[Supabase] saveLead exception:", e);
     return false;
   }
+}
+
+// ─── Diagnostic: test Supabase connectivity ──────────────────
+export async function testSupabaseConnection(): Promise<{
+  sessions: boolean;
+  messages: boolean;
+  details: string;
+}> {
+  const result = { sessions: false, messages: false, details: "" };
+  try {
+    const { error: sErr } = await supabase.from("chat_sessions").select("id").limit(1);
+    result.sessions = !sErr;
+    if (sErr) result.details += `Sessions: ${sErr.message} (${sErr.code}). `;
+
+    const { error: mErr } = await supabase.from("chat_messages").select("id").limit(1);
+    result.messages = !mErr;
+    if (mErr) result.details += `Messages: ${mErr.message} (${mErr.code}). `;
+
+    if (!result.details) result.details = "All tables accessible.";
+  } catch (e) {
+    result.details = `Connection error: ${e}`;
+  }
+  console.log("[Supabase] Connection test:", result);
+  return result;
 }
