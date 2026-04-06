@@ -66,7 +66,6 @@ const Index = () => {
   const [employees, setEmployees] = useState(6);
   const [salary, setSalary] = useState(3200);
   const [displayYearlyCost, setDisplayYearlyCost] = useState(0);
-  const [displaySavings, setDisplaySavings] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const handleIntroComplete = useCallback(() => setIntroComplete(true), []);
@@ -75,20 +74,17 @@ const Index = () => {
   const heroRef = useRef<HTMLDivElement>(null);
 
   const yearlyCost = useMemo(() => employees * salary * 12, [employees, salary]);
-  const savingsRate = useMemo(() => (selectedScenario === "support" ? 0.34 : selectedScenario === "sales" ? 0.29 : 0.31), [selectedScenario]);
-  const yearlySavings = useMemo(() => Math.round(yearlyCost * savingsRate), [yearlyCost, savingsRate]);
 
   const { scrollY } = useScroll();
-  const heroY = useTransform(scrollY, [0, 600], [0, 150]);
-  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
+  const heroY = useTransform(scrollY, [0, 1500], [0, 80]);
+  const heroOpacity = useTransform(scrollY, [300, 1500], [1, 0]);
 
   useEffect(() => {
     const interval = window.setInterval(() => {
       setDisplayYearlyCost((prev) => animateValue(prev, yearlyCost));
-      setDisplaySavings((prev) => animateValue(prev, yearlySavings));
     }, 16);
     return () => window.clearInterval(interval);
-  }, [yearlyCost, yearlySavings]);
+  }, [yearlyCost]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -115,12 +111,8 @@ const Index = () => {
         <div className="absolute left-0 top-0 h-[2px] bg-gradient-primary transition-all duration-200" style={{ width: `${scrollProgress}%` }} aria-hidden="true" />
         <div className="container px-4">
           <div className="flex h-16 items-center justify-between gap-6 md:h-20">
-            <button onClick={() => scrollTo("#home")} className="flex items-center gap-3 md:gap-4 group" aria-label="Tawano Home">
-              <span className="logo-orb flex h-10 w-10 items-center justify-center rounded-full border border-primary/30 bg-primary/10 text-sm font-semibold text-primary transition-transform duration-300 group-hover:scale-110">TW</span>
-              <span className="text-left">
-                <span className="block text-xl font-semibold tracking-[0.01em] text-foreground md:text-[1.8rem] md:leading-7">Tawano</span>
-                <span className="hidden text-[10px] uppercase tracking-[0.22em] text-primary/60 md:block">Digitale Mitarbeiter & Automation</span>
-              </span>
+            <button onClick={() => scrollTo("#home")} className="flex items-center gap-2 group" aria-label="Tawano Home">
+              <img src="/tawano-logo.png" alt="Tawano Logo" className="h-12 md:h-14 w-auto transition-transform duration-300 group-hover:scale-105" />
             </button>
             <div className="hidden items-center gap-7 md:flex">
               {navItems.map((item) => (
@@ -273,7 +265,7 @@ const Index = () => {
                   <div className="mx-auto max-w-3xl text-center">
                     <span className="section-kicker mb-6">Kostenrechner</span>
                     <h2 className="section-title">Was kosten Support und Routineaufgaben wirklich?</h2>
-                    <p className="mt-4 section-copy">Zwei Eingaben – sofort Ihr Ergebnis.</p>
+                    <p className="mt-4 section-copy">Finden Sie heraus, wie viel manuelle Arbeit Ihr Unternehmen jedes Jahr kostet.</p>
                   </div>
                   <div className="mt-12 grid gap-8 lg:grid-cols-2 lg:items-stretch">
                     <article className="rounded-2xl border border-border bg-muted/30 p-6">
@@ -294,42 +286,29 @@ const Index = () => {
                           <Slider min={1800} max={9000} step={100} value={[salary]} onValueChange={(v) => setSalary(v[0])} />
                         </div>
                       </div>
+                      <p className="mt-6 text-xs leading-relaxed text-muted-foreground">Berechnen Sie in wenigen Sekunden, wie viel Ihr Unternehmen jährlich für Support und Routineaufgaben ausgibt.</p>
                     </article>
                     <ScrollReveal direction="right" delay={0.2}>
-                      <article className="rounded-2xl border border-primary/30 bg-primary/10 p-6 h-full">
+                      <article className="rounded-2xl border border-primary/30 bg-primary/10 p-6 h-full flex flex-col">
                         <p className="text-sm font-medium text-foreground">Ergebnis</p>
-                        <div className="mt-5 rounded-xl border border-border bg-muted/30 p-4">
-                          <div className="flex items-center gap-2 text-primary">
+                        <div className="mt-5 rounded-xl border border-rose-200 bg-rose-50/50 p-5">
+                          <div className="flex items-center gap-2 text-rose-600">
                             <CircleDollarSign className="h-4 w-4" aria-hidden="true" />
-                            <p className="text-sm">Jährliche Kosten</p>
+                            <p className="text-sm font-medium">Geschätzte jährliche Kosten für manuellen Support</p>
                           </div>
-                          <p className="mt-2 text-4xl font-semibold text-rose-600 md:text-5xl tabular-nums">{euro.format(Math.round(displayYearlyCost))}</p>
+                          <p className="mt-1 text-xs text-muted-foreground">{employees} Mitarbeiter × {euro.format(salary)}/Mo × 12 Monate</p>
+                          <p className="mt-3 text-3xl font-semibold text-rose-600 md:text-4xl tabular-nums">{euro.format(Math.round(displayYearlyCost))} <span className="text-base font-normal text-rose-400">pro Jahr</span></p>
                         </div>
-                        <div className="mt-4 rounded-xl border border-emerald-500/30 bg-emerald-50 p-4">
-                          <div className="flex items-center gap-2 text-emerald-600">
-                            <Sparkles className="h-4 w-4" aria-hidden="true" />
-                            <p className="text-sm">Mögliche Einsparung</p>
-                          </div>
-                          <p className="mt-2 text-4xl font-semibold text-emerald-600 md:text-5xl tabular-nums">{euro.format(Math.round(displaySavings))}</p>
+                        <p className="mt-4 text-sm leading-relaxed text-muted-foreground">Viele Unternehmen geben jedes Jahr hohe Summen für Support- und Routineaufgaben aus, obwohl ein Großteil davon automatisiert werden kann.</p>
+                        <div className="mt-auto pt-5">
+                          <Button className="w-full" size="lg" onClick={() => scrollTo("#kontakt")}>
+                            Jetzt Einsparpotenzial berechnen lassen
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          </Button>
                         </div>
                       </article>
                     </ScrollReveal>
                   </div>
-                  <StaggerContainer staggerDelay={0.12} className="mx-auto mt-10 grid max-w-3xl gap-4 sm:grid-cols-3">
-                    {[
-                      { icon: Users, value: String(employees), label: "Mitarbeiter" },
-                      { icon: Clock3, value: "24/7", label: "System" },
-                      { icon: Workflow, value: `${Math.round(savingsRate * 100)}%`, label: "Potenzial" },
-                    ].map((item) => (
-                      <StaggerItem key={item.label}>
-                        <motion.article whileHover={{ y: -4, borderColor: "hsl(217 91% 50% / 0.3)" }} className="rounded-xl border border-border bg-muted/30 p-4 text-center transition-all">
-                          <item.icon className="mx-auto h-4 w-4 text-primary" aria-hidden="true" />
-                          <p className="mt-2 text-xl font-semibold">{item.value}</p>
-                          <p className="text-xs text-muted-foreground">{item.label}</p>
-                        </motion.article>
-                      </StaggerItem>
-                    ))}
-                  </StaggerContainer>
                 </div>
               </div>
             </ScrollReveal>
@@ -366,7 +345,10 @@ const Index = () => {
               <ScrollReveal direction="right" delay={0.15}>
                 <article className="premium-panel p-6 md:p-7">
                   <div className="relative z-10">
-                    <p className="text-sm font-medium uppercase tracking-[0.12em] text-emerald-600">Mit Tawano</p>
+                    <div className="flex items-center gap-3">
+                      <p className="text-sm font-medium uppercase tracking-[0.12em] text-emerald-600">mit</p>
+                      <img src="/tawano-logo.png" alt="Tawano" className="h-10 w-auto" />
+                    </div>
                     <div className="mt-4 space-y-3">
                       {["Support läuft 24/7 ohne Ausfall", "Kunden erhalten sofort Antworten", "Leads werden automatisch erkannt", "Aufgaben laufen automatisch im Hintergrund", "Geringere Kosten für Ihr Unternehmen"].map((item, i) => (
                         <motion.div key={item} initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08, duration: 0.4 }} whileHover={{ x: 4, borderColor: "hsl(152 69% 40% / 0.4)" }} className="flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 transition-colors">
@@ -403,7 +385,11 @@ const Index = () => {
                     <span className="rounded-xl border border-primary/20 bg-primary/8 p-2"><MessagesSquare className="h-4 w-4 text-primary" aria-hidden="true" /></span>
                     <p className="text-xl font-semibold text-foreground">Chatbots</p>
                   </div>
-                  <p className="mt-4 text-sm leading-6 text-muted-foreground">Antwortet sofort auf Fragen und nimmt neue Anfragen auf.</p>
+                  <ul className="mt-4 space-y-2 text-sm text-foreground/90">
+                    {["beantwortet Supportanfragen automatisch", "erkennt Kundenabsichten in Sekunden", "sammelt und qualifiziert Leads", "integriert sich in bestehende Systeme", "reduziert Supportaufwand erheblich"].map((feat) => (
+                      <li key={feat} className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />{feat}</li>
+                    ))}
+                  </ul>
                   <p className="mt-auto pt-4 text-xs uppercase tracking-[0.12em] text-muted-foreground">Startpreis</p>
                   <p className="mt-1 text-base font-semibold text-primary">500 EUR</p>
                 </motion.article>
@@ -412,23 +398,30 @@ const Index = () => {
                 <motion.article whileHover={{ y: -8, boxShadow: "0 24px 60px hsl(222 47% 11% / 0.08)" }} transition={{ type: "spring", stiffness: 300, damping: 20 }} className="surface-elevated flex h-full flex-col rounded-2xl p-6 cursor-default">
                   <div className="flex items-center gap-3">
                     <span className="rounded-xl border border-primary/20 bg-primary/8 p-2"><Workflow className="h-4 w-4 text-primary" aria-hidden="true" /></span>
-                    <p className="text-xl font-semibold text-foreground">Websites</p>
+                    <p className="text-xl font-semibold text-foreground">Webdesign</p>
                   </div>
-                  <p className="mt-4 text-sm leading-6 text-muted-foreground">Klare Seiten, die Vertrauen aufbauen und neue Kunden bringen.</p>
+                  <ul className="mt-4 space-y-2 text-sm text-foreground/90">
+                    {["moderne Unternehmenswebseiten & Landing Pages", "hochwertiges Design und klare Struktur", "moderne Animationen und visuelle Elemente", "optimiert für Conversion und Leadgenerierung", "schnell, performant und mobiloptimiert"].map((feat) => (
+                      <li key={feat} className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />{feat}</li>
+                    ))}
+                  </ul>
                   <p className="mt-auto pt-4 text-xs uppercase tracking-[0.12em] text-muted-foreground">Startpreis</p>
                   <p className="mt-1 text-base font-semibold text-primary">990 EUR</p>
                 </motion.article>
               </StaggerItem>
               <StaggerItem>
-                <motion.article whileHover={{ y: -8, boxShadow: "0 24px 60px hsl(217 91% 50% / 0.08)" }} transition={{ type: "spring", stiffness: 300, damping: 20 }} className="premium-panel flex h-full flex-col p-6 cursor-default">
+                <motion.article whileHover={{ y: -10, boxShadow: "0 28px 70px hsl(217 91% 50% / 0.12)" }} transition={{ type: "spring", stiffness: 300, damping: 20 }} className="premium-panel flex h-full flex-col p-6 cursor-default ring-1 ring-primary/20 shadow-lg shadow-primary/5">
                   <div className="relative z-10">
                     <div className="flex items-center justify-between gap-3">
                       <div className="flex items-center gap-3">
-                        <span className="rounded-xl border border-primary/20 bg-primary/8 p-2"><Bot className="h-4 w-4 text-primary" aria-hidden="true" /></span>
+                        <span className="rounded-xl border border-primary/30 bg-primary/12 p-2.5"><Bot className="h-5 w-5 text-primary" aria-hidden="true" /></span>
                         <p className="text-xl font-semibold text-foreground">Digitaler Mitarbeiter</p>
                       </div>
-                      <motion.span animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 2, repeat: Infinity }} className="inline-flex rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] text-primary">Beliebt</motion.span>
                     </div>
+                    <motion.div animate={{ opacity: [0.7, 1, 0.7] }} transition={{ duration: 3, repeat: Infinity }} className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/8 px-3 py-1">
+                      <Sparkles className="h-3 w-3 text-primary" aria-hidden="true" />
+                      <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-primary">Beliebteste Lösung</span>
+                    </motion.div>
                     <ul className="mt-4 space-y-2 text-sm text-foreground/90">
                       {["erkennt automatisch Support-Anfragen und Leads", "beantwortet E-Mails automatisch", "arbeitet in bis zu 7 Sprachen", "merkt sich frühere Gespräche (Memory)", "verbessert sich durch Lernsystem", "erkennt und korrigiert Fehler"].map((feat) => (
                         <li key={feat} className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />{feat}</li>
@@ -444,9 +437,12 @@ const Index = () => {
                     <span className="rounded-xl border border-primary/20 bg-primary/8 p-2"><Sparkles className="h-4 w-4 text-primary" aria-hidden="true" /></span>
                     <p className="text-xl font-semibold text-foreground">Custom Automation</p>
                   </div>
-                  <p className="mt-4 text-sm leading-6 text-muted-foreground">Individuelle Automatisierung für Ihr Unternehmen.</p>
-                  <p className="mt-auto pt-4 text-sm font-medium text-foreground/90">individuelles Projekt</p>
-                  <p className="mt-2 text-sm text-muted-foreground">Wir bauen genau den Ablauf, den Ihr Team braucht.</p>
+                  <ul className="mt-4 space-y-2 text-sm text-foreground/90">
+                    {["Automatisierung interner Prozesse", "automatische Verarbeitung von Anfragen", "Integration mit bestehenden Tools", "individuelle Workflows für Unternehmen", "skalierbare Automationslösungen"].map((feat) => (
+                      <li key={feat} className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />{feat}</li>
+                    ))}
+                  </ul>
+                  <p className="mt-auto pt-4 text-sm font-semibold text-primary">Preis je nach Umfang</p>
                 </motion.article>
               </StaggerItem>
             </StaggerContainer>

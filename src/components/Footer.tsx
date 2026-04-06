@@ -5,7 +5,7 @@ const Footer = () => {
       <div className="container px-4">
         <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
           <div>
-            <span className="text-xl font-bold text-foreground">Tawano</span>
+            <img src="/tawano-logo.png" alt="Tawano Logo" className="h-8 w-auto" />
             <p className="mt-4 max-w-md text-sm leading-6 text-muted-foreground">
               Wir bauen digitale Mitarbeiter, die Support, E-Mails und Routine-Aufgaben automatisch erledigen.
             </p>
@@ -19,7 +19,7 @@ const Footer = () => {
             <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
               <li>Digitale Mitarbeiter</li>
               <li>Chatbots</li>
-              <li>Websites</li>
+              <li>Webdesign</li>
               <li>Custom Automation</li>
             </ul>
           </div>

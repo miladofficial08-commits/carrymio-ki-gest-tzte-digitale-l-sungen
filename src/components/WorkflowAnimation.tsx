@@ -1,69 +1,70 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { Mail, BrainCircuit, MessagesSquare, CheckCircle2 } from "lucide-react";
+import { useRef, useState, useEffect } from "react";
+import { motion, useInView } from "framer-motion";
+import { Mail, BrainCircuit, MessagesSquare, CheckCircle2, ChevronRight, ChevronDown } from "lucide-react";
 
 const steps = [
   {
     icon: Mail,
     label: "Anfrage kommt rein",
+    desc: "Per E-Mail, Chat oder Formular",
     color: "from-blue-100 to-blue-50",
     accent: "text-blue-600",
     border: "border-blue-200",
     glow: "shadow-blue-100",
+    ring: "ring-blue-400/30",
   },
   {
     icon: BrainCircuit,
     label: "KI erkennt das Thema",
+    desc: "Automatische Kategorisierung",
     color: "from-violet-100 to-violet-50",
     accent: "text-violet-600",
     border: "border-violet-200",
     glow: "shadow-violet-100",
+    ring: "ring-violet-400/30",
   },
   {
     icon: MessagesSquare,
     label: "Antwort wird erstellt",
+    desc: "Passende Lösung in Sekunden",
     color: "from-cyan-100 to-cyan-50",
     accent: "text-cyan-600",
     border: "border-cyan-200",
     glow: "shadow-cyan-100",
+    ring: "ring-cyan-400/30",
   },
   {
     icon: CheckCircle2,
     label: "Kunde erhält Antwort",
+    desc: "Sofort und rund um die Uhr",
     color: "from-emerald-100 to-emerald-50",
     accent: "text-emerald-600",
     border: "border-emerald-200",
     glow: "shadow-emerald-100",
+    ring: "ring-emerald-400/30",
   },
+];
+
+const lineColors = [
+  "from-blue-400 to-violet-400",
+  "from-violet-400 to-cyan-400",
+  "from-cyan-400 to-emerald-400",
 ];
 
 export const WorkflowAnimation = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start 0.8", "end 0.3"],
-  });
+  const isInView = useInView(containerRef, { once: true, margin: "0px 0px -120px 0px" });
+  const [activeStep, setActiveStep] = useState(-1);
 
-  // The traveling dot/email moves across the flow line
-  const dotX = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-  const dotOpacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [0, 1, 1, 0]);
-
-  // Each step reveals based on scroll progress
-  const step0 = useTransform(scrollYProgress, [0, 0.15], [0, 1]);
-  const step1 = useTransform(scrollYProgress, [0.15, 0.4], [0, 1]);
-  const step2 = useTransform(scrollYProgress, [0.4, 0.65], [0, 1]);
-  const step3 = useTransform(scrollYProgress, [0.65, 0.85], [0, 1]);
-  const stepProgress = [step0, step1, step2, step3];
-
-  // Pre-compute scale transforms (hooks must be called at top level)
-  const scale0 = useTransform(step0, [0, 1], [0.85, 1]);
-  const scale1 = useTransform(step1, [0, 1], [0.85, 1]);
-  const scale2 = useTransform(step2, [0, 1], [0.85, 1]);
-  const scale3 = useTransform(step3, [0, 1], [0.85, 1]);
-  const stepScales = [scale0, scale1, scale2, scale3];
-
-  // Flow line grows with scroll
-  const lineWidth = useTransform(scrollYProgress, [0, 0.9], ["0%", "100%"]);
+  // Sequential step reveal when in view
+  useEffect(() => {
+    if (!isInView) return;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    for (let i = 0; i < steps.length; i++) {
+      timers.push(setTimeout(() => setActiveStep(i), 400 + i * 600));
+    }
+    return () => timers.forEach(clearTimeout);
+  }, [isInView]);
 
   return (
     <section className="relative py-32 overflow-hidden" ref={containerRef}>
@@ -104,75 +105,149 @@ export const WorkflowAnimation = () => {
           </motion.p>
         </div>
 
-        {/* Desktop flow - horizontal */}
-        <div className="hidden md:block mx-auto max-w-5xl">
-          {/* Flow line track */}
-          <div className="relative mx-8 mb-10">
-            <div className="h-[2px] w-full rounded-full bg-border" />
-            <motion.div
-              className="absolute top-0 left-0 h-[2px] rounded-full"
-              style={{
-                width: lineWidth,
-                background: "linear-gradient(90deg, hsl(217 91% 50%), hsl(277 82% 58%), hsl(184 84% 48%), hsl(152 69% 45%))",
-                boxShadow: "0 0 12px hsl(217 91% 50% / 0.15)",
-              }}
-            />
-            {/* Traveling dot */}
-            <motion.div
-              className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-primary"
-              style={{
-                left: dotX,
-                opacity: dotOpacity,
-                boxShadow: "0 0 10px hsl(217 91% 50% / 0.4), 0 0 24px hsl(217 91% 50% / 0.2)",
-              }}
-            />
-          </div>
+        {/* Desktop flow — horizontal with animated arrows */}
+        <div className="hidden md:flex items-start justify-center mx-auto max-w-5xl">
+          {steps.map((step, i) => {
+            const isActive = activeStep >= i;
+            const arrowActive = activeStep > i;
+            return (
+              <div key={step.label} className="flex items-start">
+                {/* Step card */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                  animate={isActive ? { opacity: 1, y: 0, scale: 1 } : {}}
+                  transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  className="text-center min-w-[150px] px-2"
+                >
+                  {/* Icon with pulse ring */}
+                  <motion.div
+                    className="relative mx-auto w-16 h-16 mb-4"
+                    animate={isActive ? { scale: [0.9, 1.08, 1] } : {}}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                  >
+                    {isActive && (
+                      <motion.div
+                        className={`absolute inset-0 rounded-2xl ring-2 ${step.ring}`}
+                        initial={{ scale: 1, opacity: 0.8 }}
+                        animate={{ scale: 1.35, opacity: 0 }}
+                        transition={{ duration: 1, ease: "easeOut" }}
+                      />
+                    )}
+                    <div className={`relative w-16 h-16 rounded-2xl bg-gradient-to-b ${step.color} border ${step.border} flex items-center justify-center shadow-lg ${step.glow}`}>
+                      <motion.div
+                        animate={isActive ? { rotate: [0, -8, 8, 0] } : {}}
+                        transition={{ duration: 0.5, delay: 0.15 }}
+                      >
+                        <step.icon className={`h-7 w-7 ${step.accent}`} />
+                      </motion.div>
+                    </div>
+                  </motion.div>
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={isActive ? { opacity: 1 } : {}}
+                    transition={{ duration: 0.4, delay: 0.15 }}
+                    className="text-sm font-medium text-foreground"
+                  >
+                    {step.label}
+                  </motion.p>
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={isActive ? { opacity: 1 } : {}}
+                    transition={{ duration: 0.4, delay: 0.25 }}
+                    className="mt-1 text-xs text-muted-foreground"
+                  >
+                    {step.desc}
+                  </motion.p>
+                </motion.div>
 
-          {/* Steps */}
-          <div className="grid grid-cols-4 gap-6">
-            {steps.map((step, i) => (
-              <motion.div
-                key={step.label}
-                style={{ opacity: stepProgress[i], scale: stepScales[i] }}
-                className="text-center"
-              >
-                <div className={`mx-auto w-16 h-16 rounded-2xl bg-gradient-to-b ${step.color} border ${step.border} flex items-center justify-center shadow-lg ${step.glow} mb-4`}>
-                  <step.icon className={`h-7 w-7 ${step.accent}`} />
-                </div>
-                <p className="text-sm font-medium text-foreground">{step.label}</p>
-              </motion.div>
-            ))}
-          </div>
+                {/* Arrow connector */}
+                {i < steps.length - 1 && (
+                  <div className="mt-5 shrink-0 flex items-center gap-1 px-1">
+                    {/* Animated line segment */}
+                    <motion.div
+                      className={`h-[2px] rounded-full bg-gradient-to-r ${lineColors[i]}`}
+                      initial={{ width: 0, opacity: 0 }}
+                      animate={arrowActive ? { width: 28, opacity: 1 } : {}}
+                      transition={{ duration: 0.4, ease: "easeOut" }}
+                    />
+                    <motion.div
+                      initial={{ opacity: 0, x: -6 }}
+                      animate={arrowActive ? { opacity: 1, x: 0 } : {}}
+                      transition={{ duration: 0.3, delay: 0.2 }}
+                    >
+                      <ChevronRight className="h-4 w-4 text-muted-foreground/60" />
+                    </motion.div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
 
-        {/* Mobile flow - vertical */}
-        <div className="md:hidden mx-auto max-w-sm">
-          <div className="relative pl-8">
-            {/* Vertical line */}
-            <div className="absolute left-3 top-0 bottom-0 w-[2px] bg-border" />
-            <motion.div
-              className="absolute left-3 top-0 w-[2px] rounded-full"
-              style={{
-                height: lineWidth,
-                background: "linear-gradient(180deg, hsl(217 91% 50%), hsl(277 82% 58%), hsl(184 84% 48%), hsl(152 69% 45%))",
-              }}
-            />
-
-            <div className="space-y-8">
-              {steps.map((step, i) => (
+        {/* Mobile flow — vertical with animated arrows */}
+        <div className="md:hidden mx-auto max-w-xs space-y-1">
+          {steps.map((step, i) => {
+            const isActive = activeStep >= i;
+            const arrowActive = activeStep > i;
+            return (
+              <div key={step.label}>
                 <motion.div
-                  key={step.label}
-                  style={{ opacity: stepProgress[i] }}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={isActive ? { opacity: 1, x: 0 } : {}}
+                  transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
                   className="flex items-center gap-4"
                 >
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-b ${step.color} border ${step.border} flex items-center justify-center shadow-lg ${step.glow} shrink-0`}>
-                    <step.icon className={`h-5 w-5 ${step.accent}`} />
-                  </div>
-                  <p className="text-sm font-medium text-foreground">{step.label}</p>
+                  <motion.div
+                    className="relative shrink-0"
+                    animate={isActive ? { scale: [0.85, 1.1, 1] } : {}}
+                    transition={{ duration: 0.5 }}
+                  >
+                    {isActive && (
+                      <motion.div
+                        className={`absolute inset-0 rounded-xl ring-2 ${step.ring}`}
+                        initial={{ scale: 1, opacity: 0.8 }}
+                        animate={{ scale: 1.4, opacity: 0 }}
+                        transition={{ duration: 1, ease: "easeOut" }}
+                      />
+                    )}
+                    <div className={`relative w-12 h-12 rounded-xl bg-gradient-to-b ${step.color} border ${step.border} flex items-center justify-center shadow-lg ${step.glow}`}>
+                      <motion.div
+                        animate={isActive ? { rotate: [0, -8, 8, 0] } : {}}
+                        transition={{ duration: 0.5, delay: 0.1 }}
+                      >
+                        <step.icon className={`h-5 w-5 ${step.accent}`} />
+                      </motion.div>
+                    </div>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={isActive ? { opacity: 1 } : {}}
+                    transition={{ duration: 0.4, delay: 0.15 }}
+                  >
+                    <p className="text-sm font-medium text-foreground">{step.label}</p>
+                    <p className="text-xs text-muted-foreground">{step.desc}</p>
+                  </motion.div>
                 </motion.div>
-              ))}
-            </div>
-          </div>
+                {i < steps.length - 1 && (
+                  <div className="flex flex-col items-center py-1 pl-6">
+                    <motion.div
+                      className={`w-[2px] rounded-full bg-gradient-to-b ${lineColors[i]}`}
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={arrowActive ? { height: 16, opacity: 1 } : {}}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                    />
+                    <motion.div
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={arrowActive ? { opacity: 1, y: 0 } : {}}
+                      transition={{ duration: 0.25, delay: 0.15 }}
+                    >
+                      <ChevronDown className="h-3.5 w-3.5 text-muted-foreground/50" />
+                    </motion.div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

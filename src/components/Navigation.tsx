@@ -65,12 +65,8 @@ export const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-3" aria-label="Tabanu - Startseite">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full border border-primary/30 bg-primary/10 text-xs font-semibold text-primary">TA</span>
-            <div className="flex flex-col">
-              <span className="text-lg md:text-xl font-semibold text-foreground tracking-wide">Tabanu</span>
-              <span className="hidden md:block text-[10px] uppercase tracking-[0.24em] text-muted-foreground">Digitale Mitarbeiter</span>
-            </div>
+          <a href="/" className="flex items-center gap-2" aria-label="Tawano - Startseite">
+            <img src="/tawano-logo.png" alt="Tawano Logo" className="h-9 w-auto" />
           </a>
 
           {/* Desktop Navigation */}

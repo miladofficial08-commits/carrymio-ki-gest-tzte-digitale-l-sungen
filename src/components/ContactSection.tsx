@@ -52,14 +52,25 @@ export const ContactSection = () => {
 
     try {
       // Template-Parameter für EmailJS - KORRIGIERT
+      const trimmedName = formData.name.trim();
+      const trimmedEmail = formData.email.trim();
+      const trimmedPhone = formData.phone.trim();
+      const trimmedCompany = formData.company.trim();
+      const trimmedMessage = formData.message.trim();
+      const selectedService = formData.service || "Gesprächsanfrage";
+
       const templateParams = {
-        from_name: formData.name.trim(),
-        from_email: formData.email.trim(), // KORRIGIERT: war vorher reply_to
-        phone: formData.phone.trim() || "-", // optional
-        company: formData.company.trim() || "-",
-        subject: formData.service || "Gesprächsanfrage",
+        from_name: trimmedName,
+        from_email: trimmedEmail,
+        reply_to: trimmedEmail,
+        email: trimmedEmail,
+        user_email: trimmedEmail,
+        phone: trimmedPhone || "-",
+        company: trimmedCompany || "-",
+        subject: selectedService,
         interest: formData.service || "Automation Anfrage",
-        message: formData.message.trim(),
+        service: selectedService,
+        message: trimmedMessage,
         datetime: new Date().toLocaleString("de-DE", {
           dateStyle: "short",
           timeStyle: "short",
@@ -68,7 +79,9 @@ export const ContactSection = () => {
         page_url: window.location.href,
       };
 
-      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      await emailjs.send(serviceId, templateId, templateParams, {
+        publicKey,
+      });
 
       setIsSubmitted(true);
       // Formular zurücksetzen
@@ -84,12 +97,18 @@ export const ContactSection = () => {
         title: "Anfrage erfolgreich gesendet!",
         description: "Wir melden uns innerhalb von 24–48 Stunden bei Ihnen.",
       });
-    } catch (error) {
-      console.error("Kontaktanfrage fehlgeschlagen", error);
+    } catch (error: any) {
+      console.error("Kontaktanfrage fehlgeschlagen", {
+        status: error?.status,
+        text: error?.text,
+        message: error?.message,
+      });
       toast({
         variant: "destructive",
         title: "Senden fehlgeschlagen",
-        description: "Bitte versuchen Sie es in Kürze erneut.",
+        description: error?.text
+          ? `EmailJS-Fehler: ${error.text}`
+          : "Bitte versuchen Sie es in Kürze erneut.",
       });
     } finally {
       setIsSubmitting(false);
