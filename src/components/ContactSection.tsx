@@ -126,7 +126,7 @@ export const ContactSection = () => {
 
   if (isSubmitted) {
     return (
-      <section id="kontakt" className="py-24 relative">
+    <section id="kontakt" className="py-16 relative md:py-24">
         <div className="container px-4">
           <div className="max-w-2xl mx-auto text-center">
             <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-8 animate-pulse-glow">
@@ -147,7 +147,7 @@ export const ContactSection = () => {
   }
 
   return (
-    <section id="kontakt" className="py-24 relative">
+    <section id="kontakt" className="py-16 relative md:py-24">
       <div className="container px-4">
         {/* Section Header */}
         <motion.div
@@ -155,8 +155,7 @@ export const ContactSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="text-center mb-16 max-w-3xl mx-auto"
-        >
+          className="text-center mb-10 max-w-3xl mx-auto md:mb-16">
           <span className="section-kicker mb-5">
             Kontakt
           </span>
@@ -169,7 +168,7 @@ export const ContactSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-5 gap-12 max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-5 gap-8 max-w-6xl mx-auto lg:gap-12">
           {/* Contact Info */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}

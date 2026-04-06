@@ -162,10 +162,35 @@ async function sendChat(
   return data.reply;
 }
 
-// ─── Greeting ────────────────────────────────────────────────
+// ─── Session title localStorage helpers ─────────────────────
+function saveLocalTitle(sessionId: string, title: string): void {
+  try {
+    const raw = localStorage.getItem("tawano-session-titles");
+    const map: Record<string, string> = raw ? JSON.parse(raw) : {};
+    map[sessionId] = title;
+    localStorage.setItem("tawano-session-titles", JSON.stringify(map));
+  } catch { /* ignore */ }
+}
+
+function getLocalTitles(): Record<string, string> {
+  try {
+    const raw = localStorage.getItem("tawano-session-titles");
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+function deriveTitleFromMessages(msgs: Array<{ role: string; content: string }>): string {
+  const first = msgs.find((m) => m.role === "user");
+  if (!first) return "Neues Gespräch";
+  return first.content.length > 50 ? first.content.slice(0, 47) + "\u2026" : first.content;
+}
+
 const GREETING_TEXT =
   "Hallo! 👋 Ich bin der digitale Assistent von Tawano. Wie kann ich Ihnen helfen?";
 
+// ─── Greeting ────────────────────────────────────────────────
 function makeGreeting(): Message {
   return {
     id: generateId(),
@@ -316,13 +341,41 @@ export const TawanoChatbot = () => {
 
     try {
       const existing = await loadSessions(visitorId.current);
-      setSessions(existing);
 
-      if (existing.length > 0) {
-        // If we have a saved session from localStorage, prefer it if found in DB
+      // Merge with locally-stored titles (covers Supabase write failures)
+      const localTitles = getLocalTitles();
+      const merged = existing.map((s) => ({
+        ...s,
+        title:
+          s.title === "Neues Gespräch" && localTitles[s.id]
+            ? localTitles[s.id]
+            : s.title,
+      }));
+
+      // If Supabase has no sessions but localStorage has restored data,
+      // build a virtual session entry so history panel shows something useful
+      if (merged.length === 0 && restoredFromStorage.current && savedSessionId) {
+        const raw = localStorage.getItem("tawano-chat-messages");
+        const storedMsgs: Array<{ role: string; content: string }> = raw
+          ? JSON.parse(raw)
+          : [];
+        const derivedTitle =
+          localTitles[savedSessionId] || deriveTitleFromMessages(storedMsgs);
+        const virtualSession = {
+          ...makeLocalSession(visitorId.current),
+          id: savedSessionId,
+          title: derivedTitle,
+        };
+        merged.push(virtualSession);
+      }
+
+      setSessions(merged);
+
+      if (merged.length > 0) {
+        // Prefer the saved session from localStorage if present in list
         const target =
-          (savedSessionId && existing.find((s) => s.id === savedSessionId)) ||
-          existing[0];
+          (savedSessionId && merged.find((s) => s.id === savedSessionId)) ||
+          merged[0];
         setActiveSessionId(target.id);
 
         const msgs = await loadMessages(target.id);
@@ -588,6 +641,8 @@ export const TawanoChatbot = () => {
             text.length > 50 ? text.slice(0, 47) + "…" : text;
           titledSessions.current.add(activeSessionId);
           updateSessionTitle(activeSessionId, title);
+          // Also persist title locally so history survives Supabase write failures
+          saveLocalTitle(activeSessionId, title);
           setSessions((prev) =>
             prev.map((s) =>
               s.id === activeSessionId
@@ -723,57 +778,65 @@ export const TawanoChatbot = () => {
             }}
           >
             {/* ─── Header ─── */}
-            <div className="relative flex items-center gap-2 bg-gradient-to-r from-blue-600 via-blue-600 to-indigo-700 px-3 py-3">
+            <div className="relative flex items-center gap-3 px-4 py-3.5 overflow-hidden"
+              style={{ background: "linear-gradient(135deg, hsl(221 83% 32%) 0%, hsl(217 91% 42%) 45%, hsl(207 90% 48%) 100%)" }}
+            >
+              {/* Subtle inner glow */}
+              <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(circle at 30% 50%, rgba(255,255,255,0.06), transparent 60%)" }} />
+
               {/* History / Back */}
               <motion.button
-                whileHover={{ backgroundColor: "rgba(255,255,255,0.15)" }}
+                whileHover={{ backgroundColor: "rgba(255,255,255,0.12)" }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setShowHistory((p) => !p)}
-                className="flex h-9 w-9 items-center justify-center rounded-xl text-white/90 transition-colors"
+                className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-white/80 transition-colors"
                 aria-label={showHistory ? "Chat anzeigen" : "Verlauf"}
                 title={showHistory ? "Zurück zum Chat" : "Chat-Verlauf"}
               >
                 {showHistory ? (
-                  <ChevronLeft className="h-[18px] w-[18px]" />
+                  <ChevronLeft className="h-4 w-4" />
                 ) : (
-                  <Clock className="h-[18px] w-[18px]" />
+                  <Clock className="h-4 w-4" />
                 )}
               </motion.button>
 
+              {/* Bot avatar */}
+              <div className="relative z-10 h-9 w-9 shrink-0 rounded-xl bg-white/15 flex items-center justify-center ring-1 ring-white/20">
+                <Bot className="h-[18px] w-[18px] text-white" />
+                <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-400 ring-2 ring-[hsl(217_91%_42%)]" />
+              </div>
+
               {/* Title */}
-              <div className="flex-1 min-w-0">
-                <p className="text-[15px] font-semibold text-white leading-tight">
-                  Tawano Assistent
+              <div className="relative z-10 flex-1 min-w-0">
+                <p className="text-[14px] font-semibold text-white leading-tight tracking-[-0.01em]">
+                  Tawano KI
                 </p>
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50" />
-                  <p className="text-[11px] text-white/70 font-medium">
-                    Online
-                  </p>
-                </div>
+                <p className="text-[11px] text-white/60 leading-tight mt-0.5">
+                  Digitaler Assistent · Immer online
+                </p>
               </div>
 
               {/* New Chat */}
               <motion.button
-                whileHover={{ backgroundColor: "rgba(255,255,255,0.15)" }}
+                whileHover={{ backgroundColor: "rgba(255,255,255,0.12)" }}
                 whileTap={{ scale: 0.9 }}
                 onClick={handleNewChat}
-                className="flex h-9 w-9 items-center justify-center rounded-xl text-white/90 transition-colors"
+                className="relative z-10 flex h-8 w-8 items-center justify-center rounded-xl text-white/80 transition-colors"
                 aria-label="Neues Gespräch"
                 title="Neues Gespräch starten"
               >
-                <Plus className="h-[18px] w-[18px]" />
+                <Plus className="h-4 w-4" />
               </motion.button>
 
               {/* Close */}
               <motion.button
-                whileHover={{ backgroundColor: "rgba(255,255,255,0.15)" }}
+                whileHover={{ backgroundColor: "rgba(255,255,255,0.12)" }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setIsOpen(false)}
-                className="flex h-9 w-9 items-center justify-center rounded-xl text-white/90 transition-colors"
+                className="relative z-10 flex h-8 w-8 items-center justify-center rounded-xl text-white/80 transition-colors"
                 aria-label="Schließen"
               >
-                <X className="h-[18px] w-[18px]" />
+                <X className="h-4 w-4" />
               </motion.button>
             </div>
 

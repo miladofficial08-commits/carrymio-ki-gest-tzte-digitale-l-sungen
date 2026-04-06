@@ -300,6 +300,19 @@
     }
   }
 
+  /* Disable blur animations on mobile for better readability */
+  @media (max-width: 767px) {
+    [style*="filter: blur"] {
+      filter: none !important;
+    }
+    .aurora-bg {
+      opacity: 0.4;
+    }
+    .soft-grid {
+      opacity: 0.15;
+    }
+  }
+
   .result-row:hover {
     border-color: hsl(217 91% 50% / 0.3);
     transform: translateY(-2px);

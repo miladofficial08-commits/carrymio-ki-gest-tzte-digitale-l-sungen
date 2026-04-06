@@ -77,8 +77,8 @@ const Index = () => {
   const yearlyCost = useMemo(() => employees * salary * 12, [employees, salary]);
 
   const { scrollY } = useScroll();
-  const heroY = useTransform(scrollY, [0, 1500], [0, 80]);
-  const heroOpacity = useTransform(scrollY, [300, 1500], [1, 0]);
+  const heroY = useTransform(scrollY, [0, 1500], [0, 50]);
+  const heroOpacity = useTransform(scrollY, [400, 1500], [1, 0]);
 
   useEffect(() => {
     const interval = window.setInterval(() => {
@@ -176,7 +176,7 @@ const Index = () => {
 
       <main>
         {/* HERO */}
-        <header id="home" className="relative overflow-hidden pt-28 md:pt-36" ref={heroRef}>
+        <header id="home" className="relative overflow-hidden pt-24 md:pt-36" ref={heroRef}>
           <div className="absolute inset-0 bg-gradient-hero-premium" aria-hidden="true" />
           <div className="absolute inset-0 aurora-bg" aria-hidden="true" />
           <div className="absolute inset-0 soft-grid opacity-30" aria-hidden="true" />
@@ -186,35 +186,35 @@ const Index = () => {
             <BackgroundActivity />
           </div>
 
-          <motion.div style={{ y: heroY, opacity: heroOpacity }} className="container relative z-10 px-4 pb-16 pt-6 md:pb-32 md:pt-10">
-            <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+          <motion.div style={{ y: heroY, opacity: heroOpacity }} className="container relative z-10 px-4 pb-12 pt-4 md:pb-32 md:pt-10">
+            <div className="mx-auto grid max-w-6xl items-center gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
               <div>
                 <motion.span initial={{ opacity: 0, y: 20, filter: "blur(8px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ duration: 0.6 }} className="section-kicker mb-6">
                   <Bot className="h-4 w-4" aria-hidden="true" />
                   Digitale Mitarbeiter für Unternehmen
                 </motion.span>
-                <motion.h1 initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }} className="text-4xl font-semibold leading-[1.02] md:text-6xl xl:text-7xl">
+                <motion.h1 initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }} className="text-[1.875rem] font-semibold leading-[1.05] sm:text-4xl md:text-6xl xl:text-7xl">
                   Automatisieren Sie Support,
                   <motion.span initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="display-serif block text-gradient">
                     E-Mails und Anfragen.
                   </motion.span>
                 </motion.h1>
-                <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.5 }} className="mt-7 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
+                <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.5 }} className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground md:mt-7 md:text-lg">
                   Tawano baut digitale Mitarbeiter, die tägliche Aufgaben automatisch erledigen — damit Ihr Team mehr Zeit für wichtige Arbeit hat.
                 </motion.p>
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.65 }} className="mt-10 flex flex-col gap-4 sm:flex-row">
-                  <Button variant="hero" size="xl" onClick={() => scrollTo("#kontakt")} className="group">
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.65 }} className="mt-6 flex flex-col gap-3 sm:flex-row sm:gap-4 md:mt-10">
+                  <Button variant="hero" size="xl" onClick={() => scrollTo("#kontakt")} className="group w-full sm:w-auto">
                     Jetzt automatisieren
                     <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                   </Button>
-                  <Button variant="heroOutline" size="xl" onClick={() => scrollTo("#kostenrechner")}>Einsparung berechnen</Button>
+                  <Button variant="heroOutline" size="xl" onClick={() => scrollTo("#kostenrechner")} className="w-full sm:w-auto">Einsparung berechnen</Button>
                 </motion.div>
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.85 }} className="mt-9 flex flex-wrap gap-3 text-sm text-muted-foreground">
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.85 }} className="mt-6 flex flex-wrap gap-2 text-sm text-muted-foreground md:mt-9 md:gap-3">
                   {["Weniger manuelle Arbeit", "Schnellere Antworten", "Mehr Zeit fürs Team"].map((text, i) => (
-                    <motion.span key={text} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4, delay: 0.9 + i * 0.1 }} className="data-pill">{text}</motion.span>
+                    <motion.span key={text} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4, delay: 0.9 + i * 0.1 }} className="data-pill text-xs md:text-sm">{text}</motion.span>
                   ))}
                 </motion.div>
-                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 1.1 }} className="mt-8 grid gap-3 sm:grid-cols-3">
+                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 1.1 }} className="mt-5 hidden grid-cols-1 gap-3 sm:grid sm:grid-cols-3 md:mt-8">
                   {[
                     { label: "Support-Antworten", value: "Automatisch beantwortet" },
                     { label: "E-Mails", value: "Sortiert & beantwortet" },
@@ -228,8 +228,8 @@ const Index = () => {
                 </motion.div>
               </div>
 
-              {/* Interactive panel */}
-              <motion.aside initial={{ opacity: 0, x: 60, rotateY: -5 }} animate={{ opacity: 1, x: 0, rotateY: 0 }} transition={{ duration: 0.9, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }} className="premium-panel p-7 md:p-9">
+              {/* Interactive panel — desktop only */}
+              <motion.aside initial={{ opacity: 0, x: 60, rotateY: -5 }} animate={{ opacity: 1, x: 0, rotateY: 0 }} transition={{ duration: 0.9, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }} className="hidden lg:block premium-panel p-7 md:p-9">
                 <div className="relative z-10">
                   <p className="text-sm text-muted-foreground">Schneller Blick auf den Nutzen</p>
                   <h2 className="mt-2 text-2xl font-semibold">Was Tawano für Ihr Team übernimmt</h2>
@@ -277,9 +277,9 @@ const Index = () => {
 
         {/* SOCIAL PROOF BAR */}
         <ScrollReveal>
-          <div className="py-12 border-y border-border/60">
+          <div className="py-8 border-y border-border/60 md:py-12">
             <div className="container px-4">
-              <div className="mx-auto grid max-w-4xl grid-cols-2 gap-8 md:grid-cols-4 text-center">
+              <div className="mx-auto grid max-w-4xl grid-cols-2 gap-y-6 gap-x-4 md:grid-cols-4 md:gap-8 text-center">
                 {[
                   { value: 24, suffix: "/7", label: "Verfügbarkeit" },
                   { value: 85, suffix: "%", label: "Automatisierungsrate" },
@@ -287,10 +287,10 @@ const Index = () => {
                   { value: 7, suffix: "+", label: "Sprachen" },
                 ].map((stat) => (
                   <motion.div key={stat.label} whileHover={{ scale: 1.05 }} className="cursor-default">
-                    <p className="text-3xl font-bold text-foreground md:text-4xl">
+                    <p className="text-2xl font-bold text-foreground md:text-4xl">
                       <AnimatedStat value={stat.value} suffix={stat.suffix} />
                     </p>
-                    <p className="mt-1 text-xs uppercase tracking-[0.14em] text-muted-foreground">{stat.label}</p>
+                    <p className="mt-1 text-[10px] md:text-xs uppercase tracking-[0.14em] text-muted-foreground">{stat.label}</p>
                   </motion.div>
                 ))}
               </div>
@@ -305,7 +305,7 @@ const Index = () => {
         <section id="kostenrechner" className="py-16 md:py-28">
           <div className="container px-4">
             <ScrollReveal>
-              <div className="mx-auto max-w-6xl premium-panel p-8 md:p-12 relative overflow-hidden">
+              <div className="mx-auto max-w-6xl premium-panel p-5 md:p-12 relative overflow-hidden">
                 <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full bg-primary/5 blur-[80px] pointer-events-none" />
                 <div className="relative z-10">
                   <div className="mx-auto max-w-3xl text-center">
@@ -313,8 +313,8 @@ const Index = () => {
                     <h2 className="section-title">Was kosten Support und Routineaufgaben wirklich?</h2>
                     <p className="mt-4 section-copy">Finden Sie heraus, wie viel manuelle Arbeit Ihr Unternehmen jedes Jahr kostet.</p>
                   </div>
-                  <div className="mt-12 grid gap-8 lg:grid-cols-2 lg:items-stretch">
-                    <article className="rounded-2xl border border-border bg-muted/30 p-6">
+                  <div className="mt-8 grid gap-5 lg:grid-cols-2 lg:items-stretch md:mt-12">
+                    <article className="rounded-2xl border border-border bg-muted/30 p-5 md:p-6">
                       <p className="text-sm font-medium text-foreground">Eingaben</p>
                       <div className="mt-6 space-y-7">
                         <div>
@@ -343,7 +343,7 @@ const Index = () => {
                             <p className="text-sm font-medium">Geschätzte jährliche Kosten für manuellen Support</p>
                           </div>
                           <p className="mt-1 text-xs text-muted-foreground">{employees} Mitarbeiter × {euro.format(salary)}/Mo × 12 Monate</p>
-                          <p className="mt-3 text-3xl font-semibold text-rose-600 md:text-4xl tabular-nums">{euro.format(Math.round(displayYearlyCost))} <span className="text-base font-normal text-rose-400">pro Jahr</span></p>
+                          <p className="mt-3 text-2xl font-semibold text-rose-600 md:text-4xl tabular-nums">{euro.format(Math.round(displayYearlyCost))} <span className="text-sm font-normal text-rose-400 md:text-base">pro Jahr</span></p>
                         </div>
                         <p className="mt-4 text-sm leading-relaxed text-muted-foreground">Viele Unternehmen geben jedes Jahr hohe Summen für Support- und Routineaufgaben aus, obwohl ein Großteil davon automatisiert werden kann.</p>
                         <div className="mt-auto pt-5">
@@ -374,7 +374,7 @@ const Index = () => {
                 <p className="section-copy mx-auto mt-4 max-w-2xl">Wie digitale Mitarbeiter Ihr Unternehmen entlasten.</p>
               </div>
             </ScrollReveal>
-            <div className="mx-auto mt-14 grid max-w-6xl gap-8 lg:grid-cols-2 lg:items-start">
+            <div className="mx-auto mt-10 grid max-w-6xl gap-5 lg:grid-cols-2 lg:items-start md:mt-14">
               <ScrollReveal direction="left">
                 <article className="rounded-3xl border border-rose-300/40 bg-rose-50 p-6 md:p-7">
                   <p className="text-sm font-medium uppercase tracking-[0.12em] text-rose-700">Ohne Automation</p>

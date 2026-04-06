@@ -44,7 +44,7 @@ export const FAQSection = () => {
   };
 
   return (
-    <section id="faq" className="py-24 relative">
+    <section id="faq" className="py-16 relative md:py-24">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-secondary/20 to-transparent" />
 
