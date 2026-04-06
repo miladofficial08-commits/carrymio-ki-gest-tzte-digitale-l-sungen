@@ -437,7 +437,7 @@ const Index = () => {
                     ))}
                   </ul>
                   <p className="mt-auto pt-4 text-xs uppercase tracking-[0.12em] text-muted-foreground">Startpreis</p>
-                  <p className="mt-1 text-base font-semibold text-primary">500 EUR</p>
+                  <p className="mt-1 text-base font-semibold text-primary">499 EUR</p>
                 </motion.article>
               </StaggerItem>
               <StaggerItem>
@@ -452,7 +452,7 @@ const Index = () => {
                     ))}
                   </ul>
                   <p className="mt-auto pt-4 text-xs uppercase tracking-[0.12em] text-muted-foreground">Startpreis</p>
-                  <p className="mt-1 text-base font-semibold text-primary">990 EUR</p>
+                  <p className="mt-1 text-base font-semibold text-primary">999 EUR</p>
                 </motion.article>
               </StaggerItem>
               <StaggerItem>

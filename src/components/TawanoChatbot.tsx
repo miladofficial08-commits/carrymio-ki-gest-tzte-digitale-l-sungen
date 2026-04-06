@@ -188,8 +188,16 @@ function deriveTitleFromMessages(msgs: Array<{ role: string; content: string }>)
   return first.content.length > 50 ? first.content.slice(0, 47) + "\u2026" : first.content;
 }
 
+const TEASER_MESSAGES = [
+  "Hi 👋 Kann ich Ihnen helfen?",
+  "Fragen zu unseren Lösungen?",
+  "Automatisierung leicht gemacht!",
+  "Ich berate Sie gerne 😊",
+  "Neugierig? Fragen Sie mich!",
+];
+
 const GREETING_TEXT =
-  "Hallo! 👋 Ich bin der digitale Assistent von Tawano. Wie kann ich Ihnen helfen?";
+  "Hallo! 👋 Ich bin Tawano Assistent – Ihr digitaler Berater. Wie kann ich Ihnen helfen?";
 
 // ─── Greeting ────────────────────────────────────────────────
 function makeGreeting(): Message {
@@ -237,6 +245,8 @@ export const TawanoChatbot = () => {
   // Entry animation
   const [showBubble, setShowBubble] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  const teaserIndex = useRef(0);
+  const [teaserText, setTeaserText] = useState(TEASER_MESSAGES[0]);
 
   // Lead capture
   const [leadStep, setLeadStep] = useState<LeadStep>("idle");
@@ -284,13 +294,25 @@ export const TawanoChatbot = () => {
     return () => el.removeEventListener("scroll", onScroll);
   }, [isOpen, showHistory]);
 
-  // ─── Entry animation (delayed bubble + greeting hint) ──────
+  // ─── Entry animation (delayed bubble + rotating teaser hints) ──────
   useEffect(() => {
     const t1 = setTimeout(() => setShowBubble(true), 2500);
-    const t2 = setTimeout(() => setShowHint(true), 3500);
+    const t2 = setTimeout(() => {
+      setTeaserText(TEASER_MESSAGES[0]);
+      setShowHint(true);
+    }, 3500);
+    // Hide first teaser after 8s, then start rotation
     const t3 = setTimeout(() => setShowHint(false), 11500);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
-  }, []);
+    // Rotation: every 18s (10s hidden + 8s visible), show next teaser
+    const interval = setInterval(() => {
+      if (isOpen) return; // don't rotate while chatbot is open
+      teaserIndex.current = (teaserIndex.current + 1) % TEASER_MESSAGES.length;
+      setTeaserText(TEASER_MESSAGES[teaserIndex.current]);
+      setShowHint(true);
+      setTimeout(() => setShowHint(false), 8000);
+    }, 18000);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearInterval(interval); };
+  }, [isOpen]);
 
   // ─── localStorage restore on mount ─────────────────────────
   useEffect(() => {
@@ -614,6 +636,9 @@ export const TawanoChatbot = () => {
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
 
+    // Track the effective session ID (may change during lazy-create)
+    let effectiveSessionId = activeSessionId;
+
     // Save user message to Supabase
     if (activeSessionId && sessionPersisted.current) {
       saveMessage(activeSessionId, "user", text);
@@ -623,19 +648,17 @@ export const TawanoChatbot = () => {
       if (realSession) {
         console.log("[Supabase] Lazy-created session:", realSession.id);
         sessionPersisted.current = true;
+        effectiveSessionId = realSession.id;
         setActiveSessionId(realSession.id);
         setSessions((prev) =>
           prev.map((s) =>
             s.id === activeSessionId ? { ...realSession } : s
           )
         );
-        // Save greeting + this user message
+        // Save greeting + this user message with the new real ID
         const greetingMsg = messages.find((m) => m.role === "assistant");
         if (greetingMsg) saveMessage(realSession.id, "assistant", greetingMsg.content);
         saveMessage(realSession.id, "user", text);
-        // Update the activeSessionId for the rest of this send
-        userMsg.id = generateId(); // keep the UI msg id
-        // We'll use realSession.id below via closure
         localStorage.setItem("tawano-active-session-id", realSession.id);
       }
     }
@@ -666,10 +689,9 @@ export const TawanoChatbot = () => {
       setMessages(updatedMessages);
 
       // Save to Supabase (only if session is persisted)
-      const currentSid = activeSessionId;
-      if (currentSid && sessionPersisted.current) {
-        saveMessage(currentSid, "assistant", reply);
-        incrementMessageCount(currentSid, updatedMessages.length);
+      if (effectiveSessionId && sessionPersisted.current) {
+        saveMessage(effectiveSessionId, "assistant", reply);
+        incrementMessageCount(effectiveSessionId, updatedMessages.length);
 
         // Auto-title on first user message
         const userMsgCount = updatedMessages.filter(
@@ -677,16 +699,16 @@ export const TawanoChatbot = () => {
         ).length;
         if (
           userMsgCount === 1 &&
-          !titledSessions.current.has(currentSid)
+          !titledSessions.current.has(effectiveSessionId)
         ) {
           const title =
             text.length > 50 ? text.slice(0, 47) + "…" : text;
-          titledSessions.current.add(currentSid);
-          updateSessionTitle(currentSid, title);
-          saveLocalTitle(currentSid, title);
+          titledSessions.current.add(effectiveSessionId);
+          updateSessionTitle(effectiveSessionId, title);
+          saveLocalTitle(effectiveSessionId, title);
           setSessions((prev) =>
             prev.map((s) =>
-              s.id === currentSid
+              s.id === effectiveSessionId
                 ? { ...s, title, updated_at: new Date().toISOString() }
                 : s
             )
@@ -695,17 +717,17 @@ export const TawanoChatbot = () => {
 
         // Analytics metadata
         const meta = extractSessionMeta(updatedMessages);
-        updateSessionMeta(currentSid, meta);
-      } else if (activeSessionId) {
+        updateSessionMeta(effectiveSessionId, meta);
+      } else if (effectiveSessionId) {
         // Still save title locally even if Supabase is down
         const userMsgCount = updatedMessages.filter((m) => m.role === "user").length;
-        if (userMsgCount === 1 && !titledSessions.current.has(activeSessionId)) {
+        if (userMsgCount === 1 && !titledSessions.current.has(effectiveSessionId)) {
           const title = text.length > 50 ? text.slice(0, 47) + "…" : text;
-          titledSessions.current.add(activeSessionId);
-          saveLocalTitle(activeSessionId, title);
+          titledSessions.current.add(effectiveSessionId);
+          saveLocalTitle(effectiveSessionId, title);
           setSessions((prev) =>
             prev.map((s) =>
-              s.id === activeSessionId
+              s.id === effectiveSessionId
                 ? { ...s, title, updated_at: new Date().toISOString() }
                 : s
             )
@@ -786,7 +808,7 @@ export const TawanoChatbot = () => {
                     onClick={() => { setShowHint(false); setIsOpen(true); }}
                     className="relative rounded-2xl bg-white px-4 py-3 shadow-lg border border-gray-100 text-[13px] text-gray-700 leading-relaxed text-left cursor-pointer hover:shadow-xl transition-shadow duration-200"
                   >
-                    Hi 👋 Brauchen Sie Hilfe bei Automation oder digitalen Mitarbeitern?
+                    {teaserText}
                     <div className="absolute -bottom-[6px] right-7 h-3 w-3 rotate-45 bg-white border-b border-r border-gray-100" />
                   </button>
                   <button
@@ -867,7 +889,7 @@ export const TawanoChatbot = () => {
                 {/* Text */}
                 <div className="min-w-0">
                   <p className="text-[15px] font-semibold text-white leading-none tracking-[-0.01em]">
-                    Tawano KI
+                    Tawano Assistent
                   </p>
                   <p className="text-[11px] text-white/40 leading-none mt-1">
                     Immer online
