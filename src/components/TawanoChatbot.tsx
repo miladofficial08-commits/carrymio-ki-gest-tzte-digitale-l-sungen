@@ -201,7 +201,7 @@ function makeGreeting(): Message {
   };
 }
 
-function makeLocalSession(visitor: string): ChatSession {
+function makeLocalSession(visitor: string): ChatSession & { _local: true } {
   const now = new Date().toISOString();
   return {
     id: generateId(),
@@ -214,7 +214,13 @@ function makeLocalSession(visitor: string): ChatSession {
     is_lead: false,
     has_pricing_objection: false,
     requested_contact: false,
+    _local: true,
   };
+}
+
+/** Check if a session was actually persisted in Supabase (not a local fallback) */
+function isPersistedSession(session: ChatSession): boolean {
+  return !("_local" in session && (session as ChatSession & { _local?: boolean })._local);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -257,6 +263,7 @@ export const TawanoChatbot = () => {
   const initCalled = useRef(false);
   const leadTriggeredForSession = useRef<Set<string>>(new Set());
   const restoredFromStorage = useRef(false);
+  const sessionPersisted = useRef(false);
 
   // ─── Auto-scroll ────────────────────────────────────────────
   const scrollToBottom = useCallback(() => {
@@ -381,6 +388,7 @@ export const TawanoChatbot = () => {
           (savedSessionId && merged.find((s) => s.id === savedSessionId)) ||
           merged[0];
         setActiveSessionId(target.id);
+        sessionPersisted.current = isPersistedSession(target);
 
         const msgs = await loadMessages(target.id);
         if (msgs.length > 0) {
@@ -395,13 +403,14 @@ export const TawanoChatbot = () => {
         } else if (!restoredFromStorage.current) {
           const g = makeGreeting();
           setMessages([g]);
-          saveMessage(target.id, "assistant", g.content);
+          if (sessionPersisted.current) saveMessage(target.id, "assistant", g.content);
         }
       } else if (!restoredFromStorage.current) {
         const session = await createSession(visitorId.current);
         if (session) {
           setActiveSessionId(session.id);
           setSessions([session]);
+          sessionPersisted.current = true;
           const g = makeGreeting();
           setMessages([g]);
           saveMessage(session.id, "assistant", g.content);
@@ -409,6 +418,7 @@ export const TawanoChatbot = () => {
           const localSession = makeLocalSession(visitorId.current);
           setActiveSessionId(localSession.id);
           setSessions([localSession]);
+          sessionPersisted.current = false;
           setMessages([makeGreeting()]);
         }
       }
@@ -418,6 +428,7 @@ export const TawanoChatbot = () => {
         const localSession = makeLocalSession(visitorId.current);
         setActiveSessionId(localSession.id);
         setSessions([localSession]);
+        sessionPersisted.current = false;
         setMessages([makeGreeting()]);
       }
     }
@@ -441,6 +452,7 @@ export const TawanoChatbot = () => {
   const handleNewChat = useCallback(async () => {
     const dbSession = await createSession(visitorId.current);
     const session = dbSession ?? makeLocalSession(visitorId.current);
+    sessionPersisted.current = !!dbSession;
 
     setActiveSessionId(session.id);
     setSessions((prev) => [session, ...prev]);
@@ -450,7 +462,7 @@ export const TawanoChatbot = () => {
 
     const g = makeGreeting();
     setMessages([g]);
-    saveMessage(session.id, "assistant", g.content);
+    if (sessionPersisted.current) saveMessage(session.id, "assistant", g.content);
     setTimeout(() => inputRef.current?.focus(), 200);
   }, []);
 
@@ -466,6 +478,10 @@ export const TawanoChatbot = () => {
       setLeadStep("idle");
       setLeadData({ name: "", email: "", company: "", project: "" });
 
+      // Check if this session is persisted
+      const target = sessions.find((s) => s.id === sid);
+      sessionPersisted.current = target ? isPersistedSession(target) : false;
+
       const msgs = await loadMessages(sid);
       if (msgs.length > 0) {
         setMessages(
@@ -479,11 +495,11 @@ export const TawanoChatbot = () => {
       } else {
         const g = makeGreeting();
         setMessages([g]);
-        saveMessage(sid, "assistant", g.content);
+        if (sessionPersisted.current) saveMessage(sid, "assistant", g.content);
       }
       setTimeout(() => inputRef.current?.focus(), 200);
     },
-    [activeSessionId]
+    [activeSessionId, sessions]
   );
 
   // ─── Lead capture flow ─────────────────────────────────────
@@ -496,7 +512,7 @@ export const TawanoChatbot = () => {
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, msg]);
-      if (activeSessionId) saveMessage(activeSessionId, "assistant", text);
+      if (activeSessionId && sessionPersisted.current) saveMessage(activeSessionId, "assistant", text);
     },
     [activeSessionId]
   );
@@ -599,8 +615,29 @@ export const TawanoChatbot = () => {
     setInput("");
 
     // Save user message to Supabase
-    if (activeSessionId) {
+    if (activeSessionId && sessionPersisted.current) {
       saveMessage(activeSessionId, "user", text);
+    } else if (activeSessionId && !sessionPersisted.current) {
+      // Lazy-create: the session was local-only, try to persist now
+      const realSession = await createSession(visitorId.current);
+      if (realSession) {
+        console.log("[Supabase] Lazy-created session:", realSession.id);
+        sessionPersisted.current = true;
+        setActiveSessionId(realSession.id);
+        setSessions((prev) =>
+          prev.map((s) =>
+            s.id === activeSessionId ? { ...realSession } : s
+          )
+        );
+        // Save greeting + this user message
+        const greetingMsg = messages.find((m) => m.role === "assistant");
+        if (greetingMsg) saveMessage(realSession.id, "assistant", greetingMsg.content);
+        saveMessage(realSession.id, "user", text);
+        // Update the activeSessionId for the rest of this send
+        userMsg.id = generateId(); // keep the UI msg id
+        // We'll use realSession.id below via closure
+        localStorage.setItem("tawano-active-session-id", realSession.id);
+      }
     }
 
     // Lead capture flow intercept
@@ -628,10 +665,11 @@ export const TawanoChatbot = () => {
       const updatedMessages = [...messages, userMsg, botMsg];
       setMessages(updatedMessages);
 
-      // Save to Supabase
-      if (activeSessionId) {
-        saveMessage(activeSessionId, "assistant", reply);
-        incrementMessageCount(activeSessionId, updatedMessages.length);
+      // Save to Supabase (only if session is persisted)
+      const currentSid = activeSessionId;
+      if (currentSid && sessionPersisted.current) {
+        saveMessage(currentSid, "assistant", reply);
+        incrementMessageCount(currentSid, updatedMessages.length);
 
         // Auto-title on first user message
         const userMsgCount = updatedMessages.filter(
@@ -639,13 +677,31 @@ export const TawanoChatbot = () => {
         ).length;
         if (
           userMsgCount === 1 &&
-          !titledSessions.current.has(activeSessionId)
+          !titledSessions.current.has(currentSid)
         ) {
           const title =
             text.length > 50 ? text.slice(0, 47) + "…" : text;
+          titledSessions.current.add(currentSid);
+          updateSessionTitle(currentSid, title);
+          saveLocalTitle(currentSid, title);
+          setSessions((prev) =>
+            prev.map((s) =>
+              s.id === currentSid
+                ? { ...s, title, updated_at: new Date().toISOString() }
+                : s
+            )
+          );
+        }
+
+        // Analytics metadata
+        const meta = extractSessionMeta(updatedMessages);
+        updateSessionMeta(currentSid, meta);
+      } else if (activeSessionId) {
+        // Still save title locally even if Supabase is down
+        const userMsgCount = updatedMessages.filter((m) => m.role === "user").length;
+        if (userMsgCount === 1 && !titledSessions.current.has(activeSessionId)) {
+          const title = text.length > 50 ? text.slice(0, 47) + "…" : text;
           titledSessions.current.add(activeSessionId);
-          updateSessionTitle(activeSessionId, title);
-          // Also persist title locally so history survives Supabase write failures
           saveLocalTitle(activeSessionId, title);
           setSessions((prev) =>
             prev.map((s) =>
@@ -655,10 +711,6 @@ export const TawanoChatbot = () => {
             )
           );
         }
-
-        // Analytics metadata
-        const meta = extractSessionMeta(updatedMessages);
-        updateSessionMeta(activeSessionId, meta);
       }
 
       // Lead capture check
@@ -782,18 +834,18 @@ export const TawanoChatbot = () => {
             }}
           >
             {/* ─── Header ─── */}
-            <div className="relative flex items-center gap-2.5 px-3 py-3 sm:px-4 sm:py-3.5 overflow-hidden"
-              style={{ background: "linear-gradient(135deg, hsl(221 83% 28%) 0%, hsl(217 91% 40%) 50%, hsl(207 90% 48%) 100%)" }}
+            <div className="relative flex items-center px-4 py-3 overflow-hidden"
+              style={{ background: "linear-gradient(135deg, hsl(222 47% 15%) 0%, hsl(221 55% 22%) 40%, hsl(217 65% 30%) 100%)" }}
             >
-              {/* Subtle inner glow */}
-              <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(circle at 20% 40%, rgba(255,255,255,0.08), transparent 55%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.04), transparent 40%)" }} />
+              {/* Shimmer overlay */}
+              <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 50%, rgba(255,255,255,0.02) 100%)" }} />
 
-              {/* History / Back */}
+              {/* History / Back button */}
               <motion.button
-                whileHover={{ backgroundColor: "rgba(255,255,255,0.15)" }}
-                whileTap={{ scale: 0.9 }}
+                whileHover={{ backgroundColor: "rgba(255,255,255,0.1)" }}
+                whileTap={{ scale: 0.92 }}
                 onClick={() => setShowHistory((p) => !p)}
-                className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white/70 hover:text-white transition-colors"
+                className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white/50 hover:text-white/90 transition-colors mr-2.5"
                 aria-label={showHistory ? "Chat anzeigen" : "Verlauf"}
                 title={showHistory ? "Zurück zum Chat" : "Chat-Verlauf"}
               >
@@ -804,44 +856,48 @@ export const TawanoChatbot = () => {
                 )}
               </motion.button>
 
-              {/* Bot avatar */}
-              <div className="relative z-10 h-10 w-10 shrink-0 rounded-xl bg-white/[0.12] flex items-center justify-center ring-1 ring-white/[0.15] backdrop-blur-sm">
-                <Bot className="h-5 w-5 text-white" />
-                <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-400 ring-[1.5px] ring-[hsl(217_91%_40%)]" />
+              {/* Avatar + Title group */}
+              <div className="relative z-10 flex items-center gap-3 flex-1 min-w-0">
+                {/* Bot avatar */}
+                <div className="relative h-9 w-9 shrink-0 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                  <Bot className="h-[18px] w-[18px] text-white" />
+                  <span className="absolute -bottom-px -right-px h-2.5 w-2.5 rounded-full bg-emerald-400 ring-2 ring-[hsl(221_55%_22%)]" />
+                </div>
+
+                {/* Text */}
+                <div className="min-w-0">
+                  <p className="text-[15px] font-semibold text-white leading-none tracking-[-0.01em]">
+                    Tawano KI
+                  </p>
+                  <p className="text-[11px] text-white/40 leading-none mt-1">
+                    Immer online
+                  </p>
+                </div>
               </div>
 
-              {/* Title */}
-              <div className="relative z-10 flex-1 min-w-0 ml-0.5">
-                <p className="text-[14px] font-semibold text-white leading-tight tracking-[-0.01em]">
-                  Tawano KI
-                </p>
-                <p className="text-[10.5px] text-white/55 leading-tight mt-0.5 tracking-wide">
-                  Digitaler Assistent · Immer online
-                </p>
+              {/* Action buttons */}
+              <div className="relative z-10 flex items-center gap-0.5">
+                <motion.button
+                  whileHover={{ backgroundColor: "rgba(255,255,255,0.1)" }}
+                  whileTap={{ scale: 0.92 }}
+                  onClick={handleNewChat}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-white/50 hover:text-white/90 transition-colors"
+                  aria-label="Neues Gespräch"
+                  title="Neues Gespräch starten"
+                >
+                  <Plus className="h-4 w-4" />
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ backgroundColor: "rgba(255,255,255,0.1)" }}
+                  whileTap={{ scale: 0.92 }}
+                  onClick={() => setIsOpen(false)}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-white/50 hover:text-white/90 transition-colors"
+                  aria-label="Schließen"
+                >
+                  <X className="h-4 w-4" />
+                </motion.button>
               </div>
-
-              {/* New Chat */}
-              <motion.button
-                whileHover={{ backgroundColor: "rgba(255,255,255,0.15)" }}
-                whileTap={{ scale: 0.9 }}
-                onClick={handleNewChat}
-                className="relative z-10 flex h-8 w-8 items-center justify-center rounded-lg text-white/70 hover:text-white transition-colors"
-                aria-label="Neues Gespräch"
-                title="Neues Gespräch starten"
-              >
-                <Plus className="h-4 w-4" />
-              </motion.button>
-
-              {/* Close */}
-              <motion.button
-                whileHover={{ backgroundColor: "rgba(255,255,255,0.15)" }}
-                whileTap={{ scale: 0.9 }}
-                onClick={() => setIsOpen(false)}
-                className="relative z-10 flex h-8 w-8 items-center justify-center rounded-lg text-white/70 hover:text-white transition-colors"
-                aria-label="Schließen"
-              >
-                <X className="h-4 w-4" />
-              </motion.button>
             </div>
 
             {/* ─── Content Area ─── */}
