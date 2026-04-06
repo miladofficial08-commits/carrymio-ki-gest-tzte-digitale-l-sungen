@@ -58,6 +58,7 @@ export interface ChatLog {
 // ─── Session functions ───────────────────────────────────────
 
 export async function createSession(visitorId: string): Promise<ChatSession | null> {
+  console.log("[Supabase] createSession called for visitor:", visitorId.slice(0, 8) + "...");
   try {
     const { data, error } = await supabase
       .from("chat_sessions")
@@ -66,22 +67,24 @@ export async function createSession(visitorId: string): Promise<ChatSession | nu
       .single();
     if (error) {
       console.error(
-        "[Supabase] createSession failed:",
+        "[Supabase] createSession FAILED:",
         error.message,
         "(code:",
         error.code,
         ") — If this is a 403 or 'row-level security' error, run supabase-setup-v2.sql in your Supabase dashboard."
       );
-      throw error;
+      return null;
     }
+    console.log("[Supabase] createSession SUCCESS:", (data as ChatSession).id);
     return data as ChatSession;
   } catch (e) {
-    console.error("[Supabase] createSession exception:", e);
+    console.error("[Supabase] createSession EXCEPTION:", e);
     return null;
   }
 }
 
 export async function loadSessions(visitorId: string, limit = 20): Promise<ChatSession[]> {
+  console.log("[Supabase] loadSessions called for visitor:", visitorId.slice(0, 8) + "...");
   try {
     const { data, error } = await supabase
       .from("chat_sessions")
@@ -90,27 +93,33 @@ export async function loadSessions(visitorId: string, limit = 20): Promise<ChatS
       .order("updated_at", { ascending: false })
       .limit(limit);
     if (error) {
-      console.error("[Supabase] loadSessions failed:", error.message, "(code:", error.code, ")");
-      throw error;
+      console.error("[Supabase] loadSessions FAILED:", error.message, "(code:", error.code, ")");
+      return [];
     }
+    console.log("[Supabase] loadSessions SUCCESS:", (data as ChatSession[])?.length || 0, "sessions");
     return (data as ChatSession[]) || [];
   } catch (e) {
-    console.error("[Supabase] loadSessions exception:", e);
+    console.error("[Supabase] loadSessions EXCEPTION:", e);
     return [];
   }
 }
 
 export async function loadMessages(sessionId: string): Promise<ChatMessage[]> {
+  console.log("[Supabase] loadMessages called for session:", sessionId.slice(0, 8) + "...");
   try {
     const { data, error } = await supabase
       .from("chat_messages")
       .select("*")
       .eq("session_id", sessionId)
       .order("created_at", { ascending: true });
-    if (error) throw error;
+    if (error) {
+      console.error("[Supabase] loadMessages FAILED:", error.message, "(code:", error.code, ")");
+      return [];
+    }
+    console.log("[Supabase] loadMessages SUCCESS:", (data as ChatMessage[])?.length || 0, "messages");
     return (data as ChatMessage[]) || [];
   } catch (e) {
-    console.error("Failed to load messages:", e);
+    console.error("[Supabase] loadMessages EXCEPTION:", e);
     return [];
   }
 }
@@ -120,19 +129,42 @@ export async function saveMessage(
   role: "user" | "assistant",
   content: string
 ): Promise<boolean> {
+  console.log("[Supabase] saveMessage called:", { sessionId: sessionId.slice(0, 8) + "...", role, contentLength: content.length });
   try {
-    const { error } = await supabase.from("chat_messages").insert({
+    const { data, error } = await supabase.from("chat_messages").insert({
       session_id: sessionId,
       role,
       content,
-    });
+    }).select();
     if (error) {
-      console.error("[Supabase] saveMessage failed:", error.message, "(code:", error.code, ")");
+      console.error("[Supabase] saveMessage FAILED:", error.message, "(code:", error.code, ")");
+      console.error("[Supabase] saveMessage details:", { sessionId, role });
       return false;
     }
+    console.log("[Supabase] saveMessage SUCCESS:", data?.[0]?.id);
     return true;
   } catch (e) {
-    console.error("[Supabase] saveMessage exception:", e);
+    console.error("[Supabase] saveMessage EXCEPTION:", e);
+    return false;
+  }
+}
+
+export async function saveMessagesBulk(
+  messages: Array<{ session_id: string; role: "user" | "assistant"; content: string }
+>
+): Promise<boolean> {
+  console.log("[Supabase] saveMessagesBulk called:", messages.length, "messages");
+  if (messages.length === 0) return true;
+  try {
+    const { data, error } = await supabase.from("chat_messages").insert(messages).select();
+    if (error) {
+      console.error("[Supabase] saveMessagesBulk FAILED:", error.message, "(code:", error.code, ")");
+      return false;
+    }
+    console.log("[Supabase] saveMessagesBulk SUCCESS:", data?.length, "messages inserted");
+    return true;
+  } catch (e) {
+    console.error("[Supabase] saveMessagesBulk EXCEPTION:", e);
     return false;
   }
 }

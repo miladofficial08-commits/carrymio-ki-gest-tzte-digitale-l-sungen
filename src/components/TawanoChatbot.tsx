@@ -18,6 +18,7 @@ import {
   loadSessions,
   loadMessages,
   saveMessage,
+  saveMessagesBulk,
   updateSessionTitle,
   updateSessionMeta,
   incrementMessageCount,
@@ -180,6 +181,45 @@ function getLocalTitles(): Record<string, string> {
   } catch {
     return {};
   }
+}
+
+// ─── Local session backup for offline/fallback ──────────────
+interface LocalSessionBackup {
+  sessions: Array<{
+    id: string;
+    visitor_id: string;
+    title: string;
+    created_at: string;
+    updated_at: string;
+    messages: Array<{
+      id: string;
+      role: "user" | "assistant";
+      content: string;
+      timestamp: string;
+    }>;
+  }>;
+  activeSessionId: string | null;
+}
+
+function saveLocalBackup(backup: LocalSessionBackup): void {
+  try {
+    localStorage.setItem("tawano-chat-backup", JSON.stringify(backup));
+  } catch { /* quota exceeded */ }
+}
+
+function getLocalBackup(): LocalSessionBackup | null {
+  try {
+    const raw = localStorage.getItem("tawano-chat-backup");
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function clearLocalBackup(): void {
+  try {
+    localStorage.removeItem("tawano-chat-backup");
+  } catch { /* ignore */ }
 }
 
 function deriveTitleFromMessages(msgs: Array<{ role: string; content: string }>): string {
@@ -360,13 +400,31 @@ export const TawanoChatbot = () => {
     }
   }, [messages]);
 
-  // ─── Session initialization (Supabase is source of truth) ──
+  // ─── Session initialization (Supabase is source of truth, localStorage is backup) ──
   const initializeSessions = useCallback(async () => {
     if (initCalled.current) return;
     initCalled.current = true;
     setIsLoadingSessions(true);
 
+    // Check for local backup FIRST (before touching Supabase)
+    const localBackup = getLocalBackup();
     const savedSessionId = localStorage.getItem("tawano-active-session-id");
+    const savedMessagesRaw = localStorage.getItem("tawano-chat-messages");
+    let localSessionToMigrate: { id: string; messages: Message[] } | null = null;
+
+    if (savedSessionId && savedMessagesRaw) {
+      try {
+        const parsed = JSON.parse(savedMessagesRaw);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const msgs = parsed.map((m: { id: string; role: "user" | "assistant"; content: string; timestamp: string }) => ({
+            ...m,
+            timestamp: new Date(m.timestamp),
+          }));
+          localSessionToMigrate = { id: savedSessionId, messages: msgs };
+          console.log("[Session] Found local session to migrate:", savedSessionId, "with", msgs.length, "messages");
+        }
+      } catch { /* ignore corrupted data */ }
+    }
 
     try {
       const existing = await loadSessions(visitorId.current);
@@ -383,17 +441,19 @@ export const TawanoChatbot = () => {
       }));
 
       if (allSessions.length > 0) {
+        // Supabase has sessions — use them as source of truth
         setSessions(allSessions);
 
-        // Prefer the saved session from localStorage if present in list
+        // Check if saved session exists in Supabase
         const target =
           (savedSessionId && allSessions.find((s) => s.id === savedSessionId)) ||
           allSessions[0];
         setActiveSessionId(target.id);
-        sessionPersisted.current = true; // came from Supabase → persisted
+        sessionPersisted.current = true;
 
-        // Always load messages from Supabase (overwrite localStorage cache)
+        // Load messages from Supabase
         const msgs = await loadMessages(target.id);
+        console.log("[Session] Loaded", msgs.length, "messages for session", target.id);
         if (msgs.length > 0) {
           setMessages(
             msgs.map((m) => ({
@@ -407,36 +467,91 @@ export const TawanoChatbot = () => {
           // Session exists but no messages — show greeting
           const g = makeGreeting();
           setMessages([g]);
-          saveMessage(target.id, "assistant", g.content);
+          const ok = await saveMessage(target.id, "assistant", g.content);
+          console.log("[Session] Greeting save:", ok ? "SUCCESS" : "FAILED");
+        }
+
+        // If there was a local session with messages that's NOT in Supabase, save it too
+        // (this handles the case where local session failed to persist earlier)
+        if (localSessionToMigrate && !allSessions.find(s => s.id === localSessionToMigrate!.id)) {
+          console.log("[Session] Orphaned local session detected, messages may be lost");
         }
       } else {
-        // No sessions in Supabase — create one
-        const session = await createSession(visitorId.current);
-        if (session) {
-          console.log("[Session] Created initial session:", session.id);
-          setActiveSessionId(session.id);
-          setSessions([session]);
-          sessionPersisted.current = true;
-          const g = makeGreeting();
-          setMessages([g]);
-          saveMessage(session.id, "assistant", g.content);
+        // No sessions in Supabase — check if we have a local session to migrate
+        if (localSessionToMigrate) {
+          console.log("[Session] Migrating local session to Supabase:", localSessionToMigrate.id);
+          // Create session in Supabase
+          const session = await createSession(visitorId.current);
+          if (session) {
+            console.log("[Session] Created Supabase session for migration:", session.id);
+            setActiveSessionId(session.id);
+            setSessions([session]);
+            sessionPersisted.current = true;
+            setMessages(localSessionToMigrate.messages);
+
+            // Save all messages to Supabase
+            for (const msg of localSessionToMigrate.messages) {
+              const ok = await saveMessage(session.id, msg.role, msg.content);
+              console.log("[Session] Migrated message:", msg.role, ok ? "SUCCESS" : "FAILED");
+            }
+            // Update message count
+            await incrementMessageCount(session.id, localSessionToMigrate.messages.length);
+
+            // Update localStorage to point to new session
+            localStorage.setItem("tawano-active-session-id", session.id);
+            console.log("[Session] Migration complete, new session:", session.id);
+          } else {
+            // Supabase still failing — keep local session
+            console.warn("[Session] Migration failed, keeping local session");
+            setActiveSessionId(localSessionToMigrate.id);
+            const localSess = makeLocalSession(visitorId.current);
+            localSess.id = localSessionToMigrate.id; // Preserve ID
+            setSessions([localSess]);
+            sessionPersisted.current = false;
+            setMessages(localSessionToMigrate.messages);
+          }
         } else {
-          // Supabase unreachable — local fallback
-          console.warn("[Session] createSession failed, using local fallback");
-          const localSession = makeLocalSession(visitorId.current);
-          setActiveSessionId(localSession.id);
-          setSessions([localSession]);
-          sessionPersisted.current = false;
-          setMessages([makeGreeting()]);
+          // No local session either — create fresh
+          console.log("[Session] No existing session, creating fresh");
+          const session = await createSession(visitorId.current);
+          if (session) {
+            console.log("[Session] Created initial session:", session.id);
+            setActiveSessionId(session.id);
+            setSessions([session]);
+            sessionPersisted.current = true;
+            const g = makeGreeting();
+            setMessages([g]);
+            const ok = await saveMessage(session.id, "assistant", g.content);
+            console.log("[Session] Greeting save:", ok ? "SUCCESS" : "FAILED");
+          } else {
+            // Supabase unreachable — local fallback
+            console.warn("[Session] createSession failed, using local fallback");
+            const localSession = makeLocalSession(visitorId.current);
+            setActiveSessionId(localSession.id);
+            setSessions([localSession]);
+            sessionPersisted.current = false;
+            setMessages([makeGreeting()]);
+          }
         }
       }
     } catch (e) {
       console.error("[Session] Init failed:", e);
-      const localSession = makeLocalSession(visitorId.current);
-      setActiveSessionId(localSession.id);
-      setSessions([localSession]);
-      sessionPersisted.current = false;
-      setMessages([makeGreeting()]);
+      // On error, try to restore local session if available
+      if (localSessionToMigrate) {
+        console.log("[Session] Restoring local session after error");
+        setActiveSessionId(localSessionToMigrate.id);
+        const localSess = makeLocalSession(visitorId.current);
+        localSess.id = localSessionToMigrate.id;
+        setSessions([localSess]);
+        sessionPersisted.current = false;
+        setMessages(localSessionToMigrate.messages);
+      } else {
+        const localSession = makeLocalSession(visitorId.current);
+        setActiveSessionId(localSession.id);
+        setSessions([localSession]);
+        sessionPersisted.current = false;
+        setMessages([makeGreeting()]);
+      }
     }
 
     setSessionReady(true);
@@ -652,22 +767,36 @@ export const TawanoChatbot = () => {
       );
     } else if (activeSessionId && !sessionPersisted.current) {
       // Lazy-create: the session was local-only, try to persist now
+      console.log("[Session] Attempting lazy-create for local session");
       const realSession = await createSession(visitorId.current);
       if (realSession) {
         console.log("[Session] Lazy-created session:", realSession.id);
         sessionPersisted.current = true;
         effectiveSessionId = realSession.id;
         setActiveSessionId(realSession.id);
+
+        // Replace local session with real session in the sessions list
         setSessions((prev) =>
           prev.map((s) =>
             s.id === activeSessionId ? { ...realSession } : s
           )
         );
-        // Save greeting + this user message with the new real ID
-        const greetingMsg = messages.find((m) => m.role === "assistant");
-        if (greetingMsg) saveMessage(realSession.id, "assistant", greetingMsg.content);
-        saveMessage(realSession.id, "user", text);
+
+        // Save ALL existing messages to Supabase (not just greeting)
+        console.log("[Session] Migrating", messages.length + 1, "messages to Supabase");
+        for (const msg of [...messages, userMsg]) {
+          const ok = await saveMessage(realSession.id, msg.role, msg.content);
+          console.log("[Session] Migrated message:", msg.role, ok ? "SUCCESS" : "FAILED");
+        }
+
+        // Update message count
+        await incrementMessageCount(realSession.id, messages.length + 1);
+
+        // Update localStorage to point to new session
         localStorage.setItem("tawano-active-session-id", realSession.id);
+        console.log("[Session] Lazy-create complete, new session:", realSession.id);
+      } else {
+        console.warn("[Session] Lazy-create failed, staying in local mode");
       }
     }
 
