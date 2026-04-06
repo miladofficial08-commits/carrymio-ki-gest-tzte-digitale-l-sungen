@@ -27,7 +27,7 @@ interface ChatMessage {
   content: string;
 }
 
-exports.handler = async (event: { httpMethod: string; body: string | null }) => {
+export const handler = async (event: { httpMethod: string; body: string | null }) => {
   const headers = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type",
