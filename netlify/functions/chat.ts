@@ -1,13 +1,36 @@
 import type { Handler } from "@netlify/functions";
 import OpenAI from "openai";
 import { readFileSync } from "fs";
-import { resolve, dirname } from "path";
-import { fileURLToPath } from "url";
+import { resolve } from "path";
+
+const DEFAULT_PROMPT =
+  "Du bist der digitale Assistent von Tawano. Antworte freundlich, klar und professionell auf Deutsch.";
+
+const DEFAULT_KNOWLEDGE =
+  "Tawano bietet digitale Mitarbeiter, Chatbots, Webdesign und Custom Automation fuer Unternehmen.";
+
+function loadTextFile(fileName: string, fallback: string): string {
+  const candidates = [
+    resolve(process.cwd(), "netlify/functions", fileName),
+    resolve(process.cwd(), fileName),
+    resolve(__dirname, fileName),
+  ];
+
+  for (const path of candidates) {
+    try {
+      return readFileSync(path, "utf-8");
+    } catch {
+      // Try next location.
+    }
+  }
+
+  console.warn(`Could not load ${fileName}. Using fallback content.`);
+  return fallback;
+}
 
 // Load prompt and knowledge base from editable text files
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const PROMPT = readFileSync(resolve(__dirname, "prompt.txt"), "utf-8");
-const KNOWLEDGE = readFileSync(resolve(__dirname, "knowledge.txt"), "utf-8");
+const PROMPT = loadTextFile("prompt.txt", DEFAULT_PROMPT);
+const KNOWLEDGE = loadTextFile("knowledge.txt", DEFAULT_KNOWLEDGE);
 
 const SYSTEM_PROMPT = `${PROMPT}
 
@@ -26,7 +49,7 @@ interface ChatMessage {
   content: string;
 }
 
-const handler: Handler = async (event) => {
+export const handler: Handler = async (event) => {
   // CORS headers
   const headers = {
     "Access-Control-Allow-Origin": "*",
@@ -43,8 +66,27 @@ const handler: Handler = async (event) => {
     return { statusCode: 405, headers, body: JSON.stringify({ error: "Method not allowed" }) };
   }
 
+  if (!process.env.OPENAI_API_KEY) {
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: "OPENAI_API_KEY is not set" }),
+    };
+  }
+
   try {
-    const { messages } = JSON.parse(event.body || "{}") as { messages: ChatMessage[] };
+    let parsedBody: { messages?: ChatMessage[] };
+    try {
+      parsedBody = JSON.parse(event.body || "{}");
+    } catch {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: "Invalid JSON body" }),
+      };
+    }
+
+    const { messages } = parsedBody;
 
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: "Messages required" }) };
@@ -80,5 +122,3 @@ const handler: Handler = async (event) => {
     };
   }
 };
-
-export { handler };

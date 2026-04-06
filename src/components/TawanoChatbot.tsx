@@ -258,6 +258,8 @@ export const TawanoChatbot = () => {
         } else {
           userError = `Serverfehler: ${message.replace("CHAT_SERVER_ERROR:", "")}`;
         }
+      } else if (message.startsWith("CHAT_HTTP_")) {
+        userError = `API-Fehler: ${message.replace("CHAT_HTTP_", "HTTP ")}`;
       }
 
       setMessages((prev) => [
