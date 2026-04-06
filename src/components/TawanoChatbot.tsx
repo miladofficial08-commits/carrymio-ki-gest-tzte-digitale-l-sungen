@@ -22,7 +22,6 @@ import {
   updateSessionMeta,
   incrementMessageCount,
   saveLead,
-  testSupabaseConnection,
   type ChatSession,
   type SessionMeta,
 } from "@/lib/supabase";
@@ -272,7 +271,6 @@ export const TawanoChatbot = () => {
   const titledSessions = useRef<Set<string>>(new Set());
   const initCalled = useRef(false);
   const leadTriggeredForSession = useRef<Set<string>>(new Set());
-  const restoredFromStorage = useRef(false);
   const sessionPersisted = useRef(false);
 
   // ─── Auto-scroll ────────────────────────────────────────────
@@ -314,7 +312,7 @@ export const TawanoChatbot = () => {
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearInterval(interval); };
   }, [isOpen]);
 
-  // ─── localStorage restore on mount ─────────────────────────
+  // ─── localStorage restore on mount (visual cache only — Supabase is source of truth) ───
   useEffect(() => {
     try {
       const sid = localStorage.getItem("tawano-active-session-id");
@@ -329,8 +327,8 @@ export const TawanoChatbot = () => {
               timestamp: new Date(m.timestamp),
             }))
           );
-          restoredFromStorage.current = true;
-          setSessionReady(true);
+          // NOTE: sessionReady stays false until initializeSessions completes
+          // This prevents sending messages before Supabase is ready
         }
       }
     } catch { /* ignore corrupted data */ }
@@ -361,23 +359,21 @@ export const TawanoChatbot = () => {
     }
   }, [messages]);
 
-  // ─── Session initialization ─────────────────────────────────
+  // ─── Session initialization (Supabase is source of truth) ──
   const initializeSessions = useCallback(async () => {
     if (initCalled.current) return;
     initCalled.current = true;
     setIsLoadingSessions(true);
 
-    // Run diagnostic on first open
-    testSupabaseConnection();
-
     const savedSessionId = localStorage.getItem("tawano-active-session-id");
 
     try {
       const existing = await loadSessions(visitorId.current);
+      console.log("[Session] Loaded", existing.length, "sessions from Supabase");
 
-      // Merge with locally-stored titles (covers Supabase write failures)
+      // Merge with locally-stored titles (covers title-update failures)
       const localTitles = getLocalTitles();
-      const merged = existing.map((s) => ({
+      const allSessions = existing.map((s) => ({
         ...s,
         title:
           s.title === "Neues Gespräch" && localTitles[s.id]
@@ -385,33 +381,17 @@ export const TawanoChatbot = () => {
             : s.title,
       }));
 
-      // If Supabase has no sessions but localStorage has restored data,
-      // build a virtual session entry so history panel shows something useful
-      if (merged.length === 0 && restoredFromStorage.current && savedSessionId) {
-        const raw = localStorage.getItem("tawano-chat-messages");
-        const storedMsgs: Array<{ role: string; content: string }> = raw
-          ? JSON.parse(raw)
-          : [];
-        const derivedTitle =
-          localTitles[savedSessionId] || deriveTitleFromMessages(storedMsgs);
-        const virtualSession = {
-          ...makeLocalSession(visitorId.current),
-          id: savedSessionId,
-          title: derivedTitle,
-        };
-        merged.push(virtualSession);
-      }
+      if (allSessions.length > 0) {
+        setSessions(allSessions);
 
-      setSessions(merged);
-
-      if (merged.length > 0) {
         // Prefer the saved session from localStorage if present in list
         const target =
-          (savedSessionId && merged.find((s) => s.id === savedSessionId)) ||
-          merged[0];
+          (savedSessionId && allSessions.find((s) => s.id === savedSessionId)) ||
+          allSessions[0];
         setActiveSessionId(target.id);
-        sessionPersisted.current = isPersistedSession(target);
+        sessionPersisted.current = true; // came from Supabase → persisted
 
+        // Always load messages from Supabase (overwrite localStorage cache)
         const msgs = await loadMessages(target.id);
         if (msgs.length > 0) {
           setMessages(
@@ -422,14 +402,17 @@ export const TawanoChatbot = () => {
               timestamp: new Date(m.created_at),
             }))
           );
-        } else if (!restoredFromStorage.current) {
+        } else {
+          // Session exists but no messages — show greeting
           const g = makeGreeting();
           setMessages([g]);
-          if (sessionPersisted.current) saveMessage(target.id, "assistant", g.content);
+          saveMessage(target.id, "assistant", g.content);
         }
-      } else if (!restoredFromStorage.current) {
+      } else {
+        // No sessions in Supabase — create one
         const session = await createSession(visitorId.current);
         if (session) {
+          console.log("[Session] Created initial session:", session.id);
           setActiveSessionId(session.id);
           setSessions([session]);
           sessionPersisted.current = true;
@@ -437,6 +420,8 @@ export const TawanoChatbot = () => {
           setMessages([g]);
           saveMessage(session.id, "assistant", g.content);
         } else {
+          // Supabase unreachable — local fallback
+          console.warn("[Session] createSession failed, using local fallback");
           const localSession = makeLocalSession(visitorId.current);
           setActiveSessionId(localSession.id);
           setSessions([localSession]);
@@ -445,14 +430,12 @@ export const TawanoChatbot = () => {
         }
       }
     } catch (e) {
-      console.error("Session init failed:", e);
-      if (!restoredFromStorage.current) {
-        const localSession = makeLocalSession(visitorId.current);
-        setActiveSessionId(localSession.id);
-        setSessions([localSession]);
-        sessionPersisted.current = false;
-        setMessages([makeGreeting()]);
-      }
+      console.error("[Session] Init failed:", e);
+      const localSession = makeLocalSession(visitorId.current);
+      setActiveSessionId(localSession.id);
+      setSessions([localSession]);
+      sessionPersisted.current = false;
+      setMessages([makeGreeting()]);
     }
 
     setSessionReady(true);
@@ -472,9 +455,21 @@ export const TawanoChatbot = () => {
 
   // ─── New Chat ───────────────────────────────────────────────
   const handleNewChat = useCallback(async () => {
-    const dbSession = await createSession(visitorId.current);
+    // Try to create session in Supabase, retry once on failure
+    let dbSession = await createSession(visitorId.current);
+    if (!dbSession) {
+      console.warn("[Session] createSession failed, retrying...");
+      dbSession = await createSession(visitorId.current);
+    }
+
     const session = dbSession ?? makeLocalSession(visitorId.current);
     sessionPersisted.current = !!dbSession;
+
+    if (dbSession) {
+      console.log("[Session] New chat created:", dbSession.id);
+    } else {
+      console.warn("[Session] New chat is local-only (won't survive refresh)");
+    }
 
     setActiveSessionId(session.id);
     setSessions((prev) => [session, ...prev]);
@@ -624,7 +619,7 @@ export const TawanoChatbot = () => {
   // ─── Send message ──────────────────────────────────────────
   const handleSend = useCallback(async () => {
     const text = input.trim();
-    if (!text || isTyping) return;
+    if (!text || isTyping || !sessionReady) return;
 
     const userMsg: Message = {
       id: generateId(),
@@ -641,12 +636,14 @@ export const TawanoChatbot = () => {
 
     // Save user message to Supabase
     if (activeSessionId && sessionPersisted.current) {
-      saveMessage(activeSessionId, "user", text);
+      saveMessage(activeSessionId, "user", text).then((ok) => {
+        if (!ok) console.warn("[Save] User message save failed for session", activeSessionId);
+      });
     } else if (activeSessionId && !sessionPersisted.current) {
       // Lazy-create: the session was local-only, try to persist now
       const realSession = await createSession(visitorId.current);
       if (realSession) {
-        console.log("[Supabase] Lazy-created session:", realSession.id);
+        console.log("[Session] Lazy-created session:", realSession.id);
         sessionPersisted.current = true;
         effectiveSessionId = realSession.id;
         setActiveSessionId(realSession.id);
@@ -690,7 +687,11 @@ export const TawanoChatbot = () => {
 
       // Save to Supabase (only if session is persisted)
       if (effectiveSessionId && sessionPersisted.current) {
-        saveMessage(effectiveSessionId, "assistant", reply);
+        console.log("[Save] Saving bot reply to session", effectiveSessionId);
+        saveMessage(effectiveSessionId, "assistant", reply).then((ok) => {
+          if (ok) console.log("[Save] Bot reply saved successfully");
+          else console.warn("[Save] Bot reply save FAILED");
+        });
         incrementMessageCount(effectiveSessionId, updatedMessages.length);
 
         // Auto-title on first user message
@@ -778,6 +779,7 @@ export const TawanoChatbot = () => {
   }, [
     input,
     isTyping,
+    sessionReady,
     messages,
     activeSessionId,
     leadStep,
