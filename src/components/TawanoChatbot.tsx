@@ -1,7 +1,18 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Bot, User, Loader2, ArrowDown } from "lucide-react";
-import { logChat, saveLead } from "@/lib/supabase";
+import { MessageCircle, X, Send, Bot, User, Loader2, ArrowDown, Plus, Clock, ChevronLeft } from "lucide-react";
+import {
+  createSession,
+  loadSessions,
+  loadMessages,
+  saveMessage,
+  updateSessionTitle,
+  updateSessionMeta,
+  incrementMessageCount,
+  saveLead,
+  type ChatSession,
+  type SessionMeta,
+} from "@/lib/supabase";
 
 // ─── Types ───────────────────────────────────────────────────
 interface Message {
@@ -24,12 +35,13 @@ function generateId(): string {
   });
 }
 
-// ─── Session ID ──────────────────────────────────────────────
-function getSessionId(): string {
-  let id = sessionStorage.getItem("tawano-chat-session");
+// ─── Persistent Visitor ID (survives tab close + refresh) ────
+function getVisitorId(): string {
+  const KEY = "tawano-visitor-id";
+  let id = localStorage.getItem(KEY);
   if (!id) {
     id = generateId();
-    sessionStorage.setItem("tawano-chat-session", id);
+    localStorage.setItem(KEY, id);
   }
   return id;
 }
@@ -45,7 +57,42 @@ const CHAT_ENDPOINT = (import.meta.env.VITE_CHAT_API_URL as string | undefined)?
 
 function shouldCaptureLead(messages: Message[]): boolean {
   const userMessages = messages.filter((m) => m.role === "user").map((m) => m.content.toLowerCase());
-  return userMessages.some((msg) => LEAD_KEYWORDS.some((kw) => msg.includes(kw)));
+  const hasEnoughContext = userMessages.length >= 2;
+  return hasEnoughContext && userMessages.some((msg) => LEAD_KEYWORDS.some((kw) => msg.includes(kw)));
+}
+
+// ─── Metadata extraction (silent analytics) ──────────────────
+function extractSessionMeta(messages: Message[]): SessionMeta {
+  const allUserText = messages
+    .filter((m) => m.role === "user")
+    .map((m) => m.content.toLowerCase())
+    .join(" ");
+
+  const services: string[] = [];
+  if (/chatbot|chat.bot|supportbot|support.bot/.test(allUserText)) services.push("chatbot");
+  if (/webdesign|website|webseite|landingpage|landing.page|homepage/.test(allUserText)) services.push("webdesign");
+  if (/automat|digitale.mitarbeiter|workflow|prozess/.test(allUserText)) services.push("automation");
+  if (/custom|individuell|maßgeschneidert|spezial/.test(allUserText)) services.push("custom");
+
+  return {
+    service_interest: services,
+    is_lead: LEAD_KEYWORDS.some((kw) => allUserText.includes(kw)),
+    has_pricing_objection: /zu teuer|zu viel|budget|günstig|billig|kostet.*viel|nicht leisten/.test(allUserText),
+    requested_contact: /kontakt|termin|anruf|beratung|gespräch|treffen|rückruf|callback/.test(allUserText),
+  };
+}
+
+// ─── Relative time formatting ────────────────────────────────
+function timeAgo(dateStr: string): string {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return "Gerade eben";
+  if (mins < 60) return `vor ${mins} Min.`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `vor ${hours} Std.`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `vor ${days} Tag${days > 1 ? "en" : ""}`;
+  return new Date(dateStr).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" });
 }
 
 // ─── API Call ────────────────────────────────────────────────
@@ -91,10 +138,18 @@ export const TawanoChatbot = () => {
   const [leadData, setLeadData] = useState({ name: "", email: "", company: "", project: "" });
   const [hasGreeted, setHasGreeted] = useState(false);
 
+  // Session state
+  const [sessions, setSessions] = useState<ChatSession[]>([]);
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
+  const [showHistory, setShowHistory] = useState(false);
+  const [isLoadingSessions, setIsLoadingSessions] = useState(false);
+  const [sessionInitialized, setSessionInitialized] = useState(false);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const sessionId = useRef(getSessionId());
+  const visitorId = useRef(getVisitorId());
+  const titleSetForSession = useRef<Set<string>>(new Set());
 
   // Auto-scroll
   const scrollToBottom = useCallback(() => {
@@ -117,27 +172,112 @@ export const TawanoChatbot = () => {
     return () => el.removeEventListener("scroll", handleScroll);
   }, [isOpen]);
 
-  // Greeting message on first open
-  useEffect(() => {
-    if (isOpen && !hasGreeted) {
-      setHasGreeted(true);
-      setTimeout(() => {
-        setMessages([
-          {
-            id: generateId(),
-            role: "assistant",
-            content: "Hallo! 👋 Ich bin der digitale Assistent von Tawano. Wie kann ich Ihnen helfen?",
-            timestamp: new Date(),
-          },
-        ]);
-      }, 400);
+  // ─── Session initialization on first open ───────────────────
+  const initializeSessions = useCallback(async () => {
+    if (sessionInitialized) return;
+    setIsLoadingSessions(true);
+
+    const existingSessions = await loadSessions(visitorId.current);
+    setSessions(existingSessions);
+
+    if (existingSessions.length > 0) {
+      // Resume most recent session
+      const latest = existingSessions[0];
+      setActiveSessionId(latest.id);
+      const msgs = await loadMessages(latest.id);
+      if (msgs.length > 0) {
+        setMessages(
+          msgs.map((m) => ({
+            id: m.id,
+            role: m.role,
+            content: m.content,
+            timestamp: new Date(m.created_at),
+          }))
+        );
+        setHasGreeted(true);
+      }
+    } else {
+      // Create first session
+      const session = await createSession(visitorId.current);
+      if (session) {
+        setActiveSessionId(session.id);
+        setSessions([session]);
+      }
     }
-  }, [isOpen, hasGreeted]);
+
+    setSessionInitialized(true);
+    setIsLoadingSessions(false);
+  }, [sessionInitialized]);
+
+  // Greeting message on first open (only if no messages loaded)
+  useEffect(() => {
+    if (isOpen && !hasGreeted && sessionInitialized) {
+      setHasGreeted(true);
+      const greeting: Message = {
+        id: generateId(),
+        role: "assistant",
+        content: "Hallo! 👋 Ich bin der digitale Assistent von Tawano. Wie kann ich Ihnen helfen?",
+        timestamp: new Date(),
+      };
+      setMessages([greeting]);
+      // Save greeting to Supabase
+      if (activeSessionId) {
+        saveMessage(activeSessionId, "assistant", greeting.content);
+        incrementMessageCount(activeSessionId, 1);
+      }
+    }
+  }, [isOpen, hasGreeted, sessionInitialized, activeSessionId]);
+
+  // Initialize sessions when chat opens
+  useEffect(() => {
+    if (isOpen) {
+      initializeSessions();
+    }
+  }, [isOpen, initializeSessions]);
 
   // Focus input when opened
   useEffect(() => {
     if (isOpen) setTimeout(() => inputRef.current?.focus(), 300);
   }, [isOpen]);
+
+  // ─── New Chat ───────────────────────────────────────────────
+  const handleNewChat = async () => {
+    const session = await createSession(visitorId.current);
+    if (session) {
+      setActiveSessionId(session.id);
+      setSessions((prev) => [session, ...prev]);
+      setMessages([]);
+      setHasGreeted(false);
+      setLeadStep("idle");
+      setLeadData({ name: "", email: "", company: "", project: "" });
+      setShowHistory(false);
+      titleSetForSession.current.delete(session.id);
+    }
+  };
+
+  // ─── Switch Session ────────────────────────────────────────
+  const handleSwitchSession = async (sessionId: string) => {
+    setActiveSessionId(sessionId);
+    setShowHistory(false);
+    setLeadStep("idle");
+    setLeadData({ name: "", email: "", company: "", project: "" });
+
+    const msgs = await loadMessages(sessionId);
+    if (msgs.length > 0) {
+      setMessages(
+        msgs.map((m) => ({
+          id: m.id,
+          role: m.role,
+          content: m.content,
+          timestamp: new Date(m.created_at),
+        }))
+      );
+      setHasGreeted(true);
+    } else {
+      setMessages([]);
+      setHasGreeted(false);
+    }
+  };
 
   // ─── Lead capture flow ─────────────────────────────────────
   const handleLeadInput = async (value: string) => {
@@ -172,7 +312,11 @@ export const TawanoChatbot = () => {
         const finalLead = { ...leadData, project: value };
         setLeadData(finalLead);
         setLeadStep("done");
-        await saveLead({ ...finalLead, session_id: sessionId.current });
+        await saveLead({
+          ...finalLead,
+          session_id: activeSessionId || undefined,
+          visitor_id: visitorId.current,
+        });
         setTimeout(
           () =>
             addBotMessage(
@@ -221,6 +365,11 @@ export const TawanoChatbot = () => {
 
     setIsTyping(true);
 
+    // Save user message to Supabase immediately
+    if (activeSessionId) {
+      saveMessage(activeSessionId, "user", text);
+    }
+
     try {
       const chatHistory = [...messages, userMsg].map((m) => ({ role: m.role, content: m.content }));
       const reply = await sendChat(chatHistory);
@@ -232,17 +381,32 @@ export const TawanoChatbot = () => {
         timestamp: new Date(),
       };
 
-      setMessages((prev) => [...prev, botMsg]);
+      const updatedMessages = [...messages, userMsg, botMsg];
+      setMessages(updatedMessages);
 
-      // Log to Supabase
-      logChat({
-        session_id: sessionId.current,
-        user_message: text,
-        ai_response: reply,
-      });
+      // Save assistant message to Supabase
+      if (activeSessionId) {
+        saveMessage(activeSessionId, "assistant", reply);
+        incrementMessageCount(activeSessionId, updatedMessages.length);
+
+        // Auto-title on first user message
+        const userMsgCount = updatedMessages.filter((m) => m.role === "user").length;
+        if (userMsgCount === 1 && !titleSetForSession.current.has(activeSessionId)) {
+          const title = text.length > 50 ? text.slice(0, 47) + "..." : text;
+          titleSetForSession.current.add(activeSessionId);
+          updateSessionTitle(activeSessionId, title);
+          setSessions((prev) =>
+            prev.map((s) => (s.id === activeSessionId ? { ...s, title } : s))
+          );
+        }
+
+        // Extract and save analytics metadata
+        const meta = extractSessionMeta(updatedMessages);
+        updateSessionMeta(activeSessionId, meta);
+      }
 
       // Check if we should capture lead
-      if (leadStep === "idle" && shouldCaptureLead([...messages, userMsg])) {
+      if (leadStep === "idle" && shouldCaptureLead(updatedMessages)) {
         setTimeout(() => startLeadCapture(), 1500);
       }
     } catch (error: unknown) {
@@ -312,10 +476,22 @@ export const TawanoChatbot = () => {
             style={{ height: "min(580px, calc(100vh - 6rem))" }}
           >
             {/* Header */}
-            <div className="relative flex items-center gap-3 border-b border-border/50 bg-gradient-to-r from-blue-600 to-blue-700 px-5 py-4">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm">
-                <Bot className="h-5 w-5 text-white" />
-              </div>
+            <div className="relative flex items-center gap-3 border-b border-border/50 bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-3.5">
+              {/* History toggle */}
+              <motion.button
+                whileHover={{ scale: 1.1, backgroundColor: "rgba(255,255,255,0.15)" }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setShowHistory((p) => !p)}
+                className="flex h-8 w-8 items-center justify-center rounded-full text-white/80 transition-colors"
+                aria-label={showHistory ? "Chat anzeigen" : "Verlauf anzeigen"}
+                title={showHistory ? "Zurück zum Chat" : "Chat-Verlauf"}
+              >
+                {showHistory ? (
+                  <ChevronLeft className="h-4 w-4" />
+                ) : (
+                  <Clock className="h-4 w-4" />
+                )}
+              </motion.button>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-white">Tawano Assistent</p>
                 <div className="flex items-center gap-1.5">
@@ -323,6 +499,17 @@ export const TawanoChatbot = () => {
                   <p className="text-[11px] text-white/70">Online</p>
                 </div>
               </div>
+              {/* New chat button */}
+              <motion.button
+                whileHover={{ scale: 1.1, backgroundColor: "rgba(255,255,255,0.15)" }}
+                whileTap={{ scale: 0.9 }}
+                onClick={handleNewChat}
+                className="flex h-8 w-8 items-center justify-center rounded-full text-white/80 transition-colors"
+                aria-label="Neues Gespräch"
+                title="Neues Gespräch"
+              >
+                <Plus className="h-4 w-4" />
+              </motion.button>
               <motion.button
                 whileHover={{ scale: 1.1, backgroundColor: "rgba(255,255,255,0.15)" }}
                 whileTap={{ scale: 0.9 }}
@@ -334,12 +521,65 @@ export const TawanoChatbot = () => {
               </motion.button>
             </div>
 
-            {/* Messages */}
-            <div
-              ref={scrollAreaRef}
-              className="flex-1 overflow-y-auto px-4 py-4 space-y-3 scroll-smooth"
-              style={{ scrollbarWidth: "thin", scrollbarColor: "hsl(0 0% 85%) transparent" }}
-            >
+            {/* Messages OR History Panel */}
+            {showHistory ? (
+              /* ─── Session History Panel ─── */
+              <div className="flex-1 overflow-y-auto px-3 py-3" style={{ scrollbarWidth: "thin", scrollbarColor: "hsl(0 0% 85%) transparent" }}>
+                <div className="mb-3 flex items-center justify-between px-1">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Gespräche</p>
+                  <button
+                    onClick={handleNewChat}
+                    className="flex items-center gap-1 rounded-lg bg-blue-50 px-2.5 py-1.5 text-[11px] font-medium text-blue-600 hover:bg-blue-100 transition-colors"
+                  >
+                    <Plus className="h-3 w-3" />
+                    Neu
+                  </button>
+                </div>
+                {isLoadingSessions ? (
+                  <div className="flex items-center justify-center py-12">
+                    <Loader2 className="h-5 w-5 animate-spin text-gray-400" />
+                  </div>
+                ) : sessions.length === 0 ? (
+                  <p className="py-12 text-center text-sm text-gray-400">Keine Gespräche</p>
+                ) : (
+                  <div className="space-y-1">
+                    {sessions.map((s) => (
+                      <button
+                        key={s.id}
+                        onClick={() => handleSwitchSession(s.id)}
+                        className={`w-full rounded-xl px-3 py-2.5 text-left transition-colors ${
+                          s.id === activeSessionId
+                            ? "bg-blue-50 border border-blue-200"
+                            : "hover:bg-gray-50 border border-transparent"
+                        }`}
+                      >
+                        <p className={`text-[13px] font-medium truncate ${
+                          s.id === activeSessionId ? "text-blue-700" : "text-gray-700"
+                        }`}>
+                          {s.title}
+                        </p>
+                        <div className="flex items-center justify-between mt-0.5">
+                          <p className="text-[11px] text-gray-400">
+                            {timeAgo(s.updated_at)}
+                          </p>
+                          {s.is_lead && (
+                            <span className="text-[10px] font-medium text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full">
+                              Lead
+                            </span>
+                          )}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* ─── Messages Panel ─── */
+              <div
+                ref={scrollAreaRef}
+                className="flex-1 overflow-y-auto px-4 py-4 space-y-3 scroll-smooth"
+                style={{ scrollbarWidth: "thin", scrollbarColor: "hsl(0 0% 85%) transparent" }}
+              >
               {messages.map((msg) => (
                 <motion.div
                   key={msg.id}
@@ -399,6 +639,7 @@ export const TawanoChatbot = () => {
 
               <div ref={messagesEndRef} />
             </div>
+            )}
 
             {/* Scroll to bottom */}
             <AnimatePresence>
