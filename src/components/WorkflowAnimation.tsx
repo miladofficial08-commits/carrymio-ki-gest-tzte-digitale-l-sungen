@@ -67,7 +67,7 @@ export const WorkflowAnimation = () => {
   }, [isInView]);
 
   return (
-    <section className="relative py-32 overflow-hidden" ref={containerRef}>
+    <section className="relative py-20 md:py-32 overflow-hidden" ref={containerRef}>
       {/* Background glow */}
       <div className="absolute inset-0" aria-hidden="true">
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full bg-primary/3 blur-[120px]" />

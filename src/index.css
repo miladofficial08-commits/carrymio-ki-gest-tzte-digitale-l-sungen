@@ -63,6 +63,11 @@
 
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  body {
+    overflow-x: hidden;
   }
 
   body {
@@ -276,6 +281,23 @@
 
   .result-row {
     @apply flex items-center gap-3 rounded-2xl border border-border bg-white px-5 py-4 transition-all duration-300;
+  }
+
+  /* Chatbot window — mobile fullscreen, desktop floating */
+  .chatbot-window {
+    inset: 0;
+  }
+
+  @media (min-width: 640px) {
+    .chatbot-window {
+      inset: auto;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: min(400px, calc(100vw - 2rem));
+      height: min(600px, calc(100vh - 6rem));
+      border-radius: 1rem;
+      border: 1px solid rgb(229 231 235 / 0.8);
+    }
   }
 
   .result-row:hover {

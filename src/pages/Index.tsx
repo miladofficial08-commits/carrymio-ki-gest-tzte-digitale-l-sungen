@@ -1,7 +1,7 @@
 ﻿import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import {
   Bot, Sparkles, Workflow, CircleDollarSign, Users, Clock3,
-  CheckCircle2, MessagesSquare, XCircle, ArrowRight,
+  CheckCircle2, MessagesSquare, XCircle, ArrowRight, Menu, X,
 } from "lucide-react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -67,8 +67,9 @@ const Index = () => {
   const [salary, setSalary] = useState(3200);
   const [displayYearlyCost, setDisplayYearlyCost] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleIntroComplete = useCallback(() => setIntroComplete(true), []);
+  const handleIntroComplete = useCallback(() => setIntroComplete(true), []); 
 
   const activeScenario = useMemo(() => scenarios[selectedScenario], [selectedScenario]);
   const heroRef = useRef<HTMLDivElement>(null);
@@ -122,12 +123,55 @@ const Index = () => {
                 </button>
               ))}
             </div>
-            <Button size="sm" variant="hero" onClick={() => scrollTo("#kontakt")} className="group">
-              Kontakt aufnehmen
-              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button size="sm" variant="hero" onClick={() => scrollTo("#kontakt")} className="hidden sm:inline-flex group">
+                Kontakt aufnehmen
+                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
+              </Button>
+              <button
+                onClick={() => setMobileMenuOpen((prev) => !prev)}
+                className="flex md:hidden h-10 w-10 items-center justify-center rounded-lg hover:bg-muted transition-colors"
+                aria-label={mobileMenuOpen ? "Menü schließen" : "Menü öffnen"}
+              >
+                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
+            </div>
           </div>
         </div>
+
+        {/* Mobile Navigation Menu */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className="md:hidden overflow-hidden border-t border-border/40 bg-white/95 backdrop-blur-xl"
+            >
+              <div className="flex flex-col gap-1 px-4 py-3">
+                {navItems.map((item) => (
+                  <button
+                    key={item.href}
+                    onClick={() => { scrollTo(item.href); setMobileMenuOpen(false); }}
+                    className="text-left px-4 py-3 text-sm font-medium text-foreground rounded-lg hover:bg-muted transition-colors"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+                <Button
+                  size="sm"
+                  variant="hero"
+                  onClick={() => { scrollTo("#kontakt"); setMobileMenuOpen(false); }}
+                  className="mt-2 w-full"
+                >
+                  Kontakt aufnehmen
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       <main>
@@ -138,9 +182,11 @@ const Index = () => {
           <div className="absolute inset-0 soft-grid opacity-30" aria-hidden="true" />
           <GradientBlob className="top-[-100px] left-[-200px]" color1="hsl(217, 91%, 50%)" color2="hsl(200, 91%, 45%)" size={600} duration={25} />
           <GradientBlob className="top-[200px] right-[-150px]" color1="hsl(277, 82%, 68%)" color2="hsl(200, 91%, 50%)" size={500} duration={30} />
-          <BackgroundActivity />
+          <div className="hidden md:block">
+            <BackgroundActivity />
+          </div>
 
-          <motion.div style={{ y: heroY, opacity: heroOpacity }} className="container relative z-10 px-4 pb-24 pt-10 md:pb-32">
+          <motion.div style={{ y: heroY, opacity: heroOpacity }} className="container relative z-10 px-4 pb-16 pt-6 md:pb-32 md:pt-10">
             <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
               <div>
                 <motion.span initial={{ opacity: 0, y: 20, filter: "blur(8px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ duration: 0.6 }} className="section-kicker mb-6">
@@ -256,7 +302,7 @@ const Index = () => {
         <WorkflowAnimation />
 
         {/* COST CALCULATOR */}
-        <section id="kostenrechner" className="py-28">
+        <section id="kostenrechner" className="py-16 md:py-28">
           <div className="container px-4">
             <ScrollReveal>
               <div className="mx-auto max-w-6xl premium-panel p-8 md:p-12 relative overflow-hidden">
@@ -316,7 +362,7 @@ const Index = () => {
         </section>
 
         {/* COMPARISON */}
-        <section className="py-28 relative">
+        <section className="py-16 md:py-28 relative">
           <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
             <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[900px] h-[1px] bg-gradient-to-r from-transparent via-primary/15 to-transparent" />
           </div>
@@ -365,7 +411,7 @@ const Index = () => {
         </section>
 
         {/* SERVICES */}
-        <section id="automation" className="py-28 relative">
+        <section id="automation" className="py-16 md:py-28 relative">
           <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
             <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-violet-500/3 blur-[120px]" />
             <div className="absolute right-0 top-1/3 w-[300px] h-[300px] rounded-full bg-cyan-500/3 blur-[100px]" />
@@ -450,7 +496,7 @@ const Index = () => {
         </section>
 
         {/* WHY TAWANO */}
-        <section id="about" className="py-28 relative">
+        <section id="about" className="py-16 md:py-28 relative">
           <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
             <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[900px] h-[1px] bg-gradient-to-r from-transparent via-border to-transparent" />
           </div>

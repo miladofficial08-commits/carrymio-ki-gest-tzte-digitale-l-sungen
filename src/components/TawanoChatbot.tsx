@@ -202,6 +202,10 @@ export const TawanoChatbot = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [showScrollBtn, setShowScrollBtn] = useState(false);
 
+  // Entry animation
+  const [showBubble, setShowBubble] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+
   // Lead capture
   const [leadStep, setLeadStep] = useState<LeadStep>("idle");
   const [leadData, setLeadData] = useState({
@@ -226,6 +230,7 @@ export const TawanoChatbot = () => {
   const titledSessions = useRef<Set<string>>(new Set());
   const initCalled = useRef(false);
   const leadTriggeredForSession = useRef<Set<string>>(new Set());
+  const restoredFromStorage = useRef(false);
 
   // ─── Auto-scroll ────────────────────────────────────────────
   const scrollToBottom = useCallback(() => {
@@ -246,21 +251,81 @@ export const TawanoChatbot = () => {
     return () => el.removeEventListener("scroll", onScroll);
   }, [isOpen, showHistory]);
 
+  // ─── Entry animation (delayed bubble + greeting hint) ──────
+  useEffect(() => {
+    const t1 = setTimeout(() => setShowBubble(true), 2500);
+    const t2 = setTimeout(() => setShowHint(true), 3500);
+    const t3 = setTimeout(() => setShowHint(false), 11500);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, []);
+
+  // ─── localStorage restore on mount ─────────────────────────
+  useEffect(() => {
+    try {
+      const sid = localStorage.getItem("tawano-active-session-id");
+      const raw = localStorage.getItem("tawano-chat-messages");
+      if (sid && raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setActiveSessionId(sid);
+          setMessages(
+            parsed.map((m: { id: string; role: "user" | "assistant"; content: string; timestamp: string }) => ({
+              ...m,
+              timestamp: new Date(m.timestamp),
+            }))
+          );
+          restoredFromStorage.current = true;
+          setSessionReady(true);
+        }
+      }
+    } catch { /* ignore corrupted data */ }
+  }, []);
+
+  // ─── localStorage save whenever state changes ──────────────
+  useEffect(() => {
+    if (activeSessionId) {
+      localStorage.setItem("tawano-active-session-id", activeSessionId);
+    }
+  }, [activeSessionId]);
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      try {
+        localStorage.setItem(
+          "tawano-chat-messages",
+          JSON.stringify(
+            messages.map((m) => ({
+              id: m.id,
+              role: m.role,
+              content: m.content,
+              timestamp: m.timestamp.toISOString(),
+            }))
+          )
+        );
+      } catch { /* quota exceeded */ }
+    }
+  }, [messages]);
+
   // ─── Session initialization ─────────────────────────────────
   const initializeSessions = useCallback(async () => {
     if (initCalled.current) return;
     initCalled.current = true;
     setIsLoadingSessions(true);
 
+    const savedSessionId = localStorage.getItem("tawano-active-session-id");
+
     try {
       const existing = await loadSessions(visitorId.current);
       setSessions(existing);
 
       if (existing.length > 0) {
-        const latest = existing[0];
-        setActiveSessionId(latest.id);
+        // If we have a saved session from localStorage, prefer it if found in DB
+        const target =
+          (savedSessionId && existing.find((s) => s.id === savedSessionId)) ||
+          existing[0];
+        setActiveSessionId(target.id);
 
-        const msgs = await loadMessages(latest.id);
+        const msgs = await loadMessages(target.id);
         if (msgs.length > 0) {
           setMessages(
             msgs.map((m) => ({
@@ -270,12 +335,12 @@ export const TawanoChatbot = () => {
               timestamp: new Date(m.created_at),
             }))
           );
-        } else {
+        } else if (!restoredFromStorage.current) {
           const g = makeGreeting();
           setMessages([g]);
-          saveMessage(latest.id, "assistant", g.content);
+          saveMessage(target.id, "assistant", g.content);
         }
-      } else {
+      } else if (!restoredFromStorage.current) {
         const session = await createSession(visitorId.current);
         if (session) {
           setActiveSessionId(session.id);
@@ -284,7 +349,6 @@ export const TawanoChatbot = () => {
           setMessages([g]);
           saveMessage(session.id, "assistant", g.content);
         } else {
-          // Supabase unavailable — keep full local session flow
           const localSession = makeLocalSession(visitorId.current);
           setActiveSessionId(localSession.id);
           setSessions([localSession]);
@@ -293,10 +357,12 @@ export const TawanoChatbot = () => {
       }
     } catch (e) {
       console.error("Session init failed:", e);
-      const localSession = makeLocalSession(visitorId.current);
-      setActiveSessionId(localSession.id);
-      setSessions([localSession]);
-      setMessages([makeGreeting()]);
+      if (!restoredFromStorage.current) {
+        const localSession = makeLocalSession(visitorId.current);
+        setActiveSessionId(localSession.id);
+        setSessions([localSession]);
+        setMessages([makeGreeting()]);
+      }
     }
 
     setSessionReady(true);
@@ -591,23 +657,54 @@ export const TawanoChatbot = () => {
   // ═══════════════════════════════════════════════════════════════
   return (
     <>
-      {/* ─── Floating Bubble ─── */}
+      {/* ─── Floating Bubble + Greeting Hint ─── */}
       <AnimatePresence>
-        {!isOpen && (
-          <motion.button
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            onClick={() => setIsOpen(true)}
-            className="fixed bottom-6 right-6 z-[9999] flex h-[60px] w-[60px] items-center justify-center rounded-full bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white shadow-lg shadow-blue-600/30 hover:shadow-xl hover:shadow-blue-600/40 transition-shadow duration-300"
-            aria-label="Chat öffnen"
-          >
-            <MessageCircle className="h-6 w-6" />
-            <span className="absolute inset-0 rounded-full animate-ping bg-blue-500/20 pointer-events-none" />
-          </motion.button>
+        {!isOpen && showBubble && (
+          <>
+            {/* Greeting tooltip */}
+            <AnimatePresence>
+              {showHint && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.9 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  className="fixed bottom-[90px] right-6 z-[9999] max-w-[260px]"
+                >
+                  <button
+                    onClick={() => { setShowHint(false); setIsOpen(true); }}
+                    className="relative rounded-2xl bg-white px-4 py-3 shadow-lg border border-gray-100 text-[13px] text-gray-700 leading-relaxed text-left cursor-pointer hover:shadow-xl transition-shadow duration-200"
+                  >
+                    Hi 👋 Brauchen Sie Hilfe bei Automation oder digitalen Mitarbeitern?
+                    <div className="absolute -bottom-[6px] right-7 h-3 w-3 rotate-45 bg-white border-b border-r border-gray-100" />
+                  </button>
+                  <button
+                    onClick={() => setShowHint(false)}
+                    className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-gray-200 text-gray-500 hover:bg-gray-300 text-[10px] leading-none"
+                    aria-label="Schließen"
+                  >
+                    ✕
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Floating chat button */}
+            <motion.button
+              initial={{ x: 80, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 300, damping: 22 }}
+              onClick={() => { setShowHint(false); setIsOpen(true); }}
+              className="fixed bottom-6 right-6 z-[9999] flex h-[60px] w-[60px] items-center justify-center rounded-full bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 text-white shadow-lg shadow-blue-600/30 hover:shadow-xl hover:shadow-blue-600/40 transition-shadow duration-300"
+              aria-label="Chat öffnen"
+            >
+              <MessageCircle className="h-6 w-6" />
+              <span className="absolute inset-0 rounded-full animate-ping bg-blue-500/20 pointer-events-none" />
+            </motion.button>
+          </>
         )}
       </AnimatePresence>
 
@@ -619,10 +716,8 @@ export const TawanoChatbot = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 320, damping: 28 }}
-            className="fixed bottom-6 right-6 z-[9999] flex flex-col overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-2xl"
+            className="fixed z-[9999] flex flex-col overflow-hidden bg-white shadow-2xl chatbot-window"
             style={{
-              width: "min(400px, calc(100vw - 2rem))",
-              height: "min(600px, calc(100vh - 6rem))",
               boxShadow:
                 "0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.03)",
             }}
