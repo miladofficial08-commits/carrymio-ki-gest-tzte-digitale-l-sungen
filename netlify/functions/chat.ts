@@ -1,23 +1,32 @@
 import type { Handler } from "@netlify/functions";
 import OpenAI from "openai";
+
 const SYSTEM_PROMPT = `Du bist der digitale Assistent von Tawano auf der Website tawano.de.
 
-REGELN:
-- Antworte freundlich, klar und professionell.
-- Standard-Sprache ist Deutsch (wenn der Nutzer anders schreibt, antworte in seiner Sprache).
-- Halte Antworten kurz (2-4 Saetze), konkret und hilfreich.
-- Fuer den Digitalen Mitarbeiter und Custom Automation: Preis je nach Umfang.
-- Startpreise, die genannt werden duerfen: Chatbots ab 500 EUR, Webdesign ab 990 EUR.
-- Wenn unklar: ehrlich sagen und auf info@tawano.de verweisen.
+PERSÖNLICHKEIT & TONFALL
+- Du bist freundlich, kompetent und professionell.
+- Du antwortest auf Deutsch, es sei denn der Besucher schreibt in einer anderen Sprache.
+- Halte Antworten kurz und klar (2-4 Sätze).
 
-WISSEN:
-- Tawano entwickelt digitale Mitarbeiter, Chatbots, Webdesign und individuelle Automationsloesungen.
-- Leistungen: Support-Automatisierung, E-Mail-Bearbeitung, Lead-Qualifizierung, Prozessautomatisierung.
-- Typische Wirkung: schnellere Reaktionszeiten, weniger manuelle Routine, bessere Skalierbarkeit.
-- Kontakt: info@tawano.de, +49 163 1283971, Standort Duesseldorf.`;
+KERNLEISTUNGEN VON TAWANO
+1. Digitale Mitarbeiter – Automatisierung von Support, E-Mails, Lead-Qualifizierung. Preis je nach Umfang.
+2. Chatbots – Startpreis 500 EUR. Automatisierte Supportanfragen und Leadgenerierung.
+3. Webdesign – Startpreis 990 EUR. Moderne Websites, optimiert für Conversion.
+4. Custom Automation – Preis je nach Umfang. Individuelle Prozessautomatisierung.
+
+KONTAKT
+E-Mail: info@tawano.de
+Telefon: +49 163 1283971
+Ort: Düsseldorf, Deutschland
+
+REGELN
+- Startpreise darfst du nennen.
+- Für Digitale Mitarbeiter und Custom Automation: immer "je nach Umfang" sagen.
+- Bei Unklarheiten ehrlich sagen und auf Kontakt verweisen.
+- Keine Erfindungen – nur Facts aus diesem Prompt.`;
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY || "",
 });
 
 interface ChatMessage {
@@ -26,10 +35,6 @@ interface ChatMessage {
 }
 
 export const handler: Handler = async (event) => {
-  console.log("[chat] function started");
-  console.log(`[chat] request method: ${event.httpMethod}`);
-
-  // CORS headers
   const headers = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type",
@@ -42,44 +47,44 @@ export const handler: Handler = async (event) => {
   }
 
   if (event.httpMethod !== "POST") {
-    return { statusCode: 405, headers, body: JSON.stringify({ error: "Method not allowed" }) };
+    return {
+      statusCode: 405,
+      headers,
+      body: JSON.stringify({ error: "Method not allowed" }),
+    };
   }
 
-  const hasApiKey = Boolean(process.env.OPENAI_API_KEY);
-  console.log(`[chat] openai key exists: ${hasApiKey ? "yes" : "no"}`);
-
-  if (!hasApiKey) {
+  if (!process.env.OPENAI_API_KEY) {
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: "OPENAI_API_KEY is not set" }),
+      body: JSON.stringify({ error: "Missing OPENAI_API_KEY" }),
     };
   }
 
   try {
-    let parsedBody: { messages?: ChatMessage[] };
+    let parsedBody: Record<string, unknown>;
     try {
       parsedBody = JSON.parse(event.body || "{}");
-      console.log("[chat] body parsed: yes");
     } catch {
-      console.log("[chat] body parsed: no");
       return {
         statusCode: 400,
         headers,
-        body: JSON.stringify({ error: "Invalid JSON body" }),
+        body: JSON.stringify({ error: "Invalid JSON" }),
       };
     }
 
-    const { messages } = parsedBody;
-
+    const messages = parsedBody.messages as ChatMessage[] | undefined;
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
-      return { statusCode: 400, headers, body: JSON.stringify({ error: "Messages required" }) };
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: "No messages provided" }),
+      };
     }
 
-    // Sanitize: only keep last 20 messages to avoid token overflow
     const recentMessages = messages.slice(-20);
 
-    console.log("[chat] openai request started");
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
@@ -89,9 +94,9 @@ export const handler: Handler = async (event) => {
       max_tokens: 500,
       temperature: 0.7,
     });
-    console.log("[chat] openai response received");
 
-    const reply = completion.choices[0]?.message?.content || "Entschuldigung, ich konnte keine Antwort generieren.";
+    const reply =
+      completion.choices[0]?.message?.content || "Entschuldigung, ich konnte keine Antwort generieren.";
 
     return {
       statusCode: 200,
@@ -99,12 +104,11 @@ export const handler: Handler = async (event) => {
       body: JSON.stringify({ reply }),
     };
   } catch (error: unknown) {
-    console.error("[chat] catch error exact message:", error);
-    const message = error instanceof Error ? error.message : "Unknown error";
+    const msg = error instanceof Error ? error.message : String(error);
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: "Fehler bei der Verarbeitung", details: message }),
+      body: JSON.stringify({ error: msg }),
     };
   }
 };
