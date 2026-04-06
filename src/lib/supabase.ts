@@ -170,11 +170,26 @@ export async function incrementMessageCount(sessionId: string, count: number): P
   try {
     const { error } = await supabase
       .from("chat_sessions")
-      .update({ message_count: count })
+      .update({
+        message_count: count,
+        updated_at: new Date().toISOString(),
+      })
       .eq("id", sessionId);
     if (error) console.error("[Supabase] incrementMessageCount failed:", error.message, "(code:", error.code, ")");
   } catch (e) {
     console.error("[Supabase] incrementMessageCount exception:", e);
+  }
+}
+
+export async function touchSession(sessionId: string): Promise<void> {
+  try {
+    const { error } = await supabase
+      .from("chat_sessions")
+      .update({ updated_at: new Date().toISOString() })
+      .eq("id", sessionId);
+    if (error) console.error("[Supabase] touchSession failed:", error.message, "(code:", error.code, ")");
+  } catch (e) {
+    console.error("[Supabase] touchSession exception:", e);
   }
 }
 

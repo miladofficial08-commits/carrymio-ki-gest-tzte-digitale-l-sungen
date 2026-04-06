@@ -21,6 +21,7 @@ import {
   updateSessionTitle,
   updateSessionMeta,
   incrementMessageCount,
+  touchSession,
   saveLead,
   type ChatSession,
   type SessionMeta,
@@ -636,9 +637,19 @@ export const TawanoChatbot = () => {
 
     // Save user message to Supabase
     if (activeSessionId && sessionPersisted.current) {
-      saveMessage(activeSessionId, "user", text).then((ok) => {
-        if (!ok) console.warn("[Save] User message save failed for session", activeSessionId);
+      const now = new Date().toISOString();
+      Promise.all([
+        saveMessage(activeSessionId, "user", text),
+        touchSession(activeSessionId),
+      ]).then(([saveOk]) => {
+        if (!saveOk) console.warn("[Save] User message save failed for session", activeSessionId);
       });
+      // Update local session list with new timestamp
+      setSessions((prev) =>
+        prev.map((s) =>
+          s.id === activeSessionId ? { ...s, updated_at: now } : s
+        )
+      );
     } else if (activeSessionId && !sessionPersisted.current) {
       // Lazy-create: the session was local-only, try to persist now
       const realSession = await createSession(visitorId.current);
@@ -688,11 +699,26 @@ export const TawanoChatbot = () => {
       // Save to Supabase (only if session is persisted)
       if (effectiveSessionId && sessionPersisted.current) {
         console.log("[Save] Saving bot reply to session", effectiveSessionId);
-        saveMessage(effectiveSessionId, "assistant", reply).then((ok) => {
-          if (ok) console.log("[Save] Bot reply saved successfully");
+        const now = new Date().toISOString();
+
+        // Save message and update session timestamp
+        Promise.all([
+          saveMessage(effectiveSessionId, "assistant", reply),
+          incrementMessageCount(effectiveSessionId, updatedMessages.length),
+          touchSession(effectiveSessionId),
+        ]).then(([saveOk]) => {
+          if (saveOk) console.log("[Save] Bot reply saved successfully");
           else console.warn("[Save] Bot reply save FAILED");
         });
-        incrementMessageCount(effectiveSessionId, updatedMessages.length);
+
+        // Update local session list with new timestamp to ensure correct ordering
+        setSessions((prev) =>
+          prev.map((s) =>
+            s.id === effectiveSessionId
+              ? { ...s, message_count: updatedMessages.length, updated_at: now }
+              : s
+          )
+        );
 
         // Auto-title on first user message
         const userMsgCount = updatedMessages.filter(
@@ -710,7 +736,7 @@ export const TawanoChatbot = () => {
           setSessions((prev) =>
             prev.map((s) =>
               s.id === effectiveSessionId
-                ? { ...s, title, updated_at: new Date().toISOString() }
+                ? { ...s, title, updated_at: now }
                 : s
             )
           );

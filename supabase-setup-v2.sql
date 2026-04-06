@@ -116,3 +116,20 @@ CREATE TRIGGER trg_chat_sessions_updated
   BEFORE UPDATE ON chat_sessions
   FOR EACH ROW
   EXECUTE FUNCTION update_chat_session_timestamp();
+
+-- ─── 10. Auto-update session timestamp when message is added ──────────────────────
+-- This ensures that when a new message is inserted, the parent session's updated_at
+-- is refreshed so the session appears at the top of the history list
+CREATE OR REPLACE FUNCTION update_session_timestamp_on_message()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE chat_sessions SET updated_at = now() WHERE id = NEW.session_id;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_chat_messages_update_session ON chat_messages;
+CREATE TRIGGER trg_chat_messages_update_session
+  AFTER INSERT ON chat_messages
+  FOR EACH ROW
+  EXECUTE FUNCTION update_session_timestamp_on_message();
