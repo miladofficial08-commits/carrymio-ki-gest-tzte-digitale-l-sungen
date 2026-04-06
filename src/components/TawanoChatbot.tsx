@@ -175,6 +175,22 @@ function makeGreeting(): Message {
   };
 }
 
+function makeLocalSession(visitor: string): ChatSession {
+  const now = new Date().toISOString();
+  return {
+    id: generateId(),
+    visitor_id: visitor,
+    title: "Neues Gespräch",
+    created_at: now,
+    updated_at: now,
+    message_count: 0,
+    service_interest: [],
+    is_lead: false,
+    has_pricing_objection: false,
+    requested_contact: false,
+  };
+}
+
 // ═══════════════════════════════════════════════════════════════
 // ─── COMPONENT ───────────────────────────────────────────────
 // ═══════════════════════════════════════════════════════════════
@@ -268,12 +284,18 @@ export const TawanoChatbot = () => {
           setMessages([g]);
           saveMessage(session.id, "assistant", g.content);
         } else {
-          // Supabase unavailable — still show greeting locally
+          // Supabase unavailable — keep full local session flow
+          const localSession = makeLocalSession(visitorId.current);
+          setActiveSessionId(localSession.id);
+          setSessions([localSession]);
           setMessages([makeGreeting()]);
         }
       }
     } catch (e) {
       console.error("Session init failed:", e);
+      const localSession = makeLocalSession(visitorId.current);
+      setActiveSessionId(localSession.id);
+      setSessions([localSession]);
       setMessages([makeGreeting()]);
     }
 
@@ -294,8 +316,8 @@ export const TawanoChatbot = () => {
 
   // ─── New Chat ───────────────────────────────────────────────
   const handleNewChat = useCallback(async () => {
-    const session = await createSession(visitorId.current);
-    if (!session) return;
+    const dbSession = await createSession(visitorId.current);
+    const session = dbSession ?? makeLocalSession(visitorId.current);
 
     setActiveSessionId(session.id);
     setSessions((prev) => [session, ...prev]);
