@@ -446,28 +446,6 @@
   }
 }
 
-/* FastBots Widget Styling */
-.fastbots-container {
-  position: fixed !important;
-  right: 24px !important;
-  bottom: 24px !important;
-  z-index: 999 !important;
-}
-
-.fastbots-widget-button {
-  width: 56px !important;
-  height: 56px !important;
-  border-radius: 50% !important;
-}
-
-.fastbots-chat-window {
-  max-width: 380px !important;
-  width: 380px !important;
-  max-height: 560px !important;
-  height: 560px !important;
-  border-radius: 12px !important;
-}
-
 @layer utilities {}
 
 /* Premium section transitions */

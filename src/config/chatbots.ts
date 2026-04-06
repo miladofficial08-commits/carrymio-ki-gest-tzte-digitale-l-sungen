@@ -11,7 +11,7 @@ export const CHATBOTS = {
     id: "ai",
     title: "CARRY MIO Support",
     side: "right" as const,
-    embedUrl: "", // FastBots wird über globales Script geladen
+    embedUrl: "",
     short: "Professionelle Beratung",
     badge: "AI",
   },

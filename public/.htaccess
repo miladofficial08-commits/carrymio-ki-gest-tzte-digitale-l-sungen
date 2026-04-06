@@ -51,7 +51,7 @@
     Header set X-XSS-Protection "1; mode=block"
     Header set Referrer-Policy "strict-origin-when-cross-origin"
     Header unset Content-Security-Policy
-    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://app.fastbots.ai https://*.fastbots.ai; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://app.fastbots.ai https://*.fastbots.ai wss://*.fastbots.ai; frame-src 'self' https://app.fastbots.ai https://*.fastbots.ai; child-src 'self' https://app.fastbots.ai https://*.fastbots.ai; media-src 'self' data: blob: https://app.fastbots.ai https://*.fastbots.ai; manifest-src 'self'"
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.openai.com https://api.emailjs.com; frame-src 'self'; child-src 'self'; media-src 'self' data: blob:; manifest-src 'self'"
 </IfModule>
 
 # Redirect HTTP to HTTPS
