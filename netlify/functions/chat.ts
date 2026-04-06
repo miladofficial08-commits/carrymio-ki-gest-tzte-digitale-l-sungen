@@ -1,6 +1,3 @@
-import type { Handler } from "@netlify/functions";
-import OpenAI from "openai";
-
 const SYSTEM_PROMPT = `Du bist der digitale Assistent von Tawano auf der Website tawano.de.
 
 PERSÖNLICHKEIT & TONFALL
@@ -25,16 +22,12 @@ REGELN
 - Bei Unklarheiten ehrlich sagen und auf Kontakt verweisen.
 - Keine Erfindungen – nur Facts aus diesem Prompt.`;
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || "",
-});
-
 interface ChatMessage {
   role: "user" | "assistant" | "system";
   content: string;
 }
 
-export const handler: Handler = async (event) => {
+exports.handler = async (event: { httpMethod: string; body: string | null }) => {
   const headers = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type",
@@ -54,7 +47,8 @@ export const handler: Handler = async (event) => {
     };
   }
 
-  if (!process.env.OPENAI_API_KEY) {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
     return {
       statusCode: 500,
       headers,
@@ -85,18 +79,35 @@ export const handler: Handler = async (event) => {
 
     const recentMessages = messages.slice(-20);
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        ...recentMessages,
-      ],
-      max_tokens: 500,
-      temperature: 0.7,
+    // Direct OpenAI API call via fetch – no SDK needed
+    const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          ...recentMessages,
+        ],
+        max_tokens: 500,
+        temperature: 0.7,
+      }),
     });
 
-    const reply =
-      completion.choices[0]?.message?.content || "Entschuldigung, ich konnte keine Antwort generieren.";
+    if (!openaiRes.ok) {
+      const errBody = await openaiRes.text();
+      return {
+        statusCode: 502,
+        headers,
+        body: JSON.stringify({ error: "OpenAI error", details: errBody }),
+      };
+    }
+
+    const data = await openaiRes.json();
+    const reply = data.choices?.[0]?.message?.content || "Entschuldigung, ich konnte keine Antwort generieren.";
 
     return {
       statusCode: 200,
