@@ -304,14 +304,14 @@ const Index = () => {
         {/* COST CALCULATOR */}
         <section id="kostenrechner" className="py-16 md:py-28">
           <div className="container px-4">
-            <ScrollReveal>
+            <ScrollReveal className="w-full">
               <div className="mx-auto max-w-6xl premium-panel p-5 md:p-12 relative overflow-hidden">
                 <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full bg-primary/5 blur-[80px] pointer-events-none" />
                 <div className="relative z-10">
-                  <div className="mx-auto max-w-3xl text-center">
+                  <div className="mx-auto max-w-3xl flex flex-col items-center text-center">
                     <span className="section-kicker mb-6">Kostenrechner</span>
-                    <h2 className="section-title">Was kosten Support und Routineaufgaben wirklich?</h2>
-                    <p className="mt-4 section-copy">Finden Sie heraus, wie viel manuelle Arbeit Ihr Unternehmen jedes Jahr kostet.</p>
+                    <h2 className="section-title text-center">Was kosten Support und Routineaufgaben wirklich?</h2>
+                    <p className="mt-4 section-copy text-center">Finden Sie heraus, wie viel manuelle Arbeit Ihr Unternehmen jedes Jahr kostet.</p>
                   </div>
                   <div className="mt-8 grid gap-5 lg:grid-cols-2 lg:items-stretch md:mt-12">
                     <article className="rounded-2xl border border-border bg-muted/30 p-5 md:p-6">
@@ -334,7 +334,7 @@ const Index = () => {
                       </div>
                       <p className="mt-6 text-xs leading-relaxed text-muted-foreground">Berechnen Sie in wenigen Sekunden, wie viel Ihr Unternehmen jährlich für Support und Routineaufgaben ausgibt.</p>
                     </article>
-                    <ScrollReveal direction="right" delay={0.2}>
+                    <ScrollReveal direction="right" delay={0.2} className="flex flex-col h-full">
                       <article className="rounded-2xl border border-primary/30 bg-primary/10 p-6 h-full flex flex-col">
                         <p className="text-sm font-medium text-foreground">Ergebnis</p>
                         <div className="mt-5 rounded-xl border border-rose-200 bg-rose-50/50 p-5">

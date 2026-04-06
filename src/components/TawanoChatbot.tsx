@@ -951,7 +951,7 @@ export const TawanoChatbot = () => {
                 >
                   <div
                     ref={scrollAreaRef}
-                    className="flex-1 overflow-y-auto px-4 py-4 space-y-3 scroll-smooth"
+                    className="flex-1 overflow-y-auto px-4 py-4 space-y-3 scroll-smooth bg-gradient-to-b from-slate-50/60 to-white"
                     style={{
                       scrollbarWidth: "thin",
                       scrollbarColor: "hsl(0 0% 88%) transparent",
@@ -1017,8 +1017,8 @@ export const TawanoChatbot = () => {
                             <div
                               className={`max-w-[78%] rounded-2xl px-3.5 py-2.5 text-[13px] leading-[1.6] ${
                                 msg.role === "assistant"
-                                  ? "bg-gray-50/80 text-gray-800 rounded-bl-md border border-gray-100/80"
-                                  : "bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-br-md shadow-sm shadow-blue-600/20"
+                                  ? "bg-white text-gray-800 rounded-bl-sm shadow-sm border border-gray-100"
+                                  : "bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-br-sm shadow-md shadow-blue-500/25"
                               }`}
                             >
                               {msg.content}
@@ -1040,7 +1040,7 @@ export const TawanoChatbot = () => {
                           <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 text-blue-600">
                             <Bot className="h-3.5 w-3.5" />
                           </div>
-                          <div className="flex items-center gap-1.5 rounded-2xl rounded-bl-md bg-gray-50/80 border border-gray-100/80 px-4 py-3">
+                          <div className="flex items-center gap-1.5 rounded-2xl rounded-bl-sm bg-white shadow-sm border border-gray-100 px-4 py-3">
                             <motion.span
                               animate={{ opacity: [0.3, 1, 0.3] }}
                               transition={{
@@ -1095,7 +1095,7 @@ export const TawanoChatbot = () => {
             </AnimatePresence>
 
             {/* ─── Input Bar ─── */}
-            <div className="border-t border-gray-100 bg-white px-3 py-3">
+            <div className="border-t border-gray-100/80 bg-white/95 backdrop-blur-sm px-3 py-3 pb-4">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -1118,7 +1118,7 @@ export const TawanoChatbot = () => {
                             ? "Was möchten Sie automatisieren?"
                             : "Nachricht schreiben…"
                   }
-                  className="flex-1 rounded-xl border border-gray-200 bg-gray-50/70 px-4 py-2.5 text-[13px] text-gray-800 placeholder:text-gray-400 outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-50 transition-all duration-200"
+                  className="flex-1 rounded-2xl border border-gray-200 bg-gray-50/80 px-4 py-2.5 text-[13px] text-gray-800 placeholder:text-gray-400 outline-none focus:border-blue-300 focus:bg-white focus:ring-2 focus:ring-blue-50 transition-all duration-200"
                   disabled={isTyping}
                 />
                 <motion.button
