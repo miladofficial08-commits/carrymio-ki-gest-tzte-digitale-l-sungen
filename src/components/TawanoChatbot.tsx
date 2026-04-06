@@ -637,7 +637,7 @@ export const TawanoChatbot = () => {
 
   // ─── Lead capture flow ─────────────────────────────────────
   const addBotMsg = useCallback(
-    (text: string) => {
+    async (text: string) => {
       const msg: Message = {
         id: generateId(),
         role: "assistant",
@@ -645,7 +645,12 @@ export const TawanoChatbot = () => {
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, msg]);
-      if (activeSessionId && sessionPersisted.current) saveMessage(activeSessionId, "assistant", text);
+      if (activeSessionId && sessionPersisted.current) {
+        console.log("[Save] Saving lead bot message to session", activeSessionId);
+        const ok = await saveMessage(activeSessionId, "assistant", text);
+        if (!ok) console.error("[Save] Lead bot message save FAILED");
+        else console.log("[Save] Lead bot message saved successfully");
+      }
     },
     [activeSessionId]
   );
@@ -752,13 +757,19 @@ export const TawanoChatbot = () => {
 
     // Save user message to Supabase
     if (activeSessionId && sessionPersisted.current) {
+      console.log("[Save] Saving user message to session", activeSessionId);
       const now = new Date().toISOString();
-      Promise.all([
-        saveMessage(activeSessionId, "user", text),
-        touchSession(activeSessionId),
-      ]).then(([saveOk]) => {
-        if (!saveOk) console.warn("[Save] User message save failed for session", activeSessionId);
-      });
+      try {
+        const saveOk = await saveMessage(activeSessionId, "user", text);
+        if (saveOk) {
+          console.log("[Save] User message saved successfully");
+          await touchSession(activeSessionId);
+        } else {
+          console.error("[Save] User message save FAILED for session", activeSessionId);
+        }
+      } catch (e) {
+        console.error("[Save] User message save EXCEPTION:", e);
+      }
       // Update local session list with new timestamp
       setSessions((prev) =>
         prev.map((s) =>
@@ -830,15 +841,18 @@ export const TawanoChatbot = () => {
         console.log("[Save] Saving bot reply to session", effectiveSessionId);
         const now = new Date().toISOString();
 
-        // Save message and update session timestamp
-        Promise.all([
-          saveMessage(effectiveSessionId, "assistant", reply),
-          incrementMessageCount(effectiveSessionId, updatedMessages.length),
-          touchSession(effectiveSessionId),
-        ]).then(([saveOk]) => {
-          if (saveOk) console.log("[Save] Bot reply saved successfully");
-          else console.warn("[Save] Bot reply save FAILED");
-        });
+        // Save message and update session timestamp (use await for reliability)
+        try {
+          const saveOk = await saveMessage(effectiveSessionId, "assistant", reply);
+          if (saveOk) {
+            console.log("[Save] Bot reply saved successfully");
+            await touchSession(effectiveSessionId);
+          } else {
+            console.error("[Save] Bot reply save FAILED");
+          }
+        } catch (e) {
+          console.error("[Save] Bot reply save EXCEPTION:", e);
+        }
 
         // Update local session list with new timestamp to ensure correct ordering
         setSessions((prev) =>

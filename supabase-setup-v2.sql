@@ -133,3 +133,32 @@ CREATE TRIGGER trg_chat_messages_update_session
   AFTER INSERT ON chat_messages
   FOR EACH ROW
   EXECUTE FUNCTION update_session_timestamp_on_message();
+
+-- ─── 11. Auto-update message_count on insert/delete ─────────────
+-- This ensures message_count is always accurate without relying on frontend
+CREATE OR REPLACE FUNCTION update_session_message_count()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF TG_OP = 'INSERT' THEN
+    UPDATE chat_sessions SET message_count = message_count + 1 WHERE id = NEW.session_id;
+    RETURN NEW;
+  ELSIF TG_OP = 'DELETE' THEN
+    UPDATE chat_sessions SET message_count = message_count - 1 WHERE id = OLD.session_id;
+    RETURN OLD;
+  END IF;
+  RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_chat_messages_count ON chat_messages;
+CREATE TRIGGER trg_chat_messages_count
+  AFTER INSERT OR DELETE ON chat_messages
+  FOR EACH ROW
+  EXECUTE FUNCTION update_session_message_count();
+
+-- ─── 12. Fix existing sessions with wrong message_count ─────────
+-- Recalculate message_count for all sessions based on actual messages
+UPDATE chat_sessions cs
+SET message_count = (
+  SELECT COUNT(*) FROM chat_messages cm WHERE cm.session_id = cs.id
+);
