@@ -1,9 +1,20 @@
 -- ============================================================
--- Tawano Chatbot v2 — Supabase Schema Migration
--- Run this in Supabase SQL Editor (Dashboard > SQL Editor > New Query)
+-- Tawano Chatbot v2 — CLEAN Supabase Setup
+-- Run this in Supabase SQL Editor (Dashboard > SQL Editor)
 --
--- SAFE: Uses IF NOT EXISTS everywhere. Will not break existing tables.
+-- 1. Drops OLD conflicting policies safely
+-- 2. Creates tables with IF NOT EXISTS
+-- 3. Sets up correct RLS policies
 -- ============================================================
+
+-- ─── 0. Drop OLD conflicting policies (from v1 setup) ───────
+DO $$ BEGIN
+  -- Old chat_logs policies
+  DROP POLICY IF EXISTS "Allow anonymous inserts on chat_logs" ON chat_logs;
+  -- Old leads policies
+  DROP POLICY IF EXISTS "Allow anonymous inserts on leads" ON leads;
+EXCEPTION WHEN undefined_table THEN NULL;
+END $$;
 
 -- ─── 1. Chat Sessions ────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS chat_sessions (
@@ -13,7 +24,6 @@ CREATE TABLE IF NOT EXISTS chat_sessions (
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now(),
   message_count INTEGER DEFAULT 0,
-  -- Analytics metadata
   service_interest TEXT[] DEFAULT '{}',
   is_lead BOOLEAN DEFAULT false,
   has_pricing_objection BOOLEAN DEFAULT false,
@@ -29,7 +39,7 @@ CREATE TABLE IF NOT EXISTS chat_messages (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
--- ─── 3. Leads (create if not exists, or leave existing) ─────
+-- ─── 3. Leads ───────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS leads (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   session_id UUID,
@@ -43,7 +53,7 @@ CREATE TABLE IF NOT EXISTS leads (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
--- ─── 4. Old chat_logs table (keep if exists, create if not) ─
+-- ─── 4. Legacy chat_logs (keep for backward compat) ─────────
 CREATE TABLE IF NOT EXISTS chat_logs (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   session_id TEXT NOT NULL,
@@ -60,61 +70,39 @@ CREATE INDEX IF NOT EXISTS idx_messages_created ON chat_messages(created_at);
 CREATE INDEX IF NOT EXISTS idx_chat_logs_session ON chat_logs(session_id);
 CREATE INDEX IF NOT EXISTS idx_leads_created ON leads(created_at DESC);
 
--- ─── 6. Row Level Security ──────────────────────────────────
+-- ─── 6. Enable RLS ──────────────────────────────────────────
 ALTER TABLE chat_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE chat_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
 ALTER TABLE chat_logs ENABLE ROW LEVEL SECURITY;
 
--- ─── 7. RLS Policies (idempotent with DO blocks) ────────────
+-- ─── 7. Drop ALL old policies first (clean slate) ───────────
+DROP POLICY IF EXISTS anon_insert_sessions ON chat_sessions;
+DROP POLICY IF EXISTS anon_select_sessions ON chat_sessions;
+DROP POLICY IF EXISTS anon_update_sessions ON chat_sessions;
+DROP POLICY IF EXISTS anon_insert_messages ON chat_messages;
+DROP POLICY IF EXISTS anon_select_messages ON chat_messages;
+DROP POLICY IF EXISTS anon_insert_leads ON leads;
+DROP POLICY IF EXISTS anon_insert_chat_logs ON chat_logs;
+
+-- ─── 8. Create fresh RLS policies ───────────────────────────
 
 -- chat_sessions: anon can INSERT, SELECT, UPDATE
-DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'chat_sessions' AND policyname = 'anon_insert_sessions') THEN
-    CREATE POLICY anon_insert_sessions ON chat_sessions FOR INSERT TO anon WITH CHECK (true);
-  END IF;
-END $$;
-
-DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'chat_sessions' AND policyname = 'anon_select_sessions') THEN
-    CREATE POLICY anon_select_sessions ON chat_sessions FOR SELECT TO anon USING (true);
-  END IF;
-END $$;
-
-DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'chat_sessions' AND policyname = 'anon_update_sessions') THEN
-    CREATE POLICY anon_update_sessions ON chat_sessions FOR UPDATE TO anon USING (true) WITH CHECK (true);
-  END IF;
-END $$;
+CREATE POLICY anon_insert_sessions ON chat_sessions FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY anon_select_sessions ON chat_sessions FOR SELECT TO anon USING (true);
+CREATE POLICY anon_update_sessions ON chat_sessions FOR UPDATE TO anon USING (true) WITH CHECK (true);
 
 -- chat_messages: anon can INSERT, SELECT
-DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'chat_messages' AND policyname = 'anon_insert_messages') THEN
-    CREATE POLICY anon_insert_messages ON chat_messages FOR INSERT TO anon WITH CHECK (true);
-  END IF;
-END $$;
-
-DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'chat_messages' AND policyname = 'anon_select_messages') THEN
-    CREATE POLICY anon_select_messages ON chat_messages FOR SELECT TO anon USING (true);
-  END IF;
-END $$;
+CREATE POLICY anon_insert_messages ON chat_messages FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY anon_select_messages ON chat_messages FOR SELECT TO anon USING (true);
 
 -- leads: anon can INSERT
-DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'leads' AND policyname = 'anon_insert_leads') THEN
-    CREATE POLICY anon_insert_leads ON leads FOR INSERT TO anon WITH CHECK (true);
-  END IF;
-END $$;
+CREATE POLICY anon_insert_leads ON leads FOR INSERT TO anon WITH CHECK (true);
 
 -- chat_logs: anon can INSERT (legacy)
-DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'chat_logs' AND policyname = 'anon_insert_chat_logs') THEN
-    CREATE POLICY anon_insert_chat_logs ON chat_logs FOR INSERT TO anon WITH CHECK (true);
-  END IF;
-END $$;
+CREATE POLICY anon_insert_chat_logs ON chat_logs FOR INSERT TO anon WITH CHECK (true);
 
--- ─── 8. Auto-update updated_at on chat_sessions ─────────────
+-- ─── 9. Auto-update updated_at trigger ──────────────────────
 CREATE OR REPLACE FUNCTION update_chat_session_timestamp()
 RETURNS TRIGGER AS $$
 BEGIN
