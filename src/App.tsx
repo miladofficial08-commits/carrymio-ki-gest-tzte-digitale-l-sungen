@@ -8,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import Impressum from "./pages/Impressum";
 import Datenschutz from "./pages/Datenschutz";
 import AGB from "./pages/AGB";
+import { TawanoChatbot } from "./components/TawanoChatbot";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/agb" element={<AGB />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <TawanoChatbot />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

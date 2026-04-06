@@ -1,0 +1,302 @@
+══════════════════════════════════════════════════════════════
+  TAWANO — WISSENSDATENBANK FÜR DEN CHATBOT
+  Letzte Aktualisierung: April 2026
+══════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════
+  1. UNTERNEHMEN
+═══════════════════════════════════════
+
+Name: Tawano
+Website: tawano.de
+Standort: Düsseldorf, Deutschland
+E-Mail: info@tawano.de
+Telefon: +49 163 1283971
+Kontakt-E-Mail (intern): info.carrymio@gmail.com
+
+Beschreibung:
+Tawano entwickelt KI-gestützte digitale Mitarbeiter, die wiederkehrende
+Büroarbeit übernehmen: E-Mail-Betreuung, Anfragequalifizierung,
+Kundenkommunikation und interne Arbeitsabläufe. Rund um die Uhr,
+mit klaren Regeln und messbarer Wirtschaftlichkeit.
+
+Zielgruppe:
+Teams mit hohem Kommunikations- und Prozessvolumen. Ideal für Unternehmen,
+die Routine-Aufgaben reduzieren und gleichzeitig schneller, sauberer und
+skalierbarer arbeiten wollen.
+
+═══════════════════════════════════════
+  2. KERNLEISTUNGEN
+═══════════════════════════════════════
+
+──── 2.1 Digitale Mitarbeiter (Hauptprodukt) ────
+
+Der digitale Mitarbeiter von Tawano führt Aufgaben aus: priorisieren,
+qualifizieren, weiterleiten, dokumentieren und verbessern. Damit sinken
+Kosten und das Team gewinnt Fokus.
+
+Fähigkeiten:
+- Erkennt automatisch Support-Anfragen und Leads
+- Beantwortet E-Mails automatisch
+- Arbeitet in 7+ Sprachen mit einheitlichem Standard
+- Erinnerungssystem: merkt sich frühere Kontexte, vermeidet doppelte Erklärungen
+- Kontinuierliche Lernschleife nach jeder Interaktion
+- Selbstkorrektur bei Unsicherheit — fehlerhafte Antworten werden erkannt und korrigiert
+- Integration in CRM, Ticketing und interne Tools
+
+Typische Einsatzgebiete:
+- E-Mail-Betreuung und Ticket-Priorisierung
+- Anfragebearbeitung und Terminvorqualifizierung
+- Interne Freigabe- und Berichts-Workflows
+- Mehrsprachige Kundenkommunikation
+
+Ergebnisse:
+- Weniger manuelle Tickets und E-Mail-Routine
+- Schnellere Anfragequalifizierung und Kundenantworten
+- Hohe Prozessstabilität auch bei Spitzenlast
+
+Preis: Je nach Umfang (im Gespräch klären)
+
+Wichtig: Tawano ersetzt NICHT das gesamte Support-Team.
+Ein Mitarbeiter bleibt, um das System zu überwachen.
+Die Automatisierung übernimmt den Großteil der Routine-Aufgaben.
+
+──── 2.2 Chatbots ────
+
+Startpreis: ab 500 EUR
+- Beantwortet Supportanfragen automatisch
+- Erkennt Kundenabsichten in Sekunden
+- Sammelt und qualifiziert Leads
+- Integriert sich in bestehende Systeme
+- Reduziert Supportaufwand erheblich
+
+──── 2.3 Webdesign ────
+
+Startpreis: ab 990 EUR
+- Moderne Unternehmenswebseiten & Landing Pages
+- Hochwertiges Design und klare Struktur
+- Moderne Animationen und visuelle Elemente
+- Optimiert für Conversion und Leadgenerierung
+- Schnell, performant und mobiloptimiert
+
+──── 2.4 Custom Automation ────
+
+Preis: Je nach Umfang
+- Automatisierung interner Prozesse
+- Automatische Verarbeitung von Anfragen
+- Integration mit bestehenden Tools
+- Individuelle Workflows für Unternehmen
+- Skalierbare Automationslösungen
+
+═══════════════════════════════════════
+  3. SERVICE-DETAILS
+═══════════════════════════════════════
+
+──── 3.1 E-Mail-Automation ────
+
+Weniger Ticket-Stau, schnellere Antworten.
+Digitale Mitarbeiter priorisieren eingehende E-Mails, beantworten
+Standardfälle und übergeben kritische Themen sauber an das Team.
+- Automatische Kategorisierung und Priorisierung
+- Kontextbezogene Antwortvorschläge oder Direktantworten
+- SLA-orientierte Eskalationslogik
+
+──── 3.2 Anfragebearbeitung ────
+
+Mehr qualifizierte Gespräche, weniger Leerlauf.
+Anfragen werden in Echtzeit geprüft, angereichert und für Vertrieb
+oder Beratung vorbereitet.
+- Qualifizierung nach Branche, Bedarf und Dringlichkeit
+- Routing in CRM mit sauberem Datensatz
+- Terminlogik für passende Ansprechpartner
+
+──── 3.3 Ablauf-Automation ────
+
+Operative Prozesse ohne manuelle Schleifen.
+Von Freigaben bis Berichten: Tawano automatisiert wiederkehrende interne
+Aufgaben über die bestehende Tool-Landschaft hinweg.
+- Integrationen mit CRM, ERP, Helpdesk und Kollaborationstools
+- Automatische Datenübergabe zwischen Systemen
+- Monitoring und Selbstkorrektur bei Ausnahmen
+
+═══════════════════════════════════════
+  4. SOFTWARE-PAKETE
+═══════════════════════════════════════
+
+──── 4.1 Automations-Steuerzentrale (Beliebt) ────
+
+Für Teams mit mehreren automatisierten Prozessen.
+Preis: Projektbasiert (inkl. Einrichtung und Rollout)
+
+Zentrales Dashboard für Monitoring, Steuerung und Freigabe
+der digitalen Mitarbeiter.
+- Kennzahlen-Tracking für Effizienz und Kosten
+- Live-Status aller Automationen
+- Rollenbasierte Dashboards für Teams
+- Auditierbare Prozesshistorie
+
+Warum projektbasiert? Weil Datenmodelle, Integrationen und Prozesslogik
+stark variieren. Kunden erhalten eine Lösung, die exakt zur operativen
+Realität passt.
+
+──── 4.2 Integrationsschicht ────
+
+Für Unternehmen mit fragmentierter Tool-Landschaft.
+Preis: ab 3.900 EUR (einmalig)
+
+Sichere Schnittstellen für Datenfluss zwischen CRM, ERP, Helpdesk
+und Kollaborationstools.
+- Systemübergreifende Datenharmonisierung
+- Ereignisbasierte Automations-Trigger
+- Validierungsregeln gegen Datenfehler
+- Dokumentierte API- und Prozesslogik
+- Optionales SLA-gestütztes Monitoring
+
+──── 4.3 Leistungs-Bots ────
+
+Für wiederkehrende Kernprozesse mit hohem Volumen.
+Preis: ab 690 EUR / Monat
+
+Digitale Mitarbeiter für spezifische Aufgaben wie Reporting,
+Nachverfolgung oder Ticket-Vorbereitung.
+- Stabile Ausführung nach klaren Regeln
+- Automatisches Error Handling mit Selbstkorrektur
+- Fortlaufende Lernschleife aus Echtbetrieb
+- Mehrsprachige Kommunikation inklusive
+- Monatliche Optimierungsreports
+
+═══════════════════════════════════════
+  5. PROZESS / ABLAUF
+═══════════════════════════════════════
+
+Schritt 1: Automations-Analyse
+Wir finden die teuersten Routine-Aufgaben mit dem größten Hebel.
+
+Schritt 2: Fahrplan mit Wirtschaftlichkeitsfällen
+Klare Priorisierung: was sofort automatisiert wird, was später folgt
+und welcher Nutzen realistisch ist.
+
+Schritt 3: Begleitete Implementierung
+Tawano begleitet Einrichtung, Integration und Befähigung, damit
+Automation im Alltag stabil funktioniert.
+
+Implementierung Digitaler Mitarbeiter:
+1. Prozessaufnahme — wiederkehrende Aufgaben in Betreuung, Vertrieb und Backoffice kartieren
+2. Bereitstellung — digitaler Mitarbeiter inkl. Integrationen in CRM, Ticketing und interne Tools
+3. Messbare Optimierung — Leistungsdaten, Fehlerquoten und Bearbeitungszeiten laufend verbessern
+
+═══════════════════════════════════════
+  6. KENNZAHLEN & ERGEBNISSE
+═══════════════════════════════════════
+
+- 24/7 Verfügbarkeit ohne Schichtkosten
+- 85% Automatisierungsrate
+- 42 Stunden Zeitersparnis pro Woche
+- 7+ Sprachen
+- Antwort auf Kontaktanfragen in der Regel innerhalb von 24 Stunden
+
+Vorher: Hoher manueller Aufwand, verzögerte Antworten und intransparente Bearbeitungsstände.
+Nachher: Automatisierte Priorisierung, schnelle Verarbeitung und saubere Übergabe ans Team.
+
+ROI-Modell (Beispielwerte):
+- Monatliche Plattformkosten: ca. 1.200 EUR
+- Einrichtungskosten: ca. 12.000 EUR
+- Berechnung: Wöchentliche Routine-Stunden × Kostensatz × Automatisierbarer Anteil
+
+═══════════════════════════════════════
+  7. HÄUFIGE FRAGEN (FAQ)
+═══════════════════════════════════════
+
+F: Welche Aufgaben kann ein digitaler Mitarbeiter übernehmen?
+A: Typische Aufgaben sind Support-Antworten, E-Mails, Lead-Erkennung
+   und einfache Abläufe im Backoffice.
+
+F: Wie schnell kann ein Unternehmen starten?
+A: Ein erster Ablauf kann oft in wenigen Wochen starten.
+   Das hängt vom Umfang und von den vorhandenen Systemen ab.
+
+F: Für welche Firmen lohnt sich Automatisierung besonders?
+A: Besonders für Firmen mit vielen wiederkehrenden Aufgaben,
+   vielen Kundenanfragen oder langen Antwortzeiten.
+
+F: Kann das System bestehende Software integrieren?
+A: Ja. Tawano bindet CRM, Ticketsystem oder andere Tools an,
+   damit alles sauber zusammenarbeitet.
+
+F: Wie erkennt das System Support-Anfragen oder Leads?
+A: Das System prüft Inhalte und Absicht der Nachricht
+   und ordnet sie automatisch richtig ein.
+
+F: Was kostet ein digitaler Mitarbeiter?
+A: Der Preis hängt vom Umfang ab. Am besten klären wir das in
+   einem kurzen kostenlosen Erstgespräch.
+
+F: Ersetzt Tawano das gesamte Support-Team?
+A: Nein. Ein Mitarbeiter bleibt, um das System zu überwachen.
+   Die Automatisierung übernimmt den Großteil der Routine-Aufgaben.
+
+═══════════════════════════════════════
+  8. PROBLEME DIE TAWANO LÖST
+═══════════════════════════════════════
+
+Problem 1: Routine-Aufgaben kosten viel Geld
+→ Mitarbeitende verbringen zu viel Zeit mit Copy-Paste-Arbeit
+  statt mit wertschaffenden Aufgaben.
+
+Problem 2: Langsame Reaktionszeiten kosten Umsatz
+→ Leads und Kunden warten zu lange, wenn Priorisierung und
+  automatische Verarbeitung fehlen.
+
+Problem 3: Manuelle Prozesse erzeugen Fehler
+→ Ohne automatisierte Kontrolle entstehen Nacharbeit, Eskalationen
+  und unnötige Abstimmungsschleifen.
+
+═══════════════════════════════════════
+  9. VERGLEICH: OHNE vs. MIT TAWANO
+═══════════════════════════════════════
+
+Ohne Automation:
+- Support-Anfragen bleiben lange offen
+- Kunden warten auf Antworten
+- Leads gehen verloren
+- Aufgaben stapeln sich im Team
+- Hohe Personalkosten
+
+Mit Tawano:
+- Support läuft 24/7 ohne Ausfall
+- Kunden erhalten sofort Antworten
+- Leads werden automatisch erkannt
+- Aufgaben laufen automatisch im Hintergrund
+- Geringere Kosten
+
+═══════════════════════════════════════
+  10. KONTAKT & ERSTGESPRÄCH
+═══════════════════════════════════════
+
+Kontaktmöglichkeiten:
+- E-Mail: info@tawano.de
+- Telefon: +49 163 1283971
+- Website: tawano.de
+- Standort: Düsseldorf, Deutschland
+
+Erstgespräch:
+- Kostenlos
+- 30 Minuten
+- Kein Newsletter, kein Spam
+- Antwort in der Regel innerhalb von 24 Stunden
+
+Was Kunden nach einer Anfrage erhalten:
+- Konkrete Priorisierung der besten Automationshebel
+- Transparente Einordnung zu Aufwand, Nutzen und nächsten Schritten
+
+═══════════════════════════════════════
+  11. RECHTLICHES (KURZFASSUNG)
+═══════════════════════════════════════
+
+- Rein B2B (keine Verbraucher-Kunden nach § 13 BGB)
+- Zahlungsziel: 14 Tage netto nach Rechnungsdatum
+- Kündigungsfrist laufende Services: 4 Wochen zum Monatsende
+- KI-Hinweis: Keine Garantie für vollständig fehlerfreie KI-Ausgaben
+- Kunden sind verantwortlich für menschliche Aufsicht bei kritischen Prozessen
+- Gerichtsstand: Düsseldorf
+- Geltendes Recht: Deutsches Recht
