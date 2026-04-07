@@ -42,7 +42,7 @@ const Impressum = () => {
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">Kontakt</h2>
               <p>Telefon: +49 163 1283971</p>
-              <p>E-Mail: info.carrymio@gmail.com</p>
+              <p>E-Mail: hello@tawano.ai</p>
             </section>
 
             <section>

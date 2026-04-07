@@ -66,7 +66,7 @@ export const Navigation = () => {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <a href="/" className="flex items-center gap-2" aria-label="Tawano - Startseite">
-            <img src="/tawano-logo.png" alt="Tawano Logo" className="h-9 w-auto" />
+            <img src="/tawano-logo.png" alt="Tawano Logo" className="h-9 w-auto" width="135" height="36" fetchPriority="high" />
           </a>
 
           {/* Desktop Navigation */}

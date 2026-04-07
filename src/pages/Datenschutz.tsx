@@ -27,7 +27,7 @@ const Datenschutz = () => {
                 <p>[Vor- und Nachname des Inhabers]</p>
                 <p>[Straße und Hausnummer]</p>
                 <p>[Postleitzahl] Düsseldorf, Deutschland</p>
-                <p className="mt-2">E-Mail: info.carrymio@gmail.com</p>
+                <p className="mt-2">E-Mail: hello@tawano.ai</p>
                 <p>Telefon: +49 163 1283971</p>
               </div>
               <p className="mt-3">
@@ -348,10 +348,10 @@ const Datenschutz = () => {
               <p className="mt-4">
                 Zur Ausübung Ihrer Rechte wenden Sie sich bitte per E-Mail an:{" "}
                 <a
-                  href="mailto:info.carrymio@gmail.com"
+                  href="mailto:hello@tawano.ai"
                   className="text-primary hover:underline"
                 >
-                  info.carrymio@gmail.com
+                  hello@tawano.ai
                 </a>
               </p>
             </section>

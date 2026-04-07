@@ -5,7 +5,7 @@ const Footer = () => {
       <div className="container px-4">
         <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
           <div>
-            <img src="/tawano-logo.png" alt="Tawano Logo" className="h-8 w-auto" />
+            <img src="/tawano-logo.png" alt="Tawano Logo" className="h-8 w-auto" width="120" height="32" loading="lazy" />
             <p className="mt-4 max-w-md text-sm leading-6 text-muted-foreground">
               Wir bauen digitale Mitarbeiter, die Support, E-Mails und Routine-Aufgaben automatisch erledigen.
             </p>

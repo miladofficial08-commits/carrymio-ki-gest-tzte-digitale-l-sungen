@@ -113,7 +113,7 @@ const Index = () => {
         <div className="container px-4">
           <div className="flex h-16 items-center justify-between gap-6 md:h-20">
             <button onClick={() => scrollTo("#home")} className="flex items-center gap-2 group" aria-label="Tawano Home">
-              <img src="/tawano-logo.png" alt="Tawano Logo" className="h-12 md:h-14 w-auto transition-transform duration-300 group-hover:scale-105" />
+              <img src="/tawano-logo.png" alt="Tawano Logo" className="h-12 md:h-14 w-auto transition-transform duration-300 group-hover:scale-105" width="168" height="56" fetchPriority="high" />
             </button>
             <div className="hidden items-center gap-7 md:flex">
               {navItems.map((item) => (
@@ -393,7 +393,7 @@ const Index = () => {
                   <div className="relative z-10">
                     <div className="flex items-center gap-3">
                       <p className="text-sm font-medium uppercase tracking-[0.12em] text-emerald-600">mit</p>
-                      <img src="/tawano-logo.png" alt="Tawano" className="h-10 w-auto" />
+                      <img src="/tawano-logo.png" alt="Tawano" className="h-10 w-auto" width="150" height="40" loading="lazy" />
                     </div>
                     <div className="mt-4 space-y-3">
                       {["Support läuft 24/7 ohne Ausfall", "Kunden erhalten sofort Antworten", "Leads werden automatisch erkannt", "Aufgaben laufen automatisch im Hintergrund", "Geringere Kosten für Ihr Unternehmen"].map((item, i) => (

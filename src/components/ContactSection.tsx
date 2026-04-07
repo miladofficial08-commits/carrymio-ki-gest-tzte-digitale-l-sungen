@@ -181,14 +181,14 @@ export const ContactSection = () => {
               <h3 className="text-xl font-bold mb-6">Direkter Kontakt</h3>
               <div className="space-y-4">
                 <a
-                  href="mailto:info.carrymio@gmail.com"
+                  href="mailto:hello@tawano.ai"
                   className="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors group"
-                  aria-label="E-Mail an info.carrymio@gmail.com senden"
+                  aria-label="E-Mail an hello@tawano.ai senden"
                 >
                   <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                     <Mail className="w-5 h-5 text-primary" aria-hidden="true" />
                   </div>
-                  <span>info.carrymio@gmail.com</span>
+                  <span>hello@tawano.ai</span>
                 </a>
                 <a
                   href="tel:+491631283971"
