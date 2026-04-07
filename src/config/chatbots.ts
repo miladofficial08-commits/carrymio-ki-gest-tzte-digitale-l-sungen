@@ -9,7 +9,7 @@ export const CHATBOTS = {
   },
   ai: {
     id: "ai",
-    title: "CARRY MIO Support",
+    title: "Tawano Support",
     side: "right" as const,
     embedUrl: "",
     short: "Professionelle Beratung",

@@ -38,7 +38,7 @@ export const SocialProofSection = () => {
                 </h2>
               </div>
               <p className="max-w-xl text-base leading-7 text-muted-foreground">
-                Tabanu fokussiert auf Wirkung im Betrieb: weniger Prozesskosten, schnellere Reaktionszeiten,
+                Tawano fokussiert auf Wirkung im Betrieb: weniger Prozesskosten, schnellere Reaktionszeiten,
                 hoehere Servicequalitaet und belastbare Automationsstandards.
               </p>
             </div>

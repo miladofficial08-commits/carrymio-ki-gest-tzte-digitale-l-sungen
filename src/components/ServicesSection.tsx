@@ -28,7 +28,7 @@ const services = [
     icon: Workflow,
     title: "Ablauf-Automation",
     subtitle: "Operative Prozesse ohne manuelle Schleifen",
-    description: "Von Freigaben bis Berichten: Tabanu automatisiert wiederkehrende interne Aufgaben ueber Ihre bestehende Tool-Landschaft hinweg.",
+    description: "Von Freigaben bis Berichten: Tawano automatisiert wiederkehrende interne Aufgaben ueber Ihre bestehende Tool-Landschaft hinweg.",
     features: [
       "Integrationen mit CRM, ERP, Helpdesk und Kollaborationstools",
       "Automatische Datenuebergabe zwischen Systemen",
@@ -56,7 +56,7 @@ export const ServicesSection = () => {
               <span className="display-serif block text-gradient">systematisch ersetzt.</span>
             </h2>
             <p className="section-copy max-w-md">
-              Tabanu entwickelt keine isolierten Features, sondern automatisierte Prozessketten.
+              Tawano entwickelt keine isolierten Features, sondern automatisierte Prozessketten.
               Ziel ist immer derselbe Hebel: weniger operative Last, mehr Tempo, niedrigere Kosten.
             </p>
           </div>

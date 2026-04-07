@@ -1,3 +1,15 @@
 User-agent: *
 Allow: /
-Sitemap: https://carrymio.de/sitemap.xml
+Disallow: /netlify/
+Disallow: /.claude/
+Crawl-delay: 1
+
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+Sitemap: https://tawano.ai/sitemap.xml

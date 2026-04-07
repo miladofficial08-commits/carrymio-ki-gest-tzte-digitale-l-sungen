@@ -74,7 +74,7 @@ export const PackagesSection = () => {
             <span className="display-serif block text-gradient">gebaut fuer automatisierte Unternehmen.</span>
           </h2>
           <p className="section-copy">
-            Wenn Standardtools nicht ausreichen, entwickelt Tabanu passgenaue Systeme,
+            Wenn Standardtools nicht ausreichen, entwickelt Tawano passgenaue Systeme,
             die Ihre digitalen Mitarbeiter in bestehende Geschaeftsprozesse einbetten.
           </p>
         </div>

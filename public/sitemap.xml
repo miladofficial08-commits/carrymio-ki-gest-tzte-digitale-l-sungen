@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://carrymio.de/</loc>
+    <loc>https://tawano.ai/</loc>
+    <lastmod>2026-04-07</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="de" href="https://tawano.ai/"/>
   </url>
   <url>
-    <loc>https://carrymio.de/impressum</loc>
-    <priority>0.3</priority>
+    <loc>https://tawano.ai/impressum</loc>
+    <lastmod>2026-04-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
   </url>
   <url>
-    <loc>https://carrymio.de/datenschutz</loc>
-    <priority>0.3</priority>
+    <loc>https://tawano.ai/datenschutz</loc>
+    <lastmod>2026-04-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
   </url>
   <url>
-    <loc>https://carrymio.de/agb</loc>
-    <priority>0.3</priority>
+    <loc>https://tawano.ai/agb</loc>
+    <lastmod>2026-04-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
   </url>
 </urlset>

@@ -1,78 +1,65 @@
 {
-  "name": "Carrymio – KI Chatbots & Digitale Lösungen",
-  "short_name": "Carrymio",
-  "description": "KI-gestützte Chatbots, Social-Media-Management und moderne Websites für Unternehmen in Düsseldorf",
-  "start_url": "https://carrymio.de/",
+  "name": "Tawano – Digitale Mitarbeiter & KI-Automatisierung",
+  "short_name": "Tawano",
+  "description": "KI-gestützte digitale Mitarbeiter und Automatisierungslösungen für Unternehmen",
+  "start_url": "https://tawano.ai/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
   "orientation": "portrait-primary",
   "scope": "/",
+  "lang": "de",
   "icons": [
     {
-      "src": "/logo.svg",
+      "src": "/tawano-logo.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/logo.svg",
+      "src": "/tawano-logo.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/logo.svg",
+      "src": "/tawano-logo.png",
       "sizes": "any",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/logo.svg",
-      "sizes": "540x720",
-      "type": "image/svg+xml",
-      "form_factor": "narrow"
-    },
-    {
-      "src": "/logo.svg",
-      "sizes": "1280x720",
-      "type": "image/svg+xml",
-      "form_factor": "wide"
     }
   ],
   "categories": ["business", "productivity"],
   "shortcuts": [
     {
-      "name": "Anfrage",
+      "name": "Anfrage stellen",
       "short_name": "Anfrage",
-      "description": "Anfrage stellen",
-      "url": "https://carrymio.de/#kontakt",
+      "description": "Automations-Check anfragen",
+      "url": "https://tawano.ai/#kontakt",
       "icons": [
         {
-          "src": "/logo.svg",
+          "src": "/tawano-logo.png",
           "sizes": "192x192",
-          "type": "image/svg+xml"
+          "type": "image/png"
         }
       ]
     },
     {
-      "name": "Dienstleistungen",
-      "short_name": "Services",
-      "description": "Unsere Dienstleistungen ansehen",
-      "url": "https://carrymio.de/#dienstleistungen",
+      "name": "Unsere Leistungen",
+      "short_name": "Leistungen",
+      "description": "Digitale Mitarbeiter und Automatisierungslösungen ansehen",
+      "url": "https://tawano.ai/#digital-employees",
       "icons": [
         {
-          "src": "/logo.svg",
+          "src": "/tawano-logo.png",
           "sizes": "192x192",
-          "type": "image/svg+xml"
+          "type": "image/png"
         }
       ]
     }
   ],
   "share_target": {
-    "action": "https://carrymio.de/#kontakt",
+    "action": "https://tawano.ai/#kontakt",
     "method": "POST",
     "enctype": "application/x-www-form-urlencoded",
     "params": {

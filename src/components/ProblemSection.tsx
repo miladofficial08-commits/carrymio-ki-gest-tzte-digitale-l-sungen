@@ -28,7 +28,7 @@ export const ProblemSection = () => {
             Die meisten Unternehmen zahlen taeglich fuer vermeidbare Routinearbeit
           </h2>
           <p className="section-copy max-w-3xl mx-auto">
-            Tabanu ersetzt wiederkehrende Aufgaben durch digitale Mitarbeiter, die Prozesse stabilisieren,
+            Tawano ersetzt wiederkehrende Aufgaben durch digitale Mitarbeiter, die Prozesse stabilisieren,
             Durchlaufzeiten verkuerzen und Kosten im laufenden Betrieb senken.
           </p>
         </div>

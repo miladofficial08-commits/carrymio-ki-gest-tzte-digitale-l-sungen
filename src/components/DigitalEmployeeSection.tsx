@@ -31,7 +31,7 @@ const flow = [
   },
   {
     title: "2. Bereitstellung digitaler Mitarbeiter",
-    text: "Tabanu implementiert den digitalen Mitarbeiter inkl. Integrationen in CRM, Ticketing und interne Tools.",
+    text: "Tawano implementiert den digitalen Mitarbeiter inkl. Integrationen in CRM, Ticketing und interne Tools.",
   },
   {
     title: "3. Messbare Optimierung",
@@ -68,13 +68,13 @@ export const DigitalEmployeeSection = () => {
         <div className="max-w-5xl mx-auto text-center mb-14">
           <span className="inline-flex items-center gap-2 text-primary text-sm font-medium mb-4 px-4 py-2 rounded-full border border-primary/30 bg-primary/5">
             <Sparkles className="w-4 h-4" aria-hidden="true" />
-            Kernprodukt: Tabanu Digitale Mitarbeiter
+            Kernprodukt: Tawano Digitale Mitarbeiter
           </span>
           <h2 className="section-title md:text-[2.8rem] mb-5">
             Ein digitaler Mitarbeiter, der echte Arbeit abnimmt
           </h2>
           <p className="section-copy max-w-3xl mx-auto">
-            Statt nur zu antworten, fuehrt ein digitaler Mitarbeiter von Tabanu Aufgaben aus: priorisieren,
+            Statt nur zu antworten, fuehrt ein digitaler Mitarbeiter von Tawano Aufgaben aus: priorisieren,
             qualifizieren, weiterleiten, dokumentieren und verbessern. Damit sinken Kosten und Ihr Team gewinnt Fokus.
           </p>
         </div>
@@ -96,7 +96,7 @@ export const DigitalEmployeeSection = () => {
 
         <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] gap-6 mb-14 max-w-5xl mx-auto">
           <article className="surface-elevated rounded-2xl p-7">
-            <h3 className="text-xl font-semibold mb-5">Wie Tabanu aus Prozessen echte Automation macht</h3>
+            <h3 className="text-xl font-semibold mb-5">Wie Tawano aus Prozessen echte Automation macht</h3>
             <div className="space-y-4">
               {flow.map((step) => (
                 <div key={step.title} className="rounded-2xl border border-white/10 bg-white/5 p-4">

@@ -20,7 +20,7 @@ const steps = [
     number: "03",
     title: "Begleitete Implementierung",
     description:
-      "Tabanu begleitet Einrichtung, Integration und Befaehigung, damit Automation im Alltag stabil funktioniert.",
+      "Tawano begleitet Einrichtung, Integration und Befaehigung, damit Automation im Alltag stabil funktioniert.",
   },
 ];
 
@@ -33,7 +33,7 @@ export const ProcessSection = () => {
             Automationsberatung
           </span>
           <h2 className="section-title mb-4">
-            Wenn Prozesse stocken, bringt Tabanu Struktur in die Automation.
+            Wenn Prozesse stocken, bringt Tawano Struktur in die Automation.
           </h2>
           <p className="section-copy">
             Sie haben bereits Tools, aber keine durchgaengige Wirkung? Wir analysieren Ursachen,

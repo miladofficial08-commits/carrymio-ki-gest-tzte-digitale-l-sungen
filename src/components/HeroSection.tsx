@@ -21,7 +21,7 @@ export const HeroSection = () => {
           <div className="max-w-3xl">
             <div className="animate-fade-up section-kicker mb-8" role="status" aria-label="KI-Automation fuer Unternehmen">
               <Bot className="h-4 w-4 text-primary" aria-hidden="true" />
-              <span>Tabanu Digitale Mitarbeiter</span>
+              <span>Tawano Digitale Mitarbeiter</span>
             </div>
 
             <h1 className="animate-fade-up-delay-1 text-4xl font-semibold leading-[1.02] md:text-6xl xl:text-7xl">
@@ -32,7 +32,7 @@ export const HeroSection = () => {
             <div className="animate-fade-up-delay-2 my-8 max-w-2xl editorial-rule" aria-hidden="true" />
 
             <p className="animate-fade-up-delay-2 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
-              Tabanu baut KI-gestützte digitale Mitarbeiter, die wiederkehrende Bueroarbeit uebernehmen:
+              Tawano baut KI-gestützte digitale Mitarbeiter, die wiederkehrende Bueroarbeit uebernehmen:
               E-Mail-Betreuung, Anfragequalifizierung, Kundenkommunikation und interne Arbeitsablaeufe. Rund um die Uhr,
               mit klaren Regeln und messbarer Wirtschaftlichkeit.
             </p>
