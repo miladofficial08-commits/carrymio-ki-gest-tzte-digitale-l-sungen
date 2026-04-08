@@ -82,18 +82,18 @@ from = "/manifest.json"
 to = "/manifest.json"
 status = 200
 
-# SEO Friendly Redirects
+# Legal pages — serve the SPA so React Router handles them
 [[redirects]]
 from = "/impressum"
-to = "/#kontakt"
+to = "/index.html"
 status = 200
 
 [[redirects]]
 from = "/datenschutz"
-to = "/#kontakt"
+to = "/index.html"
 status = 200
 
 [[redirects]]
 from = "/agb"
-to = "/#kontakt"
+to = "/index.html"
 status = 200
