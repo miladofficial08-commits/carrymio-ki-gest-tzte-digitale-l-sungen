@@ -65,6 +65,8 @@ export function AIAssistantVoicePanel({ onClose, onDismiss }: AIAssistantVoicePa
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const abortRef = useRef<AbortController | null>(null);
+  const conversationRef = useRef<ConversationEntry[]>([]);
+  const handleSendRef = useRef<(text: string) => void>(() => {});
 
   // Cleanup on unmount
   useEffect(() => {
@@ -108,7 +110,7 @@ export function AIAssistantVoicePanel({ onClose, onDismiss }: AIAssistantVoicePa
       // Auto-send when speech ends
       setTranscript((prev) => {
         if (prev.trim()) {
-          handleSend(prev.trim());
+          handleSendRef.current(prev.trim());
         } else {
           setState("idle");
         }
@@ -133,7 +135,7 @@ export function AIAssistantVoicePanel({ onClose, onDismiss }: AIAssistantVoicePa
       setResponse("");
 
       const newConversation: ConversationEntry[] = [
-        ...conversation,
+        ...conversationRef.current,
         { role: "user", content: text },
       ];
 
@@ -160,7 +162,9 @@ export function AIAssistantVoicePanel({ onClose, onDismiss }: AIAssistantVoicePa
 
         const reply = chatData.reply;
         setResponse(reply);
-        setConversation([...newConversation, { role: "assistant", content: reply }]);
+        const updated = [...newConversation, { role: "assistant" as const, content: reply }];
+        setConversation(updated);
+        conversationRef.current = updated;
 
         // Get TTS audio
         setState("speaking");
@@ -200,8 +204,13 @@ export function AIAssistantVoicePanel({ onClose, onDismiss }: AIAssistantVoicePa
         }
       }
     },
-    [conversation]
+    []
   );
+
+  // Keep ref in sync
+  useEffect(() => {
+    handleSendRef.current = handleSend;
+  }, [handleSend]);
 
   // ── Browser TTS fallback ─────────────────────────────────
   const fallbackSpeak = useCallback((text: string) => {
