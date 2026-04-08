@@ -13,7 +13,6 @@ import WebdesignFunnel from "./pages/WebdesignFunnel";
 import DigitalerMitarbeiterFunnel from "./pages/DigitalerMitarbeiterFunnel";
 import CustomAutomationFunnel from "./pages/CustomAutomationFunnel";
 import { TawanoChatbot } from "./components/TawanoChatbot";
-import { AIAssistant } from "./components/ai-assistant/AIAssistant";
 
 const queryClient = new QueryClient();
 
@@ -35,7 +34,6 @@ const App = () => (
           <Route path="*" element={<NotFound />} />
         </Routes>
         <TawanoChatbot />
-        <AIAssistant />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

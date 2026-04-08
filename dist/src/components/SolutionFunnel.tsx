@@ -1,6 +1,6 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, CheckCircle2, Loader2, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, Loader2, Sparkles, Shield, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
@@ -33,6 +33,8 @@ export interface FunnelConfig {
 
 interface Props {
   config: FunnelConfig;
+  onAnswersChange?: (answers: Record<string, string>) => void;
+  onSubmitted?: () => void;
 }
 
 // ─── Slide variants ──────────────────────────────────────────
@@ -41,22 +43,34 @@ const slideVariants = {
   enter: (direction: number) => ({
     x: direction > 0 ? 60 : -60,
     opacity: 0,
+    filter: "blur(3px)",
   }),
   center: {
     x: 0,
     opacity: 1,
-    transition: { type: "spring", stiffness: 340, damping: 30 },
+    filter: "blur(0px)",
+    transition: { type: "spring", stiffness: 300, damping: 30 },
   },
   exit: (direction: number) => ({
     x: direction > 0 ? -60 : 60,
     opacity: 0,
-    transition: { duration: 0.18 },
+    filter: "blur(3px)",
+    transition: { duration: 0.2 },
+  }),
+};
+
+const optionVariants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.06, duration: 0.35, ease: [0.22, 1, 0.36, 1] },
   }),
 };
 
 // ─── Component ───────────────────────────────────────────────
 
-export const SolutionFunnel = ({ config }: Props) => {
+export const SolutionFunnel = ({ config, onAnswersChange, onSubmitted }: Props) => {
   const { toast } = useToast();
   const { questions } = config;
   const totalSteps = questions.length + 1; // questions + contact step
@@ -72,7 +86,12 @@ export const SolutionFunnel = ({ config }: Props) => {
 
   const isContactStep = step === questions.length;
   const currentQuestion = !isContactStep ? questions[step] : null;
-  const progress = Math.round((step / totalSteps) * 100);
+  const progress = submitted ? 100 : Math.round((step / totalSteps) * 100);
+
+  // Report answers to parent for exit-intent tracking
+  useEffect(() => {
+    onAnswersChange?.(answers);
+  }, [answers, onAnswersChange]);
 
   // Advance to next step after selection
   const selectOption = useCallback(
@@ -83,7 +102,7 @@ export const SolutionFunnel = ({ config }: Props) => {
         setDirection(1);
         setStep((s) => s + 1);
         setSelectedOption(null);
-      }, 320);
+      }, 400);
     },
     []
   );
@@ -117,13 +136,19 @@ export const SolutionFunnel = ({ config }: Props) => {
       .map((q) => `• ${q.question}\n  → ${answers[q.id] || "–"}`)
       .join("\n\n");
 
-    // 1. Save to Supabase
-    await saveFunnelLead({
+    // 1. Save to Supabase (with verification)
+    const saveSuccess = await saveFunnelLead({
       name: contact.name.trim(),
       email: contact.email.trim(),
       solution: config.solution,
       answers,
     });
+    if (!saveSuccess) {
+      console.error("[Funnel] Supabase save failed — data may not be stored");
+      toast({ title: "Hinweis", description: "Ihre Anfrage konnte nicht gespeichert werden. Wir kümmern uns darum.", variant: "destructive" });
+    } else {
+      console.log("[Funnel] Lead saved successfully to Supabase for:", config.solution);
+    }
 
     // 2. Send internal notification via EmailJS
     const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
@@ -180,30 +205,60 @@ export const SolutionFunnel = ({ config }: Props) => {
 
     setSubmitting(false);
     setSubmitted(true);
+    onSubmitted?.();
   };
 
   // ── Success state ────────────────────────────────────────────
   if (submitted) {
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.96 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="flex flex-col items-center justify-center text-center py-16 px-4"
-      >
+      <div className="w-full max-w-2xl mx-auto px-4">
+        {/* Completed progress bar */}
+        <div className="mb-12">
+          <div className="flex items-center justify-between mb-2.5">
+            <span className="text-[11px] font-medium text-muted-foreground tracking-widest uppercase">
+              Abgeschlossen
+            </span>
+            <span className="text-[11px] font-semibold text-primary tabular-nums tracking-wide">
+              100%
+            </span>
+          </div>
+          <div className="relative h-[5px] w-full rounded-full bg-muted/50 overflow-hidden">
+            <motion.div
+              className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-primary to-[hsl(200,91%,45%)]"
+              initial={{ width: "80%" }}
+              animate={{ width: "100%" }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            />
+          </div>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col items-center justify-center text-center py-12 px-4"
+        >
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", stiffness: 260, damping: 18, delay: 0.1 }}
-          className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-primary/15 border border-primary/30"
+          className="mb-8 relative"
         >
-          <CheckCircle2 className="h-10 w-10 text-primary" />
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 border border-primary/20">
+            <CheckCircle2 className="h-10 w-10 text-primary" />
+          </div>
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0.6 }}
+            animate={{ scale: 1.8, opacity: 0 }}
+            transition={{ delay: 0.3, duration: 0.9, ease: "easeOut" }}
+            className="absolute inset-0 rounded-full border-2 border-primary/20"
+          />
         </motion.div>
         <motion.h2
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25 }}
-          className="text-3xl font-semibold mb-3"
+          className="text-3xl font-semibold mb-3 tracking-[-0.02em]"
         >
           Anfrage eingegangen
         </motion.h2>
@@ -216,51 +271,70 @@ export const SolutionFunnel = ({ config }: Props) => {
           Vielen Dank, {contact.name.split(" ")[0]}. Wir prüfen Ihre Angaben und melden uns
           in Kürze mit einem passenden Vorschlag.
         </motion.p>
-        <motion.p
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.55 }}
-          className="mt-2 text-sm text-muted-foreground/60"
+          transition={{ delay: 0.5 }}
+          className="mt-3 flex items-center gap-4 text-xs text-muted-foreground/50"
         >
-          info@tawano.de · +49 163 1283971
-        </motion.p>
+          <span>info@tawano.de</span>
+          <span className="h-3 w-px bg-border" />
+          <span>+49 163 1283971</span>
+        </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.65 }}
           className="mt-10"
         >
-          <Button variant="outline" onClick={() => (window.location.href = "/")}>
+          <Button variant="outline" className="rounded-full px-6" onClick={() => (window.location.href = "/")}>
             Zurück zur Startseite
           </Button>
         </motion.div>
       </motion.div>
+      </div>
     );
   }
 
   // ── Main funnel ──────────────────────────────────────────────
   return (
     <div className="w-full max-w-2xl mx-auto px-4">
-      {/* Progress bar */}
-      <div className="mb-10">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs text-muted-foreground">
+      {/* Premium progress bar with gradient glow */}
+      <div className="mb-12">
+        <div className="flex items-center justify-between mb-2.5">
+          <span className="text-[11px] font-medium text-muted-foreground tracking-widest uppercase">
             Schritt {Math.min(step + 1, totalSteps)} von {totalSteps}
           </span>
-          <span className="text-xs text-muted-foreground">{progress}%</span>
+          <motion.span
+            key={progress}
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-[11px] font-semibold text-primary tabular-nums tracking-wide"
+          >
+            {progress}%
+          </motion.span>
         </div>
-        <div className="h-1 w-full rounded-full bg-white/8 overflow-hidden">
+        <div className="relative h-[5px] w-full rounded-full bg-muted/50 overflow-hidden">
           <motion.div
-            className="h-full rounded-full bg-primary"
+            className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-primary to-[hsl(200,91%,45%)]"
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          />
+          <motion.div
+            className="absolute inset-y-0 left-0 rounded-full opacity-40"
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              background: "linear-gradient(90deg, transparent 60%, rgba(255,255,255,0.5))",
+              filter: "blur(4px)",
+            }}
           />
         </div>
       </div>
 
       {/* Step content */}
-      <div className="relative overflow-hidden min-h-[360px]">
+      <div className="relative overflow-hidden min-h-[380px]">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={step}
@@ -274,53 +348,67 @@ export const SolutionFunnel = ({ config }: Props) => {
             {currentQuestion && (
               <div>
                 {currentQuestion.subtitle && (
-                  <p className="section-kicker mb-4">{currentQuestion.subtitle}</p>
+                  <motion.p
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.08 }}
+                    className="section-kicker mb-5"
+                  >
+                    {currentQuestion.subtitle}
+                  </motion.p>
                 )}
-                <h2 className="text-2xl md:text-3xl font-semibold leading-snug mb-8">
+                <h2 className="text-2xl md:text-[1.75rem] font-semibold leading-snug mb-8 tracking-[-0.02em]">
                   {currentQuestion.question}
                 </h2>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  {currentQuestion.options.map((opt) => {
+                  {currentQuestion.options.map((opt, i) => {
                     const isSelected = selectedOption === opt.value;
                     return (
                       <motion.button
                         key={opt.value}
+                        custom={i}
+                        variants={optionVariants}
+                        initial="hidden"
+                        animate="visible"
                         onClick={() => selectOption(currentQuestion.id, opt.value)}
                         disabled={selectedOption !== null}
-                        whileHover={{ scale: 1.02 }}
+                        whileHover={{ y: -2, transition: { duration: 0.2 } }}
                         whileTap={{ scale: 0.98 }}
-                        animate={
-                          isSelected
-                            ? { scale: [1, 1.04, 1], transition: { duration: 0.28 } }
-                            : {}
-                        }
                         className={[
-                          "group relative flex flex-col gap-1 rounded-2xl border p-4 text-left transition-all duration-200 cursor-pointer",
+                          "group relative flex items-start gap-3.5 rounded-2xl border p-5 text-left transition-all duration-300 cursor-pointer",
                           isSelected
-                            ? "border-primary bg-primary/15 text-foreground shadow-lg shadow-primary/10"
-                            : "border-white/10 bg-white/4 hover:border-primary/40 hover:bg-white/8",
+                            ? "border-primary/50 bg-primary/[0.06] shadow-lg shadow-primary/8 ring-1 ring-primary/15"
+                            : "border-border/70 bg-white/60 backdrop-blur-sm hover:border-primary/25 hover:bg-white/80 hover:shadow-md hover:shadow-black/[0.03]",
                         ].join(" ")}
                       >
                         {opt.emoji && (
-                          <span className="text-xl mb-0.5">{opt.emoji}</span>
-                        )}
-                        <span className="text-sm font-semibold leading-snug">
-                          {opt.label}
-                        </span>
-                        {opt.description && (
-                          <span className="text-xs text-muted-foreground leading-relaxed">
-                            {opt.description}
+                          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-muted/50 text-lg transition-colors duration-300 group-hover:bg-primary/[0.06]">
+                            {opt.emoji}
                           </span>
                         )}
-                        {isSelected && (
-                          <motion.span
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="absolute top-3 right-3"
-                          >
-                            <CheckCircle2 className="h-4 w-4 text-primary" />
-                          </motion.span>
-                        )}
+                        <div className="flex-1 min-w-0 pt-0.5">
+                          <span className="text-[13px] font-semibold text-foreground leading-snug block">
+                            {opt.label}
+                          </span>
+                          {opt.description && (
+                            <span className="text-[11px] text-muted-foreground leading-relaxed mt-1 block">
+                              {opt.description}
+                            </span>
+                          )}
+                        </div>
+                        <AnimatePresence>
+                          {isSelected && (
+                            <motion.span
+                              initial={{ scale: 0, opacity: 0 }}
+                              animate={{ scale: 1, opacity: 1 }}
+                              exit={{ scale: 0, opacity: 0 }}
+                              transition={{ type: "spring", stiffness: 500, damping: 15 }}
+                              className="absolute top-4 right-4"
+                            >
+                              <CheckCircle2 className="h-5 w-5 text-primary" />
+                            </motion.span>
+                          )}
+                        </AnimatePresence>
                       </motion.button>
                     );
                   })}
@@ -331,14 +419,18 @@ export const SolutionFunnel = ({ config }: Props) => {
             {/* Contact step */}
             {isContactStep && (
               <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <Sparkles className="h-4 w-4 text-primary" />
-                  <span className="section-kicker">Fast geschafft</span>
+                <div className="flex items-center gap-2.5 mb-5">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10">
+                    <Sparkles className="h-3.5 w-3.5 text-primary" />
+                  </div>
+                  <span className="text-[11px] font-medium text-primary tracking-widest uppercase">
+                    Fast geschafft
+                  </span>
                 </div>
-                <h2 className="text-2xl md:text-3xl font-semibold leading-snug mb-2">
-                  Wohin sollen wir das Angebot senden?
+                <h2 className="text-2xl md:text-[1.75rem] font-semibold leading-snug mb-2 tracking-[-0.02em]">
+                  Wohin sollen wir Ihr Angebot senden?
                 </h2>
-                <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
+                <p className="text-muted-foreground text-sm mb-8 leading-relaxed max-w-md">
                   Kein Spam. Kein Newsletter. Nur Ihr individuelles Angebot für{" "}
                   <span className="text-foreground font-medium">{config.solutionLabel}</span>.
                 </p>
@@ -352,10 +444,10 @@ export const SolutionFunnel = ({ config }: Props) => {
                         if (contactErrors.name)
                           setContactErrors((er) => ({ ...er, name: "" }));
                       }}
-                      className="h-12 bg-white/5 border-white/12 text-foreground placeholder:text-muted-foreground/60 focus:border-primary/50"
+                      className="h-12 rounded-xl bg-white/60 border-border/70 text-foreground placeholder:text-muted-foreground/50 focus:border-primary/40 focus:ring-2 focus:ring-primary/10 transition-all"
                     />
                     {contactErrors.name && (
-                      <p className="mt-1 text-xs text-destructive">{contactErrors.name}</p>
+                      <p className="mt-1.5 text-xs text-destructive">{contactErrors.name}</p>
                     )}
                   </div>
                   <div>
@@ -368,16 +460,16 @@ export const SolutionFunnel = ({ config }: Props) => {
                         if (contactErrors.email)
                           setContactErrors((er) => ({ ...er, email: "" }));
                       }}
-                      className="h-12 bg-white/5 border-white/12 text-foreground placeholder:text-muted-foreground/60 focus:border-primary/50"
+                      className="h-12 rounded-xl bg-white/60 border-border/70 text-foreground placeholder:text-muted-foreground/50 focus:border-primary/40 focus:ring-2 focus:ring-primary/10 transition-all"
                     />
                     {contactErrors.email && (
-                      <p className="mt-1 text-xs text-destructive">{contactErrors.email}</p>
+                      <p className="mt-1.5 text-xs text-destructive">{contactErrors.email}</p>
                     )}
                   </div>
                   <Button
                     type="submit"
                     variant="hero"
-                    className="w-full h-12 mt-2"
+                    className="w-full h-12 mt-2 rounded-xl text-[13px] tracking-wide"
                     disabled={submitting}
                   >
                     {submitting ? (
@@ -392,8 +484,18 @@ export const SolutionFunnel = ({ config }: Props) => {
                       </>
                     )}
                   </Button>
-                  <p className="text-center text-xs text-muted-foreground/50 pt-1">
-                    Unverbindlich · Kostenlos · Antwort innerhalb von 24 Stunden
+                  <div className="flex items-center justify-center gap-5 pt-3">
+                    <span className="flex items-center gap-1.5 text-[10px] text-muted-foreground/50 tracking-wide uppercase">
+                      <Shield className="h-3 w-3" />
+                      DSGVO-konform
+                    </span>
+                    <span className="flex items-center gap-1.5 text-[10px] text-muted-foreground/50 tracking-wide uppercase">
+                      <Lock className="h-3 w-3" />
+                      Verschlüsselt
+                    </span>
+                  </div>
+                  <p className="text-center text-[11px] text-muted-foreground/40 pt-0.5">
+                    Unverbindlich · Kostenlos · Antwort innerhalb von 24 h
                   </p>
                 </form>
               </div>
@@ -404,15 +506,19 @@ export const SolutionFunnel = ({ config }: Props) => {
 
       {/* Back button */}
       {step > 0 && !submitting && (
-        <div className="mt-8">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="mt-10"
+        >
           <button
             onClick={goBack}
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className="group flex items-center gap-2 text-[13px] text-muted-foreground/60 hover:text-foreground transition-colors duration-200"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
             Zurück
           </button>
-        </div>
+        </motion.div>
       )}
     </div>
   );

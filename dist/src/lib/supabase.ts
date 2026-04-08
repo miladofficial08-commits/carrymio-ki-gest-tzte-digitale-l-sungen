@@ -261,11 +261,12 @@ export interface FunnelLead {
 
 export async function saveFunnelLead(data: FunnelLead): Promise<boolean> {
   try {
-    const { error } = await supabase.from("funnel_leads").insert(data);
+    const { data: inserted, error } = await supabase.from("funnel_leads").insert(data).select();
     if (error) {
       console.error("[Supabase] saveFunnelLead failed:", error.message, "(code:", error.code, ")");
       return false;
     }
+    console.log("[Supabase] saveFunnelLead success — row:", inserted?.[0]?.id ?? "unknown", inserted);
     return true;
   } catch (e) {
     console.error("[Supabase] saveFunnelLead exception:", e);

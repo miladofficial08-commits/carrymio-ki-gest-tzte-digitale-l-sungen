@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Loader2 } from "lucide-react";
+import { X, Loader2, Sparkles, CheckCircle2, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { saveFunnelLead } from "@/lib/supabase";
@@ -9,57 +9,71 @@ interface Props {
   solution: string;
   solutionLabel: string;
   currentAnswers: Record<string, string>;
-  /** Call this to notify parent that popup dismissed permanently */
+  /** Imperative trigger from parent (logo/nav/back click) */
+  forceShow?: boolean;
+  /** Called when user chooses to continue the funnel */
+  onContinue?: () => void;
+  /** Called when user confirms leaving */
+  onLeave?: () => void;
+  /** Legacy callback */
   onDismiss?: () => void;
 }
 
-export const ExitIntentPopup = ({ solution, solutionLabel, currentAnswers, onDismiss }: Props) => {
+export const ExitIntentPopup = ({
+  solution,
+  solutionLabel,
+  currentAnswers,
+  forceShow = false,
+  onContinue,
+  onLeave,
+  onDismiss,
+}: Props) => {
   const [visible, setVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [emailError, setEmailError] = useState("");
-  const triggered = useRef(false);
-  const dismissed = useRef(false);
+  const firedOnce = useRef(false);
 
-  // Only trigger once per page visit, not immediately
+  // Force show from parent (logo/nav/back click interception)
   useEffect(() => {
-    const DELAY_MS = 3000; // wait 3s before arming the trap
-    let armed = false;
+    if (forceShow && !firedOnce.current) {
+      firedOnce.current = true;
+      setVisible(true);
+    }
+  }, [forceShow]);
 
-    const armTimer = setTimeout(() => {
-      armed = true;
-    }, DELAY_MS);
+  // Autonomous trigger: mouseleave (desktop)
+  useEffect(() => {
+    const DELAY_MS = 1500;
+    let armed = false;
+    const armTimer = setTimeout(() => { armed = true; }, DELAY_MS);
 
     const handleMouseLeave = (e: MouseEvent) => {
-      if (!armed || triggered.current || dismissed.current) return;
-      // Only trigger when cursor exits from the top of the viewport
+      if (!armed || firedOnce.current) return;
       if (e.clientY <= 5) {
-        triggered.current = true;
+        firedOnce.current = true;
         setVisible(true);
       }
     };
 
-    const handlePopState = () => {
-      if (!armed || triggered.current || dismissed.current) return;
-      triggered.current = true;
-      setVisible(true);
-    };
-
     document.addEventListener("mouseleave", handleMouseLeave);
-    window.addEventListener("popstate", handlePopState);
-
     return () => {
       clearTimeout(armTimer);
       document.removeEventListener("mouseleave", handleMouseLeave);
-      window.removeEventListener("popstate", handlePopState);
     };
   }, []);
 
-  const dismiss = () => {
-    dismissed.current = true;
+  const handleContinue = () => {
     setVisible(false);
+    firedOnce.current = false; // allow re-trigger on next attempt
+    onContinue?.();
     onDismiss?.();
+  };
+
+  const handleLeave = () => {
+    setVisible(false);
+    onLeave?.();
   };
 
   const handleSave = async () => {
@@ -69,15 +83,20 @@ export const ExitIntentPopup = ({ solution, solutionLabel, currentAnswers, onDis
     }
     setEmailError("");
     setSaving(true);
-    await saveFunnelLead({
+    const success = await saveFunnelLead({
       name: "–",
       email: email.trim(),
       solution,
       answers: currentAnswers,
     });
     setSaving(false);
+    if (success) {
+      console.log("[ExitPopup] Lead saved to Supabase for:", solution);
+    } else {
+      console.error("[ExitPopup] Failed to save lead to Supabase");
+    }
     setSaved(true);
-    setTimeout(() => dismiss(), 2200);
+    setTimeout(() => handleLeave(), 2400);
   };
 
   return (
@@ -86,92 +105,182 @@ export const ExitIntentPopup = ({ solution, solutionLabel, currentAnswers, onDis
         <>
           {/* Backdrop */}
           <motion.div
-            key="backdrop"
+            key="exit-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.22 }}
+            transition={{ duration: 0.25 }}
             className="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm"
-            onClick={dismiss}
+            onClick={handleContinue}
           />
 
-          {/* Panel */}
+          {/* Popup card */}
           <motion.div
-            key="panel"
-            initial={{ opacity: 0, y: 40, scale: 0.96 }}
+            key="exit-panel"
+            initial={{ opacity: 0, y: 40, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 24, scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 320, damping: 28 }}
-            className="fixed inset-x-4 bottom-6 z-[201] mx-auto max-w-md rounded-[24px] border border-white/12 bg-card/95 p-7 shadow-2xl backdrop-blur-2xl sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 sm:bottom-8"
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25, mass: 0.8 }}
+            className="fixed z-[201] inset-x-4 top-1/2 -translate-y-1/2 mx-auto max-w-[420px] sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2"
           >
-            {/* Close */}
-            <button
-              onClick={dismiss}
-              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
-              aria-label="Schließen"
-            >
-              <X className="h-4 w-4" />
-            </button>
+            <div className="relative overflow-hidden rounded-3xl bg-white shadow-[0_25px_60px_-12px_rgba(0,0,0,0.25)]">
+              {/* Animated gradient top bar */}
+              <motion.div
+                className="h-1.5 bg-gradient-to-r from-primary via-[hsl(200,91%,50%)] to-[hsl(270,70%,55%)]"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
+                style={{ transformOrigin: "left" }}
+              />
 
-            {saved ? (
-              <div className="text-center py-2">
-                <p className="text-lg font-semibold mb-1">Gespeichert.</p>
-                <p className="text-sm text-muted-foreground">
-                  Wir melden uns in Kürze bei Ihnen.
-                </p>
-              </div>
-            ) : (
-              <>
-                <p className="text-sm text-primary/80 font-medium mb-1">Kurze Unterbrechung</p>
-                <h3 className="text-xl font-semibold mb-2 leading-snug">
-                  Möchten Sie Ihre Auswahl speichern?
-                </h3>
-                <p className="text-sm text-muted-foreground mb-5 leading-relaxed">
-                  Hinterlassen Sie einfach Ihre E-Mail – wir senden Ihnen ein
-                  unverbindliches Angebot für{" "}
-                  <span className="text-foreground font-medium">{solutionLabel}</span>.
-                </p>
+              {/* Glow orb behind icon */}
+              <div className="absolute top-6 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
 
-                <div className="space-y-3">
-                  <div>
-                    <Input
-                      type="email"
-                      placeholder="Ihre E-Mail-Adresse"
-                      value={email}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                        if (emailError) setEmailError("");
-                      }}
-                      onKeyDown={(e) => e.key === "Enter" && handleSave()}
-                      className="h-11 bg-white/5 border-white/12 placeholder:text-muted-foreground/60 focus:border-primary/50"
-                    />
-                    {emailError && (
-                      <p className="mt-1 text-xs text-destructive">{emailError}</p>
-                    )}
+              {/* Close button */}
+              <button
+                onClick={handleContinue}
+                className="absolute top-4 right-4 p-1.5 rounded-full text-muted-foreground/30 hover:text-foreground hover:bg-muted/50 transition-all z-10"
+                aria-label="Schließen"
+              >
+                <X className="h-4 w-4" />
+              </button>
+
+              <div className="px-7 pt-8 pb-7 sm:px-9 sm:pt-10 sm:pb-8">
+                {saved ? (
+                  /* ── Saved confirmation ── */
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    className="text-center py-4"
+                  >
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 500, damping: 15, delay: 0.1 }}
+                      className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 mx-auto mb-5"
+                    >
+                      <CheckCircle2 className="h-7 w-7 text-primary" />
+                    </motion.div>
+                    <motion.p
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}
+                      className="text-xl font-bold mb-2"
+                    >
+                      Perfekt!
+                    </motion.p>
+                    <motion.p
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                      className="text-sm text-muted-foreground leading-relaxed"
+                    >
+                      Ihr Angebot für <span className="font-semibold text-foreground">{solutionLabel}</span> ist unterwegs.
+                    </motion.p>
+                  </motion.div>
+                ) : (
+                  /* ── Main view — single step ── */
+                  <div className="text-center">
+                    {/* Animated icon */}
+                    <motion.div
+                      initial={{ scale: 0, rotate: -20 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 15, delay: 0.1 }}
+                      className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/15 to-[hsl(270,70%,55%)]/10 mx-auto mb-5"
+                    >
+                      <Gift className="h-6 w-6 text-primary" />
+                    </motion.div>
+
+                    {/* Headline */}
+                    <motion.h3
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.15, duration: 0.35 }}
+                      className="text-[1.3rem] sm:text-[1.45rem] font-bold leading-snug tracking-[-0.02em] mb-2"
+                    >
+                      Warten Sie kurz!
+                    </motion.h3>
+
+                    <motion.p
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.22, duration: 0.35 }}
+                      className="text-sm text-muted-foreground leading-relaxed mb-6 max-w-[280px] mx-auto"
+                    >
+                      Erhalten Sie ein <span className="font-semibold text-foreground">kostenloses Angebot</span> für{" "}
+                      <span className="font-semibold text-foreground">{solutionLabel}</span> — direkt in Ihr Postfach.
+                    </motion.p>
+
+                    {/* Email input — immediately visible */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3, duration: 0.35 }}
+                      className="space-y-3"
+                    >
+                      <div>
+                        <Input
+                          type="email"
+                          placeholder="Ihre E-Mail-Adresse"
+                          value={email}
+                          onChange={(e) => {
+                            setEmail(e.target.value);
+                            if (emailError) setEmailError("");
+                          }}
+                          onKeyDown={(e) => e.key === "Enter" && handleSave()}
+                          autoFocus
+                          className="h-12 rounded-xl bg-muted/10 border-border/40 text-center text-[15px] placeholder:text-muted-foreground/40 focus:border-primary/50 focus:ring-2 focus:ring-primary/15 transition-all"
+                        />
+                        {emailError && (
+                          <p className="mt-1.5 text-xs text-destructive">{emailError}</p>
+                        )}
+                      </div>
+
+                      <Button
+                        variant="hero"
+                        className="w-full h-12 rounded-xl text-[14px] font-semibold shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all"
+                        onClick={handleSave}
+                        disabled={saving}
+                      >
+                        {saving ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Wird gesendet…
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className="mr-2 h-4 w-4" />
+                            Kostenloses Angebot erhalten
+                          </>
+                        )}
+                      </Button>
+                    </motion.div>
+
+                    {/* Secondary actions */}
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.45 }}
+                      className="mt-4 space-y-1"
+                    >
+                      <button
+                        onClick={handleContinue}
+                        className="w-full py-2 text-[13px] font-medium text-primary/80 hover:text-primary transition-colors"
+                      >
+                        ← Zurück zur Anfrage
+                      </button>
+                      <button
+                        onClick={handleLeave}
+                        className="w-full py-1.5 text-[11px] text-muted-foreground/35 hover:text-muted-foreground/60 transition-colors"
+                      >
+                        Nein danke
+                      </button>
+                    </motion.div>
                   </div>
-
-                  <Button
-                    variant="hero"
-                    className="w-full h-11"
-                    onClick={handleSave}
-                    disabled={saving}
-                  >
-                    {saving ? (
-                      <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Speichert…</>
-                    ) : (
-                      "Angebot zusenden"
-                    )}
-                  </Button>
-
-                  <button
-                    onClick={dismiss}
-                    className="w-full text-center text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors py-1"
-                  >
-                    Weiter ausfüllen
-                  </button>
-                </div>
-              </>
-            )}
+                )}
+              </div>
+            </div>
           </motion.div>
         </>
       )}

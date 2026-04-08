@@ -5,9 +5,6 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  // Source lives in dist/src — make dist/ the Vite root so that
-  // index.html's "/src/main.tsx" resolves correctly.
-  root: path.resolve(__dirname, "dist"),
   publicDir: path.resolve(__dirname, "public"),
   server: {
     host: "::",

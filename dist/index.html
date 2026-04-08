@@ -5,14 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <!-- SEO Meta Tags -->
-    <title>Tawano - Digital Employees and Business Automation</title>
-    <meta name="description" content="Tawano builds automation systems and digital employees that reduce manual work, lower costs, and scale business operations 24/7." />
-    <meta name="keywords" content="Inbox Sentinel, digitaler Mitarbeiter E-Mail, Chatbot, Website, B2B, E-Mail-Automatisierung, Anfrageprozesse" />
+    <title>Tawano – Digitale Mitarbeiter & KI-Automatisierung für Unternehmen</title>
+    <meta name="description" content="Tawano baut KI-gestützte digitale Mitarbeiter, die E-Mails, Support und Routineaufgaben automatisch erledigen. Rund um die Uhr, messbar und skalierbar. Jetzt Automations-Check anfragen." />
+    <meta name="keywords" content="digitaler Mitarbeiter, KI-Automatisierung, Geschäftsprozesse automatisieren, E-Mail-Automatisierung, Chatbot Unternehmen, KI Assistent Unternehmen, Business Automation, Workflow Automation, KI Mitarbeiter, automatisierte Kundenkommunikation, Prozessautomatisierung, digitale Transformation, AI Agent, Tawano, Düsseldorf Automatisierung, Anfragebearbeitung automatisieren, Support Automation, KI B2B, digitaler Assistent, Automatisierung Kosten senken, RPA Deutschland" />
     <meta name="author" content="Tawano" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="language" content="de" />
-    <meta name="revisit-after" content="7 days" />
+    <meta name="revisit-after" content="3 days" />
     <meta name="theme-color" content="#2563eb" />
+    <meta name="geo.region" content="DE-NW" />
+    <meta name="geo.placename" content="Düsseldorf" />
+    <meta name="geo.position" content="51.2277;6.7735" />
+    <meta name="ICBM" content="51.2277, 6.7735" />
     
     <!-- Canonical Tag -->
     <link rel="canonical" href="https://tawano.ai/" />
@@ -23,122 +27,231 @@
     <link rel="dns-prefetch" href="https://fcjuqyrcehhtaejxpfey.supabase.co" />
     
     <!-- Icons & Manifest -->
-    <link rel="icon" href="/favicon.ico" sizes="any">
-    <link rel="apple-touch-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" href="/tawano-logo.png?v=2" sizes="192x192">
+    <link rel="icon" href="/favicon.ico?v=2" sizes="any">
+    <link rel="apple-touch-icon" href="/tawano-logo.png?v=2">
     <link rel="manifest" href="/manifest.json">
+
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/tawano-logo.png" as="image" type="image/png" fetchpriority="high">
 
 
     <!-- Open Graph Tags -->
-    <meta property="og:title" content="Tawano - Automate Your Business with Digital Employees" />
-    <meta property="og:description" content="Premium business automation, chatbots, and digital employee systems for modern companies." />
-    <meta property="og:type" content="business.business" />
+    <meta property="og:title" content="Tawano – Digitale Mitarbeiter & KI-Automatisierung für Unternehmen" />
+    <meta property="og:description" content="Tawano baut KI-gestützte digitale Mitarbeiter, die E-Mails, Support und Routineaufgaben automatisch erledigen. Rund um die Uhr, messbar und skalierbar." />
+    <meta property="og:type" content="website" />
     <meta property="og:url" content="https://tawano.ai/" />
-    <meta property="og:image" content="https://tawano.ai/favicon.ico" />
+    <meta property="og:image" content="https://tawano.ai/tawano-logo.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Tawano – Digitale Mitarbeiter & KI-Automatisierung" />
     <meta property="og:site_name" content="Tawano" />
     <meta property="og:locale" content="de_DE" />
 
     <!-- Twitter Card Tags -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Tawano - Digital Employees and Business Automation" />
-    <meta name="twitter:description" content="Automation systems for websites, chatbots, and digital workforce operations." />
-    <meta name="twitter:image" content="https://tawano.ai/favicon.ico" />
+    <meta name="twitter:site" content="@tawano_ai" />
+    <meta name="twitter:title" content="Tawano – Digitale Mitarbeiter & KI-Automatisierung für Unternehmen" />
+    <meta name="twitter:description" content="Tawano baut KI-gestützte digitale Mitarbeiter, die E-Mails, Support und Routineaufgaben automatisch erledigen. Rund um die Uhr, messbar und skalierbar." />
+    <meta name="twitter:image" content="https://tawano.ai/tawano-logo.png" />
+    <meta name="twitter:image:alt" content="Tawano – Digitale Mitarbeiter & KI-Automatisierung" />
 
-    <!-- JSON-LD Structured Data -->
+    <!-- JSON-LD: WebSite with SearchAction -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "LocalBusiness",
+      "@type": "WebSite",
       "name": "Tawano",
-      "description": "Digital employees and automation systems for business operations",
       "url": "https://tawano.ai",
-      "telephone": "+49 1631283971",
-      "email": "hello@tawano.ai",
-      "areaServed": {
-        "@type": "City",
-        "name": "Düsseldorf",
-        "url": "https://de.wikipedia.org/wiki/Düsseldorf"
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": "51.2277",
-        "longitude": "6.7735"
-      },
-      "image": "https://tawano.ai/favicon.ico",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://tawano.ai/favicon.ico",
-        "width": 256,
-        "height": 256
-      },
-      "priceRange": "$$"
+      "description": "KI-gestützte digitale Mitarbeiter und Automatisierungslösungen für Unternehmen",
+      "inLanguage": "de-DE",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://tawano.ai/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
     }
     </script>
 
-    <!-- Organization Schema -->
+    <!-- JSON-LD: Organization -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "Tawano",
+      "alternateName": "Tawano AI",
       "url": "https://tawano.ai",
-      "logo": "https://tawano.ai/favicon.ico",
-      "description": "Automation systems, digital employees, chatbot solutions, and conversion-focused websites",
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "contactType": "Customer Support",
-        "telephone": "+49 1631283971",
-        "email": "hello@tawano.ai",
-        "availableLanguage": "de"
-      }
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://tawano.ai/tawano-logo.png",
+        "width": 400,
+        "height": 400
+      },
+      "image": "https://tawano.ai/tawano-logo.png",
+      "description": "Tawano baut KI-gestützte digitale Mitarbeiter und Automatisierungssysteme, die Routinearbeit übernehmen, Kosten senken und Unternehmen skalierbar machen.",
+      "foundingDate": "2023",
+      "areaServed": ["DE", "AT", "CH"],
+      "knowsLanguage": ["de", "en"],
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "contactType": "sales",
+          "telephone": "+49 1631283971",
+          "email": "hello@tawano.ai",
+          "availableLanguage": ["de", "en"],
+          "areaServed": "DE"
+        }
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Düsseldorf",
+        "addressRegion": "Nordrhein-Westfalen",
+        "addressCountry": "DE"
+      },
+      "sameAs": [
+        "https://www.linkedin.com/company/tawano",
+        "https://tawano.de"
+      ]
     }
     </script>
 
+    <!-- JSON-LD: LocalBusiness -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "ProfessionalService",
-      "name": "Tawano - Digital Employees and Automation Systems",
+      "name": "Tawano – Digitale Mitarbeiter & KI-Automatisierung",
       "url": "https://tawano.ai",
-      "image": "https://tawano.ai/favicon.ico",
-      "description": "Specialized in digital employees, chatbot systems, business automation, and premium websites for companies",
-      "areaServed": "Düsseldorf, Deutschland",
+      "telephone": "+49 1631283971",
+      "email": "hello@tawano.ai",
+      "image": "https://tawano.ai/tawano-logo.png",
+      "description": "Tawano baut KI-gestützte digitale Mitarbeiter, die E-Mail-Betreuung, Anfragequalifizierung, Kundenkommunikation und interne Workflows automatisch übernehmen.",
+      "priceRange": "$$",
+      "currenciesAccepted": "EUR",
+      "paymentAccepted": "Überweisung, Rechnung",
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "51.2277",
+        "longitude": "6.7735"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Düsseldorf",
+        "addressRegion": "Nordrhein-Westfalen",
+        "postalCode": "40210",
+        "addressCountry": "DE"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "Deutschland"
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+        "opens": "09:00",
+        "closes": "18:00"
+      },
       "hasOfferCatalog": {
         "@type": "OfferCatalog",
-        "name": "Digital Services",
+        "name": "Tawano Leistungen",
         "itemListElement": [
           {
             "@type": "Offer",
             "itemOffered": {
               "@type": "Service",
-              "name": "Chatbots",
-              "description": "Chatbots für Erstkontakt, Fragen und Anfragequalifizierung"
+              "name": "Digitale Mitarbeiter",
+              "description": "KI-Agenten, die E-Mails bearbeiten, Anfragen qualifizieren und Aufgaben eigenständig ausführen – 24/7."
             }
           },
           {
             "@type": "Offer",
             "itemOffered": {
               "@type": "Service",
-              "name": "Tawano Digital Employees",
-              "description": "Digital workforce systems for email automation, support handling, and workflow execution"
+              "name": "E-Mail-Automatisierung",
+              "description": "Digitale Mitarbeiter priorisieren eingehende E-Mails, beantworten Standardfälle und eskalieren kritische Themen."
             }
           },
           {
             "@type": "Offer",
             "itemOffered": {
               "@type": "Service",
-              "name": "Website-Erstellung",
-              "description": "Moderne Websites mit Fokus auf Vertrauen, Klarheit und Anfragen"
+              "name": "Workflow-Automatisierung",
+              "description": "Automatisierte Prozessketten über CRM, ERP, Helpdesk und Kollaborationstools hinweg."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Anfragebearbeitung",
+              "description": "Anfragen werden in Echtzeit geprüft, angereichert und für Vertrieb oder Beratung vorbereitet."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "KI-Chatbots",
+              "description": "Intelligente Chatbots für Erstkontakt, Qualifizierung und mehrsprachige Kundenkommunikation."
             }
           }
         ]
       }
     }
     </script>
-    <link rel="modulepreload" crossorigin href="/assets/vendor-BCiENdxb-tm_IcjPe-tm_IcjPe-tm_IcjPe.js">
-    <script type="module" crossorigin src="/assets/index-C7NLYLhC.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-37-vhl1t.css">
+
+    <!-- JSON-LD: FAQPage -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Was ist ein digitaler Mitarbeiter von Tawano?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ein digitaler Mitarbeiter von Tawano ist ein KI-Agent, der selbständig Aufgaben wie E-Mail-Betreuung, Anfragequalifizierung, interne Workflows und Kundenkommunikation übernimmt – rund um die Uhr, in mehreren Sprachen und integriert in Ihre bestehenden Tools."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Wie viel kostet ein digitaler Mitarbeiter von Tawano?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tawano bietet projektbasierte Lösungen sowie monatliche Pakete ab 690 € / Monat. Der genaue Preis richtet sich nach den zu automatisierenden Prozessen. Ein kostenloser Automations-Check gibt Aufschluss über das Einsparpotenzial."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Welche Prozesse kann Tawano automatisieren?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tawano automatisiert E-Mail-Betreuung und Ticket-Priorisierung, Anfragebearbeitung und Terminvorqualifizierung, interne Freigabe- und Berichts-Workflows sowie mehrsprachige Kundenkommunikation."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Wie lange dauert die Einrichtung eines digitalen Mitarbeiters?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nach dem Automations-Check und der Prozessanalyse dauert die Implementierung eines digitalen Mitarbeiters typischerweise 2–4 Wochen, abhängig von der Komplexität der Integrationen."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Funktioniert Tawano mit meinen bestehenden Tools?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ja. Tawano integriert sich in gängige CRM-Systeme, ERP-Software, Ticketingsysteme (z.B. Zendesk, HubSpot, Salesforce) und Kollaborationstools. Die Integrationsschicht verbindet alle Systeme sicher miteinander."
+          }
+        }
+      ]
+    }
+    </script>
+    <script type="module" crossorigin src="/assets/index-Du27OV-T.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/vendor-WqQAVELq.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-DhWrVApE.css">
   </head>
 
   <body>
