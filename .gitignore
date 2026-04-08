@@ -7,15 +7,24 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Environment variables
+# Environment variables (keep private, do not commit)
 .env
 .env.local
 .env.*.local
 
 node_modules
-dist
+
+# Vite build artifacts (but keep dist/src/** which is the actual source)
 dist-ssr
 *.local
+
+# Keep dist/src and dist/index.html (source code and HTML template)
+# But ignore compiled JavaScript and other build output in dist root
+dist/*.js
+dist/*.css
+dist/*.json
+dist/manifest.json
+!dist/src/**
 
 # Netlify function build artifacts
 netlify/functions/*.zip
