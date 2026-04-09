@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { saveFunnelLead } from "@/lib/supabase";
-import emailjs from "@emailjs/browser";
 
 // ─── Types ───────────────────────────────────────────────────
 
@@ -150,57 +149,26 @@ export const SolutionFunnel = ({ config, onAnswersChange, onSubmitted }: Props) 
       console.log("[Funnel] Lead saved successfully to Supabase for:", config.solution);
     }
 
-    // 2. Send internal notification via EmailJS
-    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+    // 2. Send emails via Netlify function (internal notification + customer confirmation)
+    try {
+      const response = await fetch("/.netlify/functions/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "funnel",
+          name: contact.name.trim(),
+          email: contact.email.trim(),
+          solution: config.solution,
+          solutionLabel: config.solutionLabel,
+          answersText: answersText,
+        }),
+      });
 
-    if (serviceId && templateId && publicKey) {
-      try {
-        await emailjs.send(
-          serviceId,
-          templateId,
-          {
-            from_name: contact.name.trim(),
-            from_email: contact.email.trim(),
-            reply_to: contact.email.trim(),
-            email: contact.email.trim(),
-            subject: `Funnel-Anfrage: ${config.solutionLabel}`,
-            service: config.solutionLabel,
-            interest: config.solutionLabel,
-            message: `Neue Funnel-Anfrage für: ${config.solutionLabel}\n\n${answersText}`,
-            datetime: new Date().toLocaleString("de-DE", {
-              dateStyle: "short",
-              timeStyle: "short",
-              timeZone: "Europe/Berlin",
-            }),
-            page_url: window.location.href,
-          },
-          { publicKey }
-        );
-      } catch (err) {
-        console.error("[Funnel] EmailJS notification failed:", err);
+      if (!response.ok) {
+        console.error("[Funnel] Email sending failed:", await response.text());
       }
-
-      // 3. Auto-response to user (requires VITE_EMAILJS_AUTORESPONSE_TEMPLATE_ID)
-      const autoTemplateId = import.meta.env.VITE_EMAILJS_AUTORESPONSE_TEMPLATE_ID;
-      if (autoTemplateId) {
-        try {
-          await emailjs.send(
-            serviceId,
-            autoTemplateId,
-            {
-              to_name: contact.name.trim(),
-              to_email: contact.email.trim(),
-              solution: config.solutionLabel,
-              reply_to: "info@tawano.de",
-            },
-            { publicKey }
-          );
-        } catch (err) {
-          console.error("[Funnel] Auto-response email failed:", err);
-        }
-      }
+    } catch (err) {
+      console.error("[Funnel] Email request failed:", err);
     }
 
     setSubmitting(false);

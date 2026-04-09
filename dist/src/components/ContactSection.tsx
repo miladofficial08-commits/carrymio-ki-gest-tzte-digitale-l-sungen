@@ -5,7 +5,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Send, Check, Mail, Phone, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
-import emailjs from "@emailjs/browser";
 
 export const ContactSection = () => {
   const { toast } = useToast();
@@ -24,21 +23,6 @@ export const ContactSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Prüfe EmailJS Konfiguration
-    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-
-    if (!serviceId || !templateId || !publicKey) {
-      toast({
-        variant: "destructive",
-        title: "Konfigurationsfehler",
-        description: "E-Mail-Konfiguration ist nicht vollständig. Bitte kontaktieren Sie uns direkt.",
-      });
-      setIsSubmitting(false);
-      return;
-    }
-
     // Frontend-Validierung für Pflichtfelder
     if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
       toast({
@@ -51,40 +35,26 @@ export const ContactSection = () => {
     }
 
     try {
-      // Template-Parameter für EmailJS - KORRIGIERT
-      const trimmedName = formData.name.trim();
-      const trimmedEmail = formData.email.trim();
-      const trimmedPhone = formData.phone.trim();
-      const trimmedCompany = formData.company.trim();
-      const trimmedMessage = formData.message.trim();
-      const selectedService = formData.service || "Gesprächsanfrage";
-
-      const templateParams = {
-        from_name: trimmedName,
-        from_email: trimmedEmail,
-        reply_to: trimmedEmail,
-        email: trimmedEmail,
-        user_email: trimmedEmail,
-        phone: trimmedPhone || "-",
-        company: trimmedCompany || "-",
-        subject: selectedService,
-        interest: formData.service || "Automation Anfrage",
-        service: selectedService,
-        message: trimmedMessage,
-        datetime: new Date().toLocaleString("de-DE", {
-          dateStyle: "short",
-          timeStyle: "short",
-          timeZone: "Europe/Berlin",
+      const response = await fetch("/.netlify/functions/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "contact",
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim() || undefined,
+          company: formData.company.trim() || undefined,
+          service: formData.service || "Gesprächsanfrage",
+          message: formData.message.trim(),
         }),
-        page_url: window.location.href,
-      };
-
-      await emailjs.send(serviceId, templateId, templateParams, {
-        publicKey,
       });
 
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Server error");
+      }
+
       setIsSubmitted(true);
-      // Formular zurücksetzen
       setFormData({
         name: "",
         email: "",
@@ -95,20 +65,14 @@ export const ContactSection = () => {
       });
       toast({
         title: "Anfrage erfolgreich gesendet!",
-        description: "Wir melden uns innerhalb von 24–48 Stunden bei Ihnen.",
+        description: "Wir melden uns innerhalb von 24 Stunden bei Ihnen.",
       });
     } catch (error: any) {
-      console.error("Kontaktanfrage fehlgeschlagen", {
-        status: error?.status,
-        text: error?.text,
-        message: error?.message,
-      });
+      console.error("Kontaktanfrage fehlgeschlagen", error);
       toast({
         variant: "destructive",
         title: "Senden fehlgeschlagen",
-        description: error?.text
-          ? `EmailJS-Fehler: ${error.text}`
-          : "Bitte versuchen Sie es in Kürze erneut.",
+        description: "Bitte versuchen Sie es in Kürze erneut.",
       });
     } finally {
       setIsSubmitting(false);

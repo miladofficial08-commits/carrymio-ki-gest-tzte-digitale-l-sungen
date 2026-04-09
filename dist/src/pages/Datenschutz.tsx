@@ -172,37 +172,25 @@ const Datenschutz = () => {
               </p>
             </section>
 
-            {/* 6. EmailJS */}
+            {/* 6. E-Mail-Versand */}
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">
-                6. E-Mail-Versand über EmailJS
+                6. E-Mail-Versand
               </h2>
               <p>
-                Zur technischen Übermittlung von Formularinhalten nutzen wir den Dienst EmailJS
-                (EmailJS Ltd., Großbritannien). Wenn Sie das Kontaktformular absenden, werden Ihre
-                Eingaben über die Server von EmailJS an unsere E-Mail-Adresse weitergeleitet.
+                Zur technischen Übermittlung von Formularinhalten nutzen wir einen eigenen
+                serverseitigen E-Mail-Dienst über Netlify Functions und Gmail SMTP. Wenn Sie
+                das Kontaktformular absenden, werden Ihre Eingaben über unseren Server direkt
+                an unsere E-Mail-Adresse weitergeleitet.
               </p>
               <p className="mt-3">
                 Dabei werden alle von Ihnen eingegebenen Daten (Name, E-Mail-Adresse, Telefon,
-                Unternehmen, Nachricht) sowie technische Metadaten (Zeitstempel, URL der Seite)
-                durch EmailJS verarbeitet. EmailJS handelt als technischer Auftragsverarbeiter
-                gemäß Art. 28 DSGVO. Großbritannien gilt auf Grundlage des Angemessenheitsbeschlusses
-                der Europäischen Kommission als sicheres Drittland für Datenübermittlungen.
+                Unternehmen, Nachricht) sowie technische Metadaten (Zeitstempel) serverseitig
+                verarbeitet. Es werden keine Daten an Drittanbieter übermittelt.
               </p>
               <p className="mt-3">
                 Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer
                 zuverlässigen technischen Zustellung von Kontaktanfragen).
-              </p>
-              <p className="mt-3">
-                Datenschutzerklärung EmailJS:{" "}
-                <a
-                  href="https://www.emailjs.com/legal/privacy-policy/"
-                  className="text-primary hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  https://www.emailjs.com/legal/privacy-policy/
-                </a>
               </p>
             </section>
 
