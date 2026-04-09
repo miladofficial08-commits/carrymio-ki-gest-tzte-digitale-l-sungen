@@ -249,31 +249,6 @@ export async function saveLead(data: Lead) {
   }
 }
 
-// ─── Funnel leads ────────────────────────────────────────────
-
-export interface FunnelLead {
-  name: string;
-  email: string;
-  solution: string;
-  answers: Record<string, string>;
-  created_at?: string;
-}
-
-export async function saveFunnelLead(data: FunnelLead): Promise<boolean> {
-  try {
-    const { data: inserted, error } = await supabase.from("funnel_leads").insert(data).select();
-    if (error) {
-      console.error("[Supabase] saveFunnelLead failed:", error.message, "(code:", error.code, ")");
-      return false;
-    }
-    console.log("[Supabase] saveFunnelLead success — row:", inserted?.[0]?.id ?? "unknown", inserted);
-    return true;
-  } catch (e) {
-    console.error("[Supabase] saveFunnelLead exception:", e);
-    return false;
-  }
-}
-
 // ─── Diagnostic: test Supabase connectivity ──────────────────
 export async function testSupabaseConnection(): Promise<{
   sessions: boolean;

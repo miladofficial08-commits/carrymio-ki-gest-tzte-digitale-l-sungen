@@ -17,6 +17,8 @@ interface FunnelPayload {
   solution: string;
   solutionLabel: string;
   answersText: string;
+  answers?: Record<string, string>;
+  questions?: Array<{ id: string; question: string }>;
 }
 
 type EmailPayload = ContactPayload | FunnelPayload;
@@ -45,20 +47,47 @@ function buildInternalContactEmail(data: ContactPayload) {
   return {
     subject: `Neue Anfrage – ${data.service || "Kontaktformular"}`,
     html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h2 style="color: #2563eb; margin-bottom: 20px;">Neue Kontaktanfrage</h2>
-        <table style="width: 100%; border-collapse: collapse;">
-          <tr><td style="padding: 8px 0; font-weight: bold; color: #374151;">Name:</td><td style="padding: 8px 0;">${escapeHtml(data.name)}</td></tr>
-          <tr><td style="padding: 8px 0; font-weight: bold; color: #374151;">E-Mail:</td><td style="padding: 8px 0;"><a href="mailto:${escapeHtml(data.email)}">${escapeHtml(data.email)}</a></td></tr>
-          <tr><td style="padding: 8px 0; font-weight: bold; color: #374151;">Telefon:</td><td style="padding: 8px 0;">${escapeHtml(data.phone || "–")}</td></tr>
-          <tr><td style="padding: 8px 0; font-weight: bold; color: #374151;">Unternehmen:</td><td style="padding: 8px 0;">${escapeHtml(data.company || "–")}</td></tr>
-          <tr><td style="padding: 8px 0; font-weight: bold; color: #374151;">Interesse:</td><td style="padding: 8px 0;">${escapeHtml(data.service || "–")}</td></tr>
-        </table>
-        <div style="margin-top: 20px; padding: 16px; background-color: #f3f4f6; border-radius: 8px;">
-          <p style="font-weight: bold; color: #374151; margin: 0 0 8px 0;">Nachricht:</p>
-          <p style="margin: 0; white-space: pre-wrap; color: #1f2937;">${escapeHtml(data.message)}</p>
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #1f2937;">
+        <div style="background: #2563eb; color: #fff; padding: 16px 20px; border-radius: 8px 8px 0 0;">
+          <h2 style="margin: 0; font-size: 18px;">Neue Kontaktanfrage</h2>
+          <p style="margin: 4px 0 0; font-size: 13px; opacity: 0.9;">${now}</p>
         </div>
-        <p style="margin-top: 20px; font-size: 12px; color: #9ca3af;">Eingang: ${now}</p>
+        <div style="border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 8px 8px; padding: 20px;">
+          <h3 style="margin: 0 0 12px; font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Kontaktdaten</h3>
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr style="border-bottom: 1px solid #f3f4f6;">
+              <td style="padding: 10px 0; font-weight: 600; color: #374151; width: 140px;">Name</td>
+              <td style="padding: 10px 0;">${escapeHtml(data.name)}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f3f4f6;">
+              <td style="padding: 10px 0; font-weight: 600; color: #374151;">E-Mail</td>
+              <td style="padding: 10px 0;"><a href="mailto:${escapeHtml(data.email)}" style="color: #2563eb;">${escapeHtml(data.email)}</a></td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f3f4f6;">
+              <td style="padding: 10px 0; font-weight: 600; color: #374151;">Telefon</td>
+              <td style="padding: 10px 0;">${data.phone ? `<a href="tel:${escapeHtml(data.phone)}" style="color: #2563eb;">${escapeHtml(data.phone)}</a>` : "–"}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f3f4f6;">
+              <td style="padding: 10px 0; font-weight: 600; color: #374151;">Unternehmen</td>
+              <td style="padding: 10px 0;">${escapeHtml(data.company || "–")}</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px 0; font-weight: 600; color: #374151;">Interesse</td>
+              <td style="padding: 10px 0;"><span style="background: #dbeafe; color: #1d4ed8; padding: 2px 10px; border-radius: 12px; font-size: 13px;">${escapeHtml(data.service || "Allgemein")}</span></td>
+            </tr>
+          </table>
+
+          <h3 style="margin: 24px 0 12px; font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Nachricht</h3>
+          <div style="padding: 16px; background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px;">
+            <p style="margin: 0; white-space: pre-wrap; line-height: 1.6;">${escapeHtml(data.message)}</p>
+          </div>
+
+          <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #e5e7eb;">
+            <p style="margin: 0; font-size: 12px; color: #9ca3af;">
+              Direkt antworten: <a href="mailto:${escapeHtml(data.email)}" style="color: #2563eb;">${escapeHtml(data.email)}</a>
+            </p>
+          </div>
+        </div>
       </div>
     `,
   };
@@ -71,20 +100,63 @@ function buildInternalFunnelEmail(data: FunnelPayload) {
     timeZone: "Europe/Berlin",
   });
 
+  // Build structured Q&A rows from questions + answers if available
+  let answersHtml = "";
+  if (data.questions && data.answers) {
+    answersHtml = data.questions
+      .map((q) => {
+        const answer = data.answers?.[q.id] || "–";
+        return `
+          <tr style="border-bottom: 1px solid #e5e7eb;">
+            <td style="padding: 12px 16px; color: #6b7280; font-size: 13px; vertical-align: top; width: 40%;">${escapeHtml(q.question)}</td>
+            <td style="padding: 12px 16px; font-weight: 600; color: #1f2937;">${escapeHtml(answer)}</td>
+          </tr>`;
+      })
+      .join("");
+  } else {
+    // Fallback to plain text
+    answersHtml = `
+      <tr>
+        <td colspan="2" style="padding: 12px 16px;">
+          <pre style="margin: 0; white-space: pre-wrap; font-family: Arial, sans-serif; color: #1f2937;">${escapeHtml(data.answersText)}</pre>
+        </td>
+      </tr>`;
+  }
+
   return {
     subject: `Neue Anfrage – ${data.solutionLabel}`,
     html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h2 style="color: #2563eb; margin-bottom: 20px;">Neue Funnel-Anfrage: ${escapeHtml(data.solutionLabel)}</h2>
-        <table style="width: 100%; border-collapse: collapse;">
-          <tr><td style="padding: 8px 0; font-weight: bold; color: #374151;">Name:</td><td style="padding: 8px 0;">${escapeHtml(data.name)}</td></tr>
-          <tr><td style="padding: 8px 0; font-weight: bold; color: #374151;">E-Mail:</td><td style="padding: 8px 0;"><a href="mailto:${escapeHtml(data.email)}">${escapeHtml(data.email)}</a></td></tr>
-        </table>
-        <div style="margin-top: 20px; padding: 16px; background-color: #f3f4f6; border-radius: 8px;">
-          <p style="font-weight: bold; color: #374151; margin: 0 0 8px 0;">Antworten:</p>
-          <pre style="margin: 0; white-space: pre-wrap; font-family: Arial, sans-serif; color: #1f2937;">${escapeHtml(data.answersText)}</pre>
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #1f2937;">
+        <div style="background: #2563eb; color: #fff; padding: 16px 20px; border-radius: 8px 8px 0 0;">
+          <h2 style="margin: 0; font-size: 18px;">Neue Funnel-Anfrage</h2>
+          <p style="margin: 4px 0 0; font-size: 13px; opacity: 0.9;">${escapeHtml(data.solutionLabel)} · ${now}</p>
         </div>
-        <p style="margin-top: 20px; font-size: 12px; color: #9ca3af;">Eingang: ${now}</p>
+        <div style="border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 8px 8px; padding: 20px;">
+
+          <h3 style="margin: 0 0 12px; font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Kontaktdaten</h3>
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr style="border-bottom: 1px solid #f3f4f6;">
+              <td style="padding: 10px 0; font-weight: 600; color: #374151; width: 140px;">Name</td>
+              <td style="padding: 10px 0;">${escapeHtml(data.name)}</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px 0; font-weight: 600; color: #374151;">E-Mail</td>
+              <td style="padding: 10px 0;"><a href="mailto:${escapeHtml(data.email)}" style="color: #2563eb;">${escapeHtml(data.email)}</a></td>
+            </tr>
+          </table>
+
+          <h3 style="margin: 24px 0 12px; font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Funnel-Antworten</h3>
+          <table style="width: 100%; border-collapse: collapse; background: #f9fafb; border-radius: 8px;">
+            ${answersHtml}
+          </table>
+
+          <div style="margin-top: 24px; padding: 12px 16px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px;">
+            <p style="margin: 0; font-size: 13px; color: #1d4ed8;">
+              <strong>Lösung:</strong> ${escapeHtml(data.solutionLabel)}<br/>
+              <strong>Direkt antworten:</strong> <a href="mailto:${escapeHtml(data.email)}" style="color: #1d4ed8;">${escapeHtml(data.email)}</a>
+            </p>
+          </div>
+        </div>
       </div>
     `,
   };

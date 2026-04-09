@@ -4,7 +4,6 @@ import { ArrowLeft, ArrowRight, CheckCircle2, Loader2, Sparkles, Shield, Lock } 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { saveFunnelLead } from "@/lib/supabase";
 
 // ─── Types ───────────────────────────────────────────────────
 
@@ -135,21 +134,7 @@ export const SolutionFunnel = ({ config, onAnswersChange, onSubmitted }: Props) 
       .map((q) => `• ${q.question}\n  → ${answers[q.id] || "–"}`)
       .join("\n\n");
 
-    // 1. Save to Supabase (with verification)
-    const saveSuccess = await saveFunnelLead({
-      name: contact.name.trim(),
-      email: contact.email.trim(),
-      solution: config.solution,
-      answers,
-    });
-    if (!saveSuccess) {
-      console.error("[Funnel] Supabase save failed — data may not be stored");
-      toast({ title: "Hinweis", description: "Ihre Anfrage konnte nicht gespeichert werden. Wir kümmern uns darum.", variant: "destructive" });
-    } else {
-      console.log("[Funnel] Lead saved successfully to Supabase for:", config.solution);
-    }
-
-    // 2. Send emails via Netlify function (internal notification + customer confirmation)
+    // Send emails via Netlify function (internal notification + customer confirmation)
     try {
       const response = await fetch("/.netlify/functions/send-email", {
         method: "POST",
@@ -161,6 +146,8 @@ export const SolutionFunnel = ({ config, onAnswersChange, onSubmitted }: Props) 
           solution: config.solution,
           solutionLabel: config.solutionLabel,
           answersText: answersText,
+          answers: answers,
+          questions: questions.map((q) => ({ id: q.id, question: q.question })),
         }),
       });
 

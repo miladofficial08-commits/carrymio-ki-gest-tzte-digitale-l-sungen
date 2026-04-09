@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Loader2, Sparkles, CheckCircle2, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { saveFunnelLead } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
 
 interface Props {
   solution: string;
@@ -28,6 +28,7 @@ export const ExitIntentPopup = ({
   onLeave,
   onDismiss,
 }: Props) => {
+  const { toast } = useToast();
   const [visible, setVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [saving, setSaving] = useState(false);
@@ -83,20 +84,37 @@ export const ExitIntentPopup = ({
     }
     setEmailError("");
     setSaving(true);
-    const success = await saveFunnelLead({
-      name: "–",
-      email: email.trim(),
-      solution,
-      answers: currentAnswers,
-    });
-    setSaving(false);
-    if (success) {
-      console.log("[ExitPopup] Lead saved to Supabase for:", solution);
-    } else {
-      console.error("[ExitPopup] Failed to save lead to Supabase");
+    try {
+      const response = await fetch("/.netlify/functions/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "funnel",
+          name: "Interessent",
+          email: email.trim(),
+          solution,
+          solutionLabel,
+          answersText: JSON.stringify(currentAnswers, null, 2),
+          answers: currentAnswers,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Email sending failed");
+      }
+
+      setSaved(true);
+      setTimeout(() => handleLeave(), 2400);
+    } catch (error) {
+      console.error("[ExitPopup] Failed to send email:", error);
+      toast({
+        title: "Senden fehlgeschlagen",
+        description: "Bitte versuchen Sie es in Kürze erneut.",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
     }
-    setSaved(true);
-    setTimeout(() => handleLeave(), 2400);
   };
 
   return (
