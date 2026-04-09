@@ -25,6 +25,10 @@ export const FunnelLayout = ({ config }: Props) => {
   const [pendingNav, setPendingNav] = useState<(() => void) | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const exitFiredRef = useRef(false);
+  const completionRatio = config.questions.length
+    ? Object.keys(answers).length / config.questions.length
+    : 0;
+  const exitIntentEnabled = !submitted && completionRatio >= 1;
   /** Tracks whether we pushed the sentinel history entry */
   const sentinelPushed = useRef(false);
 
@@ -44,6 +48,12 @@ export const FunnelLayout = ({ config }: Props) => {
 
     const onPopState = (e: PopStateEvent) => {
       if (submitted || exitFiredRef.current) return;
+
+      if (!exitIntentEnabled) {
+        navigate(-1);
+        return;
+      }
+
       // Re-push sentinel so a second back-press is also caught
       window.history.pushState({ funnelSentinel: true }, "");
       exitFiredRef.current = true;
@@ -52,7 +62,7 @@ export const FunnelLayout = ({ config }: Props) => {
     };
 
     const onBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (submitted) return;
+      if (submitted || !exitIntentEnabled) return;
       e.preventDefault();
     };
 
@@ -62,11 +72,11 @@ export const FunnelLayout = ({ config }: Props) => {
       window.removeEventListener("popstate", onPopState);
       window.removeEventListener("beforeunload", onBeforeUnload);
     };
-  }, [submitted, navigate]);
+  }, [submitted, navigate, exitIntentEnabled]);
 
   const attemptLeave = useCallback(
     (navFn: () => void) => {
-      if (submitted || exitFiredRef.current) {
+      if (submitted || exitFiredRef.current || !exitIntentEnabled) {
         navFn();
         return;
       }
@@ -74,7 +84,7 @@ export const FunnelLayout = ({ config }: Props) => {
       setPendingNav(() => navFn);
       setShowExitPopup(true);
     },
-    [submitted]
+    [submitted, exitIntentEnabled]
   );
 
   const handleLogoClick = (e: React.MouseEvent) => {
@@ -162,6 +172,7 @@ export const FunnelLayout = ({ config }: Props) => {
         solution={config.solution}
         solutionLabel={config.solutionLabel}
         currentAnswers={answers}
+        enabled={exitIntentEnabled}
         forceShow={showExitPopup}
         onContinue={handleExitContinue}
         onLeave={handleExitLeave}

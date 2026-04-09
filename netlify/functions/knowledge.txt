@@ -277,6 +277,9 @@ Kontaktmöglichkeiten:
 - Website: tawano.ai
 - Standort: Düsseldorf, Deutschland
 
+Wenn Nutzer direkt nach der E-Mail-Adresse fragt:
+- Immer direkt antworten: "Unsere E-Mail-Adresse ist tawanoai@gmail.com."
+
 Erstgespräch:
 - Kostenlos
 - 30 Minuten

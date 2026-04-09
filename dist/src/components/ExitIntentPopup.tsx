@@ -9,6 +9,7 @@ interface Props {
   solution: string;
   solutionLabel: string;
   currentAnswers: Record<string, string>;
+  enabled?: boolean;
   /** Imperative trigger from parent (logo/nav/back click) */
   forceShow?: boolean;
   /** Called when user chooses to continue the funnel */
@@ -23,6 +24,7 @@ export const ExitIntentPopup = ({
   solution,
   solutionLabel,
   currentAnswers,
+  enabled = true,
   forceShow = false,
   onContinue,
   onLeave,
@@ -38,14 +40,25 @@ export const ExitIntentPopup = ({
 
   // Force show from parent (logo/nav/back click interception)
   useEffect(() => {
+    if (!enabled) return;
     if (forceShow && !firedOnce.current) {
       firedOnce.current = true;
       setVisible(true);
     }
-  }, [forceShow]);
+  }, [enabled, forceShow]);
+
+  // If disabled (e.g. after submit), ensure popup stays closed
+  useEffect(() => {
+    if (!enabled) {
+      setVisible(false);
+      firedOnce.current = false;
+    }
+  }, [enabled]);
 
   // Autonomous trigger: mouseleave (desktop)
   useEffect(() => {
+    if (!enabled) return;
+
     const DELAY_MS = 1500;
     let armed = false;
     const armTimer = setTimeout(() => { armed = true; }, DELAY_MS);
@@ -63,7 +76,7 @@ export const ExitIntentPopup = ({
       clearTimeout(armTimer);
       document.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, []);
+  }, [enabled]);
 
   const handleContinue = () => {
     setVisible(false);

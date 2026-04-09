@@ -50,6 +50,20 @@ interface LeadData {
   note?: string;
 }
 
+function getDirectContactReply(userText: string): string | null {
+  const q = userText.toLowerCase();
+
+  const asksEmail =
+    /(e-?mail|email|mailadresse|mail adresse|kontaktadresse|kontakt e-?mail)/.test(q) ||
+    (q.includes("kontakt") && q.includes("adresse"));
+
+  if (asksEmail) {
+    return "Unsere E-Mail-Adresse ist tawanoai@gmail.com.";
+  }
+
+  return null;
+}
+
 async function callOpenAI(apiKey: string, messages: ChatMessage[], useTools: boolean) {
   return fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
@@ -95,6 +109,16 @@ export const handler = async (event: { httpMethod: string; body: string | null }
   const messages = parsedBody.messages as ChatMessage[] | undefined;
   if (!messages || !Array.isArray(messages) || messages.length === 0) {
     return { statusCode: 400, headers, body: JSON.stringify({ error: "No messages provided" }) };
+  }
+
+  const lastUserMessage = [...messages].reverse().find((m) => m.role === "user")?.content ?? "";
+  const directContactReply = getDirectContactReply(lastUserMessage);
+  if (directContactReply) {
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ reply: directContactReply }),
+    };
   }
 
   try {
