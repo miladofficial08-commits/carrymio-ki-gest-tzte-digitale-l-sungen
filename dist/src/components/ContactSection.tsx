@@ -160,12 +160,13 @@ export const ContactSection = () => {
               </div>
             </div>
 
-            <article className="p-6 rounded-2xl border border-primary/30 bg-primary/10">
-              <h4 className="font-semibold mb-3">Schneller Weg zum Termin</h4>
-              <p className="text-sm text-foreground/85 leading-6">
+            <article className="p-6 rounded-2xl border border-primary/30 bg-primary/10 relative overflow-hidden group">
+              <div className="absolute -top-12 -right-12 w-32 h-32 rounded-full bg-primary/10 blur-[60px] group-hover:bg-primary/15 transition-all duration-500 pointer-events-none" aria-hidden="true" />
+              <h4 className="font-semibold mb-3 relative z-10">Schneller Weg zum Termin</h4>
+              <p className="text-sm text-foreground/85 leading-6 relative z-10">
                 Schreiben Sie uns kurz Ihr Ziel. Wir melden uns in der Regel innerhalb von 24 Stunden per E-Mail.
               </p>
-              <Button variant="hero" size="sm" className="mt-4 w-full" onClick={() => window.open("mailto:tawanoai@gmail.com", "_self")}>
+              <Button variant="hero" size="sm" className="mt-4 w-full glow-ring relative z-10" onClick={() => window.open("mailto:tawanoai@gmail.com", "_self")}>
                 Jetzt E-Mail senden
               </Button>
             </article>
@@ -173,9 +174,16 @@ export const ContactSection = () => {
             <article className="p-6 rounded-2xl surface-elevated">
               <h4 className="font-semibold mb-3">Was Sie nach der Anfrage erhalten</h4>
               <ul className="space-y-3 text-sm text-muted-foreground">
-                <li>Antwort in der Regel innerhalb von 24 Stunden</li>
-                <li>Konkrete Priorisierung Ihrer besten Automationshebel</li>
-                <li>Transparente Einordnung zu Aufwand, Nutzen und nächsten Schritten</li>
+                {[
+                  "Antwort in der Regel innerhalb von 24 Stunden",
+                  "Konkrete Priorisierung Ihrer besten Automationshebel",
+                  "Transparente Einordnung zu Aufwand, Nutzen und nächsten Schritten",
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+                    {item}
+                  </li>
+                ))}
               </ul>
             </article>
           </motion.div>
@@ -187,7 +195,7 @@ export const ContactSection = () => {
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.6, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
             onSubmit={handleSubmit}
-            className="lg:col-span-3 surface-elevated rounded-2xl p-8 hover-lift"
+            className="lg:col-span-3 surface-elevated rounded-2xl p-8 hover-lift spotlight-glow"
             noValidate
             aria-label="Kontaktformular für Anfragen"
           >

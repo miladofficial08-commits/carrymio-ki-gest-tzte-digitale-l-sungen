@@ -15,6 +15,10 @@ import { StaggerContainer, StaggerItem } from "@/components/motion/StaggerContai
 import { GradientBlob } from "@/components/motion/GradientBlob";
 import { TypingHero } from "@/components/motion/TypingHero";
 import { BackgroundActivity } from "@/components/motion/BackgroundActivity";
+import { SpotlightCard } from "@/components/motion/SpotlightCard";
+import { NumberTicker } from "@/components/motion/NumberTicker";
+import { TextReveal } from "@/components/motion/TextReveal";
+import { SectionDivider } from "@/components/motion/SectionDivider";
 import { useCountUp } from "@/hooks/useCountUp";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import Footer from "@/components/Footer";
@@ -110,23 +114,45 @@ const Index = () => {
       <TypingHero onComplete={handleIntroComplete} />
 
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/60 bg-white/80 backdrop-blur-2xl backdrop-saturate-150">
-        <div className="absolute left-0 top-0 h-[2px] bg-gradient-primary transition-all duration-200" style={{ width: `${scrollProgress}%` }} aria-hidden="true" />
+      <motion.nav
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 bg-white/70 backdrop-blur-2xl backdrop-saturate-[1.8]"
+      >
+        <motion.div className="absolute left-0 top-0 h-[2px] bg-gradient-to-r from-primary via-violet-500 to-cyan-500 transition-all duration-200" style={{ width: `${scrollProgress}%` }} aria-hidden="true" />
         <div className="container px-4">
           <div className="flex h-16 items-center justify-between gap-6 md:h-20">
             <button onClick={() => scrollTo("#home")} className="flex items-center gap-2 group" aria-label="Tawano Home">
-              <img src="/tawano-logo.png" alt="Tawano Logo" className="h-12 md:h-14 w-auto transition-transform duration-300 group-hover:scale-105" width="168" height="56" fetchPriority="high" />
+              <motion.img
+                whileHover={{ scale: 1.05, rotate: -1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                src="/tawano-logo.png" alt="Tawano Logo" className="h-12 md:h-14 w-auto" width="168" height="56" fetchPriority="high"
+              />
             </button>
-            <div className="hidden items-center gap-7 md:flex">
+            <div className="hidden items-center gap-1 md:flex bg-muted/40 rounded-full px-1.5 py-1 border border-border/50">
               {navItems.map((item) => (
-                <button key={item.href} onClick={() => scrollTo(item.href)} className="relative text-sm font-medium text-muted-foreground transition-colors hover:text-foreground group">
+                <motion.button
+                  key={item.href}
+                  onClick={() => scrollTo(item.href)}
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="relative text-sm font-medium text-muted-foreground transition-colors hover:text-foreground px-4 py-2 rounded-full"
+                >
                   {item.label}
-                  <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full" />
-                </button>
+                  <motion.span
+                    className="absolute inset-0 rounded-full bg-white shadow-sm border border-border/30"
+                    initial={false}
+                    animate={{ opacity: 0 }}
+                    whileHover={{ opacity: 1 }}
+                    transition={{ duration: 0.2 }}
+                    style={{ zIndex: -1 }}
+                  />
+                </motion.button>
               ))}
             </div>
             <div className="flex items-center gap-3">
-              <Button size="sm" variant="hero" onClick={() => scrollTo("#kontakt")} className="hidden sm:inline-flex group">
+              <Button size="sm" variant="hero" onClick={() => scrollTo("#kontakt")} className="hidden sm:inline-flex group glow-ring">
                 Kontakt aufnehmen
                 <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
               </Button>
@@ -174,7 +200,7 @@ const Index = () => {
             </motion.div>
           )}
         </AnimatePresence>
-      </nav>
+      </motion.nav>
 
       <main>
         {/* HERO */}
@@ -191,13 +217,15 @@ const Index = () => {
           <motion.div style={{ y: heroY, opacity: heroOpacity }} className="container relative z-10 px-4 pb-12 pt-4 md:pb-32 md:pt-10">
             <div className="mx-auto grid max-w-6xl items-center gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
               <div>
-                <motion.span initial={{ opacity: 0, y: 20, filter: "blur(8px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ duration: 0.6 }} className="section-kicker mb-6">
-                  <Bot className="h-4 w-4" aria-hidden="true" />
+                <motion.span initial={{ opacity: 0, y: 20, filter: "blur(8px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ duration: 0.6 }} className="section-kicker mb-6 group cursor-default">
+                  <motion.span animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}>
+                    <Bot className="h-4 w-4" aria-hidden="true" />
+                  </motion.span>
                   Digitale Mitarbeiter für Unternehmen
                 </motion.span>
                 <motion.h1 initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }} className="text-[1.875rem] font-semibold leading-[1.05] sm:text-4xl md:text-6xl xl:text-7xl">
                   Automatisieren Sie Support,
-                  <motion.span initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="display-serif block text-gradient">
+                  <motion.span initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="display-serif block text-gradient-animated">
                     E-Mails und Anfragen.
                   </motion.span>
                 </motion.h1>
@@ -205,15 +233,27 @@ const Index = () => {
                   Tawano baut digitale Mitarbeiter, die tägliche Aufgaben automatisch erledigen — damit Ihr Team mehr Zeit für wichtige Arbeit hat.
                 </motion.p>
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.65 }} className="mt-6 flex flex-col gap-3 sm:flex-row sm:gap-4 md:mt-10">
-                  <Button variant="hero" size="xl" onClick={() => scrollTo("#kontakt")} className="group w-full sm:w-auto">
+                  <Button variant="hero" size="xl" onClick={() => scrollTo("#kontakt")} className="group w-full sm:w-auto glow-ring">
                     Jetzt automatisieren
-                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    <motion.span animate={{ x: [0, 4, 0] }} transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2 }}>
+                      <ArrowRight className="h-4 w-4" />
+                    </motion.span>
                   </Button>
                   <Button variant="heroOutline" size="xl" onClick={() => scrollTo("#kostenrechner")} className="w-full sm:w-auto">Einsparung berechnen</Button>
                 </motion.div>
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.85 }} className="mt-6 flex flex-wrap gap-2 text-sm text-muted-foreground md:mt-9 md:gap-3">
                   {["Weniger manuelle Arbeit", "Schnellere Antworten", "Mehr Zeit fürs Team"].map((text, i) => (
-                    <motion.span key={text} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4, delay: 0.9 + i * 0.1 }} className="data-pill text-xs md:text-sm">{text}</motion.span>
+                    <motion.span
+                      key={text}
+                      initial={{ opacity: 0, scale: 0.8, filter: "blur(4px)" }}
+                      animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                      transition={{ duration: 0.5, delay: 0.9 + i * 0.12 }}
+                      whileHover={{ scale: 1.05, borderColor: "hsl(217 91% 60% / 0.3)" }}
+                      className="data-pill text-xs md:text-sm flex items-center gap-1.5 cursor-default"
+                    >
+                      <CheckCircle2 className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+                      {text}
+                    </motion.span>
                   ))}
                 </motion.div>
                 <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 1.1 }} className="mt-5 hidden grid-cols-1 gap-3 sm:grid sm:grid-cols-3 md:mt-8">
@@ -221,11 +261,17 @@ const Index = () => {
                     { label: "Support-Antworten", value: "Automatisch beantwortet" },
                     { label: "E-Mails", value: "Sortiert & beantwortet" },
                     { label: "Leads", value: "Sofort erkannt" },
-                  ].map((stat) => (
-                    <motion.div key={stat.label} whileHover={{ y: -4, boxShadow: "0 12px 40px hsl(217 91% 50% / 0.08)" }} transition={{ type: "spring", stiffness: 300, damping: 20 }} className="stat-chip cursor-default">
-                      <p className="text-xs uppercase tracking-[0.14em] text-primary">{stat.label}</p>
-                      <p className="mt-1 text-xl font-semibold">{stat.value}</p>
-                    </motion.div>
+                  ].map((stat, i) => (
+                    <SpotlightCard key={stat.label} className="rounded-2xl">
+                      <motion.div
+                        whileHover={{ y: -4, boxShadow: "0 12px 40px hsl(217 91% 50% / 0.08)" }}
+                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                        className="stat-chip cursor-default h-full"
+                      >
+                        <p className="text-xs uppercase tracking-[0.14em] text-primary">{stat.label}</p>
+                        <p className="mt-1 text-xl font-semibold">{stat.value}</p>
+                      </motion.div>
+                    </SpotlightCard>
                   ))}
                 </motion.div>
               </div>
@@ -268,9 +314,9 @@ const Index = () => {
 
           {/* Scroll indicator */}
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10">
-            <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} className="flex flex-col items-center gap-2">
+            <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} className="flex flex-col items-center gap-2 cursor-pointer" onClick={() => scrollTo("#kostenrechner")}>
               <span className="text-xs text-muted-foreground/60 uppercase tracking-widest">Scrollen</span>
-              <div className="w-5 h-8 rounded-full border border-border flex justify-center pt-1.5">
+              <div className="w-5 h-8 rounded-full border border-border/60 flex justify-center pt-1.5 backdrop-blur-sm">
                 <motion.div animate={{ y: [0, 10, 0], opacity: [1, 0.3, 1] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} className="w-1 h-1.5 rounded-full bg-primary/60" />
               </div>
             </motion.div>
@@ -279,7 +325,7 @@ const Index = () => {
 
         {/* SOCIAL PROOF BAR */}
         <ScrollReveal>
-          <div className="py-8 border-y border-border/60 md:py-12">
+          <div className="py-8 border-y border-border/40 md:py-12 bg-gradient-to-r from-transparent via-primary/[0.02] to-transparent">
             <div className="container px-4">
               <div className="mx-auto grid max-w-4xl grid-cols-2 gap-y-6 gap-x-4 md:grid-cols-4 md:gap-8 text-center">
                 {[
@@ -288,9 +334,9 @@ const Index = () => {
                   { value: 42, suffix: "h", label: "Zeitersparnis / Woche" },
                   { value: 7, suffix: "+", label: "Sprachen" },
                 ].map((stat) => (
-                  <motion.div key={stat.label} whileHover={{ scale: 1.05 }} className="cursor-default">
-                    <p className="text-2xl font-bold text-foreground md:text-4xl">
-                      <AnimatedStat value={stat.value} suffix={stat.suffix} />
+                  <motion.div key={stat.label} whileHover={{ scale: 1.08, y: -2 }} transition={{ type: "spring", stiffness: 400, damping: 15 }} className="cursor-default group">
+                    <p className="text-2xl font-bold text-foreground md:text-4xl group-hover:text-primary transition-colors duration-300">
+                      <NumberTicker value={stat.value} suffix={stat.suffix} duration={2.2} />
                     </p>
                     <p className="mt-1 text-[10px] md:text-xs uppercase tracking-[0.14em] text-muted-foreground">{stat.label}</p>
                   </motion.div>
@@ -301,6 +347,7 @@ const Index = () => {
         </ScrollReveal>
 
         {/* WORKFLOW ANIMATION */}
+        <SectionDivider variant="wave" />
         <WorkflowAnimation />
 
         {/* COST CALCULATOR */}
@@ -364,6 +411,7 @@ const Index = () => {
         </section>
 
         {/* COMPARISON */}
+        <SectionDivider variant="gradient" />
         <section className="py-16 md:py-28 relative">
           <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
             <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[900px] h-[1px] bg-gradient-to-r from-transparent via-primary/15 to-transparent" />
@@ -413,6 +461,7 @@ const Index = () => {
         </section>
 
         {/* SERVICES */}
+        <SectionDivider variant="wave" />
         <section id="automation" className="py-16 md:py-28 relative">
           <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
             <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-violet-500/3 blur-[120px]" />
@@ -430,8 +479,9 @@ const Index = () => {
 
               {/* Chatbots */}
               <StaggerItem>
+                <SpotlightCard className="rounded-2xl h-full">
                 <motion.article
-                  whileHover={{ y: -8, boxShadow: "0 24px 60px hsl(222 47% 11% / 0.08)" }}
+                  whileHover={{ y: -8, boxShadow: "0 24px 60px hsl(222 47% 11% / 0.1)" }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   className="surface-elevated flex h-full flex-col rounded-2xl p-6"
                 >
@@ -461,12 +511,14 @@ const Index = () => {
                     <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                   </Button>
                 </motion.article>
+                </SpotlightCard>
               </StaggerItem>
 
               {/* Webdesign */}
               <StaggerItem>
+                <SpotlightCard className="rounded-2xl h-full">
                 <motion.article
-                  whileHover={{ y: -8, boxShadow: "0 24px 60px hsl(222 47% 11% / 0.08)" }}
+                  whileHover={{ y: -8, boxShadow: "0 24px 60px hsl(222 47% 11% / 0.1)" }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   className="surface-elevated flex h-full flex-col rounded-2xl p-6"
                 >
@@ -496,10 +548,12 @@ const Index = () => {
                     <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                   </Button>
                 </motion.article>
+                </SpotlightCard>
               </StaggerItem>
 
               {/* Digitaler Mitarbeiter – featured */}
               <StaggerItem>
+                <SpotlightCard className="rounded-[28px] h-full" spotlightColor="hsl(217 91% 60% / 0.12)">
                 <motion.article
                   whileHover={{ y: -12, boxShadow: "0 32px 80px hsl(217 91% 50% / 0.18)" }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -550,12 +604,14 @@ const Index = () => {
                     </Button>
                   </div>
                 </motion.article>
+                </SpotlightCard>
               </StaggerItem>
 
               {/* Custom Automation */}
               <StaggerItem>
+                <SpotlightCard className="rounded-2xl h-full">
                 <motion.article
-                  whileHover={{ y: -8, boxShadow: "0 24px 60px hsl(222 47% 11% / 0.08)" }}
+                  whileHover={{ y: -8, boxShadow: "0 24px 60px hsl(222 47% 11% / 0.1)" }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   className="surface-elevated flex h-full flex-col rounded-2xl p-6"
                 >
@@ -584,6 +640,7 @@ const Index = () => {
                     <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                   </Button>
                 </motion.article>
+                </SpotlightCard>
               </StaggerItem>
 
             </StaggerContainer>
@@ -591,6 +648,7 @@ const Index = () => {
         </section>
 
         {/* WHY TAWANO */}
+        <SectionDivider variant="dots" />
         <section id="about" className="py-16 md:py-28 relative">
           <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
             <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[900px] h-[1px] bg-gradient-to-r from-transparent via-border to-transparent" />
@@ -598,6 +656,7 @@ const Index = () => {
           <div className="container px-4">
             <div className="mx-auto max-w-6xl grid gap-6 lg:grid-cols-[1fr_1fr]">
               <ScrollReveal direction="left">
+                <SpotlightCard className="rounded-[28px] h-full" spotlightColor="hsl(217 91% 60% / 0.06)">
                 <article className="premium-panel p-8 md:p-10 h-full">
                   <div className="relative z-10">
                     <span className="section-kicker mb-5">Zusammenarbeit mit Tawano</span>
@@ -605,13 +664,22 @@ const Index = () => {
                     <p className="mt-4 section-copy">Echte Ansprechpartner, die Ihre Abläufe verstehen und Systeme bauen, die wirklich funktionieren.</p>
                   </div>
                 </article>
+                </SpotlightCard>
               </ScrollReveal>
               <StaggerContainer staggerDelay={0.1} className="grid gap-5 sm:grid-cols-2">
-                {["Keine Standardlösung – Ihr Ablauf im Mittelpunkt.", "Klare Umsetzung von Anfang bis Ende.", "Systeme, die Ihr Team wirklich nutzt.", "Betreuung von der Planung bis zum Betrieb."].map((point) => (
-                  <StaggerItem key={point}>
+                {[
+                  { text: "Keine Standardlösung – Ihr Ablauf im Mittelpunkt.", icon: "🎯" },
+                  { text: "Klare Umsetzung von Anfang bis Ende.", icon: "✅" },
+                  { text: "Systeme, die Ihr Team wirklich nutzt.", icon: "⚡" },
+                  { text: "Betreuung von der Planung bis zum Betrieb.", icon: "🛡️" },
+                ].map((point) => (
+                  <StaggerItem key={point.text}>
+                    <SpotlightCard className="rounded-2xl h-full">
                     <motion.article whileHover={{ y: -4, borderColor: "hsl(217 91% 50% / 0.2)" }} className="surface-elevated rounded-2xl p-6 h-full transition-all">
-                      <p className="text-sm leading-6 text-foreground/90">{point}</p>
+                      <span className="text-xl mb-2 block" aria-hidden="true">{point.icon}</span>
+                      <p className="text-sm leading-6 text-foreground/90">{point.text}</p>
                     </motion.article>
+                    </SpotlightCard>
                   </StaggerItem>
                 ))}
               </StaggerContainer>
@@ -619,7 +687,9 @@ const Index = () => {
           </div>
         </section>
 
+        <SectionDivider variant="wave" />
         <FAQSection />
+        <SectionDivider variant="dots" />
         <ContactSection />
       </main>
       <Footer />

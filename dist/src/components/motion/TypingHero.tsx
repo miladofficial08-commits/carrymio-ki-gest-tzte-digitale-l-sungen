@@ -75,6 +75,10 @@ export const TypingHero = ({ onComplete }: TypingHeroProps) => {
         >
           {/* Dark cinematic backdrop */}
           <div className="absolute inset-0 bg-[#0a0f1a]" />
+          {/* Subtle radial gradient */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_hsl(217_91%_50%_/_0.06)_0%,_transparent_60%)]" />
+          {/* Grid pattern */}
+          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "linear-gradient(hsl(0 0% 100%) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 100%) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
 
           {/* Center content */}
           <div className="relative z-10 flex flex-col items-center">
