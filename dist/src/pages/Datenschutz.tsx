@@ -27,8 +27,7 @@ const Datenschutz = () => {
                 <p>[Vor- und Nachname des Inhabers]</p>
                 <p>[Straße und Hausnummer]</p>
                 <p>[Postleitzahl] Düsseldorf, Deutschland</p>
-                <p className="mt-2">E-Mail: hello@tawano.ai</p>
-                <p>Telefon: +49 163 1283971</p>
+                <p className="mt-2">E-Mail: tawanoai@gmail.com</p>
               </div>
               <p className="mt-3">
                 Für Anfragen zum Datenschutz wenden Sie sich bitte direkt an die oben genannte
@@ -336,10 +335,10 @@ const Datenschutz = () => {
               <p className="mt-4">
                 Zur Ausübung Ihrer Rechte wenden Sie sich bitte per E-Mail an:{" "}
                 <a
-                  href="mailto:hello@tawano.ai"
+                  href="mailto:tawanoai@gmail.com"
                   className="text-primary hover:underline"
                 >
-                  hello@tawano.ai
+                  tawanoai@gmail.com
                 </a>
               </p>
             </section>

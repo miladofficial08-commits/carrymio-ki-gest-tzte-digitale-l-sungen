@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Check, Mail, Phone, MapPin } from "lucide-react";
+import { Send, Check, Mail, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 
@@ -13,7 +13,6 @@ export const ContactSection = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",
     company: "",
     service: "",
     message: "",
@@ -42,7 +41,6 @@ export const ContactSection = () => {
           type: "contact",
           name: formData.name.trim(),
           email: formData.email.trim(),
-          phone: formData.phone.trim() || undefined,
           company: formData.company.trim() || undefined,
           service: formData.service || "Gesprächsanfrage",
           message: formData.message.trim(),
@@ -58,7 +56,6 @@ export const ContactSection = () => {
       setFormData({
         name: "",
         email: "",
-        phone: "",
         company: "",
         service: "",
         message: "",
@@ -145,24 +142,14 @@ export const ContactSection = () => {
               <h3 className="text-xl font-bold mb-6">Direkter Kontakt</h3>
               <div className="space-y-4">
                 <a
-                  href="mailto:hello@tawano.ai"
+                  href="mailto:tawanoai@gmail.com"
                   className="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors group"
-                  aria-label="E-Mail an hello@tawano.ai senden"
+                  aria-label="E-Mail an tawanoai@gmail.com senden"
                 >
                   <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                     <Mail className="w-5 h-5 text-primary" aria-hidden="true" />
                   </div>
-                  <span>hello@tawano.ai</span>
-                </a>
-                <a
-                  href="tel:+491631283971"
-                  className="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors group"
-                  aria-label="Anrufen unter +49 1631283971"
-                >
-                  <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <Phone className="w-5 h-5 text-primary" aria-hidden="true" />
-                  </div>
-                  <span>+49 1631283971</span>
+                  <span>tawanoai@gmail.com</span>
                 </a>
                 <div className="flex items-center gap-4 text-muted-foreground">
                   <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center">
@@ -176,10 +163,10 @@ export const ContactSection = () => {
             <article className="p-6 rounded-2xl border border-primary/30 bg-primary/10">
               <h4 className="font-semibold mb-3">Schneller Weg zum Termin</h4>
               <p className="text-sm text-foreground/85 leading-6">
-                Schreiben Sie uns kurz Ihr Ziel. Wir melden uns mit einem Terminvorschlag für ein 30-Minuten-Gespräch.
+                Schreiben Sie uns kurz Ihr Ziel. Wir melden uns in der Regel innerhalb von 24 Stunden per E-Mail.
               </p>
-              <Button variant="hero" size="sm" className="mt-4 w-full" onClick={() => window.open("tel:+491631283971", "_self")}>
-                Jetzt direkt anrufen
+              <Button variant="hero" size="sm" className="mt-4 w-full" onClick={() => window.open("mailto:tawanoai@gmail.com", "_self")}>
+                Jetzt E-Mail senden
               </Button>
             </article>
 
@@ -236,34 +223,18 @@ export const ContactSection = () => {
               </div>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium mb-2">
-                  Telefonnummer
-                </label>
-                <Input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  placeholder="Optional"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="bg-background"
-                />
-              </div>
-              <div>
-                <label htmlFor="company" className="block text-sm font-medium mb-2">
-                  Unternehmen
-                </label>
-                <Input
-                  id="company"
-                  name="company"
-                  placeholder="Optional"
-                  value={formData.company}
-                  onChange={handleChange}
-                  className="bg-background"
-                />
-              </div>
+            <div className="mb-6">
+              <label htmlFor="company" className="block text-sm font-medium mb-2">
+                Unternehmen
+              </label>
+              <Input
+                id="company"
+                name="company"
+                placeholder="Optional"
+                value={formData.company}
+                onChange={handleChange}
+                className="bg-background"
+              />
             </div>
 
             <div className="mb-6">

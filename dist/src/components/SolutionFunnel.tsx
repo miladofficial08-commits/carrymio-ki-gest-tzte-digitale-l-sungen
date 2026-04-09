@@ -232,9 +232,7 @@ export const SolutionFunnel = ({ config, onAnswersChange, onSubmitted }: Props) 
           transition={{ delay: 0.5 }}
           className="mt-3 flex items-center gap-4 text-xs text-muted-foreground/50"
         >
-          <span>info@tawano.de</span>
-          <span className="h-3 w-px bg-border" />
-          <span>+49 163 1283971</span>
+          <span>tawanoai@gmail.com</span>
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 8 }}

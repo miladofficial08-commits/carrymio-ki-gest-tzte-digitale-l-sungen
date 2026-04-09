@@ -10,9 +10,8 @@
 Name: Tawano
 Website: tawano.ai
 Standort: Düsseldorf, Deutschland
-E-Mail: info@tawano.de
-Telefon: +49 163 1283971
-Kontakt-E-Mail (intern): hello@tawano.ai
+E-Mail: tawanoai@gmail.com
+Kontakt-E-Mail (intern): tawanoai@gmail.com
 
 Beschreibung:
 Tawano entwickelt KI-gestützte digitale Mitarbeiter, die wiederkehrende
@@ -274,8 +273,7 @@ Mit Tawano:
 ═══════════════════════════════════════
 
 Kontaktmöglichkeiten:
-- E-Mail: info@tawano.de
-- Telefon: +49 163 1283971
+- E-Mail: tawanoai@gmail.com
 - Website: tawano.ai
 - Standort: Düsseldorf, Deutschland
 

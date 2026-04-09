@@ -4,7 +4,6 @@ interface ContactPayload {
   type: "contact";
   name: string;
   email: string;
-  phone?: string;
   company?: string;
   service?: string;
   message: string;
@@ -62,10 +61,6 @@ function buildInternalContactEmail(data: ContactPayload) {
             <tr style="border-bottom: 1px solid #f3f4f6;">
               <td style="padding: 10px 0; font-weight: 600; color: #374151;">E-Mail</td>
               <td style="padding: 10px 0;"><a href="mailto:${escapeHtml(data.email)}" style="color: #2563eb;">${escapeHtml(data.email)}</a></td>
-            </tr>
-            <tr style="border-bottom: 1px solid #f3f4f6;">
-              <td style="padding: 10px 0; font-weight: 600; color: #374151;">Telefon</td>
-              <td style="padding: 10px 0;">${data.phone ? `<a href="tel:${escapeHtml(data.phone)}" style="color: #2563eb;">${escapeHtml(data.phone)}</a>` : "–"}</td>
             </tr>
             <tr style="border-bottom: 1px solid #f3f4f6;">
               <td style="padding: 10px 0; font-weight: 600; color: #374151;">Unternehmen</td>
