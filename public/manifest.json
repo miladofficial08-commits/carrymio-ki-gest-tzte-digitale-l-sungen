@@ -11,19 +11,19 @@
   "lang": "de",
   "icons": [
     {
-      "src": "/tawano-logo.png",
+      "src": "/tawano-icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/tawano-logo.png",
+      "src": "/tawano-icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/tawano-logo.png",
+      "src": "/tawano-icon-512.png",
       "sizes": "any",
       "type": "image/png",
       "purpose": "maskable"
@@ -38,7 +38,7 @@
       "url": "https://tawano.ai/#kontakt",
       "icons": [
         {
-          "src": "/tawano-logo.png",
+          "src": "/tawano-icon-192.png",
           "sizes": "192x192",
           "type": "image/png"
         }
@@ -51,7 +51,7 @@
       "url": "https://tawano.ai/#digital-employees",
       "icons": [
         {
-          "src": "/tawano-logo.png",
+          "src": "/tawano-icon-192.png",
           "sizes": "192x192",
           "type": "image/png"
         }
