@@ -396,8 +396,9 @@ const Index = () => {
                         </div>
                         <p className="mt-4 text-sm leading-relaxed text-muted-foreground">Viele Unternehmen geben jedes Jahr hohe Summen für Support- und Routineaufgaben aus, obwohl ein Großteil davon automatisiert werden kann.</p>
                         <div className="mt-auto pt-5">
-                          <Button className="w-full" size="lg" onClick={() => scrollTo("#kontakt")}>
-                            Jetzt Einsparpotenzial berechnen lassen
+                          <Button className="h-auto w-full whitespace-normal px-4 py-3 text-center leading-tight sm:py-4" size="lg" onClick={() => scrollTo("#kontakt")}>
+                            <span className="sm:hidden">Einsparpotenzial berechnen</span>
+                            <span className="hidden sm:inline">Jetzt Einsparpotenzial berechnen lassen</span>
                             <ArrowRight className="ml-2 h-4 w-4" />
                           </Button>
                         </div>
