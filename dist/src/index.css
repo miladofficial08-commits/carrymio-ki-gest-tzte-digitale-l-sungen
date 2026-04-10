@@ -1,4 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700;800&display=swap');
+﻿/* Fonts loaded via <link> in index.html for non-blocking fetch */
 
 @tailwind base;
 @tailwind components;
@@ -310,6 +310,45 @@
     }
     .soft-grid {
       opacity: 0.15;
+    }
+  }
+
+  /* GPU-accelerate all floating elements */
+  .float-slow,
+  .float-slower {
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  /* Below-fold sections: skip rendering until near viewport */
+  section[id]:not(#home) {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 600px;
+  }
+
+  /* Reduce animation complexity on slower devices */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Touch devices: skip hover-only effects */
+  @media (hover: none) {
+    .hover-lift:hover,
+    .hover-tilt:hover {
+      transform: none;
+      box-shadow: none;
+    }
+    .interactive-ring::before {
+      display: none;
+    }
+    .glow-ring::after {
+      display: none;
     }
   }
 

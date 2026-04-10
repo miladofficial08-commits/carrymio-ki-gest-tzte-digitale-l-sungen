@@ -5,24 +5,34 @@ interface TypingHeroProps {
   onComplete?: () => void;
 }
 
+const SEEN_KEY = "tawano-intro-seen";
+
 /**
  * Premium intro — real terminal-style typing.
- *  1. Typing starts immediately (no delay)
- *  2. "Tawano" typed fast, character-by-character
- *  3. Brief hold — tagline fades in
- *  4. Powerful zoom-in exit → website revealed
+ * Skips on repeat visits within the same session for instant load.
  */
 export const TypingHero = ({ onComplete }: TypingHeroProps) => {
+  // Skip intro on repeat visits
+  const alreadySeen = typeof sessionStorage !== "undefined" && sessionStorage.getItem(SEEN_KEY) === "1";
+
   const brand = "Tawano";
-  const [chars, setChars] = useState(0);
+  const [chars, setChars] = useState(alreadySeen ? brand.length : 0);
   const [phase, setPhase] = useState<
     "typing" | "hold" | "exit" | "done"
-  >("typing");
+  >(alreadySeen ? "done" : "typing");
 
   const finish = useCallback(() => {
     setPhase("done");
+    try { sessionStorage.setItem(SEEN_KEY, "1"); } catch {}
     onComplete?.();
   }, [onComplete]);
+
+  // If already seen, fire onComplete immediately
+  useEffect(() => {
+    if (alreadySeen) {
+      onComplete?.();
+    }
+  }, [alreadySeen, onComplete]);
 
   /* ── phase machine ─────────────────────────────── */
 
@@ -40,14 +50,14 @@ export const TypingHero = ({ onComplete }: TypingHeroProps) => {
   // Hold — let user see the finished brand name
   useEffect(() => {
     if (phase !== "hold") return;
-    const id = setTimeout(() => setPhase("exit"), 750);
+    const id = setTimeout(() => setPhase("exit"), 400);
     return () => clearTimeout(id);
   }, [phase]);
 
   // Exit — elegant zoom-in, then done
   useEffect(() => {
     if (phase !== "exit") return;
-    const id = setTimeout(finish, 800);
+    const id = setTimeout(finish, 600);
     return () => clearTimeout(id);
   }, [phase, finish]);
 

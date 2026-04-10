@@ -31,13 +31,36 @@ export default defineConfig(({ mode }) => ({
     emptyOutDir: false,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ["react", "react-dom", "react-router-dom"],
+        manualChunks(id) {
+          // Core React vendor chunk — cached long-term
+          if (id.includes("node_modules/react/") || id.includes("node_modules/react-dom/") || id.includes("node_modules/react-router")) {
+            return "vendor";
+          }
+          // Animation library — separate chunk so it doesn't block core render
+          if (id.includes("node_modules/framer-motion")) {
+            return "framer-motion";
+          }
+          // Icons — large module, lazy-cacheable
+          if (id.includes("node_modules/lucide-react")) {
+            return "icons";
+          }
+          // Radix UI primitives
+          if (id.includes("node_modules/@radix-ui")) {
+            return "radix-ui";
+          }
+          // Supabase — only needed for chatbot
+          if (id.includes("node_modules/@supabase")) {
+            return "supabase";
+          }
         },
       },
     },
     minify: "esbuild",
     sourcemap: false,
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 600,
+    // Reduce CSS size through minification
+    cssMinify: "esbuild",
+    // Target modern browsers for smaller output
+    target: "es2020",
   },
 }));

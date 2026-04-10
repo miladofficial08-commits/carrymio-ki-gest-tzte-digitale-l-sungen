@@ -86,18 +86,33 @@ const Index = () => {
   const heroY = useTransform(scrollY, [0, 1500], [0, 50]);
   const heroOpacity = useTransform(scrollY, [400, 1500], [1, 0]);
 
+  // Animate cost display using rAF instead of setInterval — stops when hidden
   useEffect(() => {
-    const interval = window.setInterval(() => {
-      setDisplayYearlyCost((prev) => animateValue(prev, yearlyCost));
-    }, 16);
-    return () => window.clearInterval(interval);
+    let raf: number;
+    const step = () => {
+      setDisplayYearlyCost((prev) => {
+        const diff = Math.abs(yearlyCost - prev);
+        if (diff < 1) return yearlyCost;
+        raf = requestAnimationFrame(step);
+        return animateValue(prev, yearlyCost);
+      });
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
   }, [yearlyCost]);
 
+  // Scroll progress bar — throttled via rAF to avoid excess re-renders
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      const doc = document.documentElement;
-      const total = doc.scrollHeight - doc.clientHeight;
-      setScrollProgress(total > 0 ? Math.min(100, (doc.scrollTop / total) * 100) : 0);
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const doc = document.documentElement;
+        const total = doc.scrollHeight - doc.clientHeight;
+        setScrollProgress(total > 0 ? Math.min(100, (doc.scrollTop / total) * 100) : 0);
+        ticking = false;
+      });
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -120,7 +135,7 @@ const Index = () => {
         transition={{ duration: 0.5, delay: 0.2 }}
         className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 bg-white/70 backdrop-blur-2xl backdrop-saturate-[1.8]"
       >
-        <motion.div className="absolute left-0 top-0 h-[2px] bg-gradient-to-r from-primary via-violet-500 to-cyan-500 transition-all duration-200" style={{ width: `${scrollProgress}%` }} aria-hidden="true" />
+        <motion.div className="absolute left-0 top-0 h-[2px] bg-gradient-to-r from-primary via-violet-500 to-cyan-500" style={{ width: `${scrollProgress}%`, willChange: "width", transform: "translateZ(0)" }} aria-hidden="true" />
         <div className="container px-4">
           <div className="flex h-16 items-center justify-between gap-6 md:h-20">
             <button onClick={() => scrollTo("#home")} className="flex items-center gap-2 group" aria-label="Tawano Home">
@@ -214,7 +229,7 @@ const Index = () => {
             <BackgroundActivity />
           </div>
 
-          <motion.div style={{ y: heroY, opacity: heroOpacity }} className="container relative z-10 px-4 pb-12 pt-4 md:pb-32 md:pt-10">
+          <motion.div style={{ y: heroY, opacity: heroOpacity, willChange: "transform, opacity" }} className="container relative z-10 px-4 pb-12 pt-4 md:pb-32 md:pt-10">
             <div className="mx-auto grid max-w-6xl items-center gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
               <div>
                 <motion.span initial={{ opacity: 0, y: 20, filter: "blur(8px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ duration: 0.6 }} className="section-kicker mb-6 group cursor-default">

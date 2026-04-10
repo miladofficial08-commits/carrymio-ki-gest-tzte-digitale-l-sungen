@@ -22,6 +22,8 @@ export const GradientBlob = ({
       height: size,
       background: `radial-gradient(circle, ${color1} 0%, ${color2} 50%, transparent 70%)`,
       opacity: 0.06,
+      willChange: "transform",
+      transform: "translateZ(0)",
     }}
     animate={{
       x: [0, 30, -20, 10, 0],
