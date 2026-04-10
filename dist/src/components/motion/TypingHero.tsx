@@ -26,28 +26,34 @@ export const TypingHero = ({ onComplete }: TypingHeroProps) => {
 
   /* ── phase machine ─────────────────────────────── */
 
+  // Remove HTML splash screen on mount
+  useEffect(() => {
+    const splash = document.getElementById("splash");
+    if (splash) splash.remove();
+  }, []);
+
   // Type one character at a time — starts immediately on mount
   useEffect(() => {
     if (phase !== "typing") return;
     if (chars < brand.length) {
-      const id = setTimeout(() => setChars((c) => c + 1), 75);
+      const id = setTimeout(() => setChars((c) => c + 1), 40);
       return () => clearTimeout(id);
     }
-    const id = setTimeout(() => setPhase("hold"), 80);
+    const id = setTimeout(() => setPhase("hold"), 50);
     return () => clearTimeout(id);
   }, [chars, phase]);
 
   // Hold — let user see the finished brand name
   useEffect(() => {
     if (phase !== "hold") return;
-    const id = setTimeout(() => setPhase("exit"), 750);
+    const id = setTimeout(() => setPhase("exit"), 300);
     return () => clearTimeout(id);
   }, [phase]);
 
   // Exit — elegant zoom-in, then done
   useEffect(() => {
     if (phase !== "exit") return;
-    const id = setTimeout(finish, 800);
+    const id = setTimeout(finish, 400);
     return () => clearTimeout(id);
   }, [phase, finish]);
 
@@ -64,13 +70,13 @@ export const TypingHero = ({ onComplete }: TypingHeroProps) => {
           style={{ willChange: "transform, opacity" }}
           animate={
             isExiting
-              ? { opacity: 0, scale: 1.6 }
+              ? { opacity: 0, scale: 1.4 }
               : { opacity: 1, scale: 1 }
           }
           transition={
             isExiting
-              ? { duration: 0.75, ease: [0.16, 1, 0.3, 1] }
-              : { duration: 0.2 }
+              ? { duration: 0.35, ease: [0.16, 1, 0.3, 1] }
+              : { duration: 0.15 }
           }
         >
           {/* Dark cinematic backdrop */}

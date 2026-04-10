@@ -75,7 +75,7 @@ const Index = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleIntroComplete = useCallback(() => setIntroComplete(true), []); 
+  const handleIntroComplete = useCallback(() => setIntroComplete(true), []);
 
   const activeScenario = useMemo(() => scenarios[selectedScenario], [selectedScenario]);
   const heroRef = useRef<HTMLDivElement>(null);
