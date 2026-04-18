@@ -19,376 +19,376 @@ const Datenschutz = () => {
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">1. Verantwortlicher</h2>
               <p>
-                Verantwortlicher für die Datenverarbeitung auf dieser Website im Sinne der
-                Datenschutz-Grundverordnung (DSGVO) ist:
+                Verantwortlicher für die Datenverarbeitung auf dieser Website ist:
               </p>
               <div className="mt-3 pl-4 border-l-2 border-primary/30 space-y-1">
-                <p className="font-medium text-foreground">Tawano</p>
-                <p>[Vor- und Nachname des Inhabers]</p>
-                <p>[Straße und Hausnummer]</p>
-                <p>[Postleitzahl] Düsseldorf, Deutschland</p>
-                <p className="mt-2">E-Mail: tawanoai@gmail.com</p>
+                <p className="font-medium text-foreground">Jamal Kamal</p>
+                <p>handelnd unter „Tawano"</p>
+                <p>Erkrather Str. 401</p>
+                <p>40231 Düsseldorf</p>
+                <p>Deutschland</p>
+                <p className="mt-2">E-Mail: info@tawano.de</p>
               </div>
-              <p className="mt-3">
-                Für Anfragen zum Datenschutz wenden Sie sich bitte direkt an die oben genannte
-                E-Mail-Adresse.
-              </p>
             </section>
 
-            {/* 2. Allgemeines */}
+            {/* 2. Allgemeine Hinweise */}
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">
-                2. Allgemeines zur Datenverarbeitung
+                2. Allgemeine Hinweise zur Datenverarbeitung
               </h2>
               <p>
-                Wir verarbeiten personenbezogene Daten grundsätzlich nur, soweit dies zur
-                Bereitstellung dieser Website und der darüber angebotenen Leistungen erforderlich
-                ist. Eine darüber hinausgehende Verarbeitung findet nur statt, wenn Sie eine
-                ausdrückliche Einwilligung erteilt haben oder eine andere Rechtsgrundlage nach
-                Art. 6 DSGVO vorliegt.
+                Wir verarbeiten personenbezogene Daten nur, soweit dies zur Bereitstellung unserer
+                Website, zur Bearbeitung von Anfragen und zur Erbringung unserer Leistungen
+                erforderlich ist.
               </p>
-              <p className="mt-3">
-                Maßgebliche Rechtsgrundlagen im Überblick:
-              </p>
-              <ul className="list-disc pl-5 space-y-2 mt-2">
-                <li>
-                  <span className="font-medium text-foreground">Art. 6 Abs. 1 lit. a DSGVO</span> —
-                  Einwilligung der betroffenen Person
-                </li>
-                <li>
-                  <span className="font-medium text-foreground">Art. 6 Abs. 1 lit. b DSGVO</span> —
-                  Vertragserfüllung oder vorvertragliche Maßnahmen
-                </li>
-                <li>
-                  <span className="font-medium text-foreground">Art. 6 Abs. 1 lit. c DSGVO</span> —
-                  Erfüllung einer rechtlichen Verpflichtung
-                </li>
-                <li>
-                  <span className="font-medium text-foreground">Art. 6 Abs. 1 lit. f DSGVO</span> —
-                  Wahrung berechtigter Interessen des Verantwortlichen
-                </li>
+              <p className="mt-3">Rechtsgrundlagen sind insbesondere:</p>
+              <ul className="list-disc pl-5 space-y-1 mt-2">
+                <li>Art. 6 Abs. 1 lit. a DSGVO (Einwilligung)</li>
+                <li>Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen und Vertragserfüllung)</li>
+                <li>Art. 6 Abs. 1 lit. c DSGVO (rechtliche Verpflichtung)</li>
+                <li>Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse)</li>
               </ul>
-            </section>
-
-            {/* 3. Hosting – Netlify */}
-            <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">
-                3. Hosting – Netlify
-              </h2>
-              <p>
-                Diese Website wird bei Netlify, Inc. (44 Montgomery Street, Suite 300, San Francisco,
-                California 94104, USA) gehostet. Beim Aufruf unserer Website werden vom Hosting-Anbieter
-                automatisch Verbindungsdaten erfasst, darunter IP-Adresse des anfragenden Geräts,
-                Browsertyp und -version, aufgerufene Seite, Datum und Uhrzeit des Abrufs sowie der
-                HTTP-Statuscode der Antwort.
-              </p>
               <p className="mt-3">
-                Die Verarbeitung erfolgt auf Grundlage unseres berechtigten Interesses an einem
-                sicheren und stabilen Betrieb der Website (Art. 6 Abs. 1 lit. f DSGVO). Da Netlify
-                in den USA ansässig ist, werden Daten in die USA übermittelt. Die Übermittlung
-                erfolgt auf Grundlage von Standardvertragsklauseln (SCCs) gemäß Art. 46 Abs. 2
-                lit. c DSGVO. Mit Netlify besteht ein Auftragsverarbeitungsvertrag (AVV).
-              </p>
-              <p className="mt-3">
-                Datenschutzerklärung Netlify:{" "}
-                <a
-                  href="https://www.netlify.com/privacy/"
-                  className="text-primary hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  https://www.netlify.com/privacy/
-                </a>
+                Unser berechtigtes Interesse liegt insbesondere in dem sicheren Betrieb der Website,
+                der zuverlässigen Bearbeitung von Anfragen sowie der technisch notwendigen
+                Bereitstellung unserer Online-Angebote.
               </p>
             </section>
 
-            {/* 4. Cloudflare */}
+            {/* 3. Hosting */}
+            <section>
+              <h2 className="text-xl font-semibold text-foreground mb-3">3. Hosting</h2>
+              <p>
+                Unsere Website wird über Netlify bereitgestellt. Beim Aufruf der Website werden
+                technisch erforderliche Verbindungs- und Zugriffsdaten verarbeitet, insbesondere
+                IP-Adresse, Datum und Uhrzeit des Abrufs, Browser-Informationen, aufgerufene
+                Seiten und technische Statusdaten.
+              </p>
+              <p className="mt-3">
+                Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO zum Zweck
+                des sicheren und stabilen Website-Betriebs.
+              </p>
+            </section>
+
+            {/* 4. CDN, DNS und Sicherheit */}
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">
-                4. CDN und Netzwerksicherheit – Cloudflare
+                4. CDN, DNS und Sicherheit
               </h2>
               <p>
-                Diese Website nutzt Dienste der Cloudflare, Inc. (101 Townsend St., San Francisco,
-                CA 94107, USA). Cloudflare ist zwischen Ihrem Browser und unserem Hosting-Anbieter
-                geschaltet und übernimmt DNS-Auflösung, Schutz vor DDoS-Angriffen sowie die schnelle
-                Auslieferung von Website-Inhalten. Sämtlicher Datenverkehr dieser Website wird über
-                das Cloudflare-Netzwerk geleitet.
+                Zur Absicherung und beschleunigten Auslieferung unserer Website nutzen wir
+                Cloudflare. Dabei kann der Datenverkehr unserer Website über die Systeme von
+                Cloudflare geleitet werden. Hierbei können insbesondere IP-Adressen, technische
+                Verbindungsdaten sowie sicherheitsrelevante Informationen verarbeitet werden.
               </p>
               <p className="mt-3">
-                Dabei werden unter anderem IP-Adressen, HTTP-Anfragen sowie gerätebezogene
-                Informationen verarbeitet. Zur Erkennung automatisierter Zugriffe kann Cloudflare
-                technisch notwendige Cookies setzen (insbesondere <em>__cf_bm</em> zur
-                Bot-Erkennung). Diese Cookies dienen ausschließlich dem sicheren Betrieb und
-                erfordern keine Einwilligung nach § 25 TTDSG.
+                Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO aufgrund
+                unseres berechtigten Interesses an IT-Sicherheit, DDoS-Schutz und einer stabilen
+                Bereitstellung der Website.
               </p>
               <p className="mt-3">
-                Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an sicherem
-                und performantem Website-Betrieb). Die Datenübermittlung in die USA erfolgt auf
-                Grundlage von Standardvertragsklauseln und — soweit Cloudflare hierunter
-                zertifiziert ist — des EU-U.S. Data Privacy Framework (DPF).
-              </p>
-              <p className="mt-3">
-                Datenschutzerklärung Cloudflare:{" "}
-                <a
-                  href="https://www.cloudflare.com/privacypolicy/"
-                  className="text-primary hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  https://www.cloudflare.com/privacypolicy/
-                </a>
+                Soweit Cloudflare technisch notwendige Sicherheits-Cookies oder ähnliche technisch
+                erforderliche Mechanismen einsetzt, geschieht dies ausschließlich zur sicheren
+                Bereitstellung der Website.
               </p>
             </section>
 
             {/* 5. Kontaktformular */}
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">
-                5. Kontaktformular
-              </h2>
+              <h2 className="text-xl font-semibold text-foreground mb-3">5. Kontaktformular</h2>
               <p>
-                Auf unserer Website steht ein Kontaktformular zur Verfügung. Bei dessen Nutzung
-                werden folgende Angaben erhoben:
+                Auf unserer Website können Sie uns über ein Kontaktformular kontaktieren. Dabei
+                verarbeiten wir die von Ihnen eingegebenen Daten zur Bearbeitung Ihrer Anfrage.
               </p>
+              <p className="mt-3">Je nach Formular können dies insbesondere sein:</p>
               <ul className="list-disc pl-5 space-y-1 mt-2">
-                <li>Name (Pflichtfeld)</li>
-                <li>E-Mail-Adresse (Pflichtfeld)</li>
-                <li>Nachricht (Pflichtfeld)</li>
-                <li>Telefonnummer (freiwillig)</li>
-                <li>Unternehmen (freiwillig)</li>
-                <li>Interessensgebiet (freiwillig, per Auswahl)</li>
+                <li>Name</li>
+                <li>E-Mail-Adresse</li>
+                <li>Unternehmen</li>
+                <li>gewünschte Leistung / Auswahlfeld</li>
+                <li>Nachricht</li>
               </ul>
               <p className="mt-3">
-                Ihre Angaben werden ausschließlich zur Bearbeitung und Beantwortung Ihrer Anfrage
-                verwendet. Eine Weitergabe an Dritte erfolgt nicht, es sei denn, dies ist zur
-                Vertragserfüllung zwingend erforderlich oder gesetzlich vorgeschrieben.
+                Pflichtangaben sind als solche gekennzeichnet. Ohne diese Angaben kann Ihre Anfrage
+                gegebenenfalls nicht bearbeitet werden.
               </p>
-              <p className="mt-3">
-                Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen) sowie
-                unser berechtigtes Interesse an der Bearbeitung geschäftlicher Anfragen
-                (Art. 6 Abs. 1 lit. f DSGVO). Die Daten werden gelöscht, sobald Ihre Anfrage
-                abschließend bearbeitet ist und keine gesetzlichen Aufbewahrungspflichten
-                entgegenstehen.
-              </p>
+              <p className="mt-3">Die Verarbeitung erfolgt:</p>
+              <ul className="list-disc pl-5 space-y-2 mt-2">
+                <li>
+                  auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO, soweit Ihre Anfrage auf den
+                  Abschluss eines Vertrags oder vorvertragliche Maßnahmen gerichtet ist,
+                </li>
+                <li>
+                  hilfsweise auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO aufgrund unseres
+                  berechtigten Interesses an einer effizienten Kommunikation mit Interessenten
+                  und Geschäftskunden.
+                </li>
+              </ul>
             </section>
 
-            {/* 6. E-Mail-Versand */}
+            {/* 6. Technische Verarbeitung */}
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">
-                6. E-Mail-Versand
+                6. Technische Verarbeitung von Formularanfragen
               </h2>
               <p>
-                Zur technischen Übermittlung von Formularinhalten nutzen wir einen eigenen
-                serverseitigen E-Mail-Dienst über Netlify Functions und Gmail SMTP. Wenn Sie
-                das Kontaktformular absenden, werden Ihre Eingaben über unseren Server direkt
-                an unsere E-Mail-Adresse weitergeleitet.
-              </p>
-              <p className="mt-3">
-                Dabei werden alle von Ihnen eingegebenen Daten (Name, E-Mail-Adresse, Telefon,
-                Unternehmen, Nachricht) sowie technische Metadaten (Zeitstempel) serverseitig
-                verarbeitet. Es werden keine Daten an Drittanbieter übermittelt.
-              </p>
-              <p className="mt-3">
-                Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer
-                zuverlässigen technischen Zustellung von Kontaktanfragen).
-              </p>
-            </section>
-
-            {/* 7. Server-Logfiles */}
-            <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">
-                7. Server-Logfiles
-              </h2>
-              <p>
-                Beim Aufruf dieser Website werden automatisch Zugriffsdaten (Logfiles) erfasst,
-                die Ihr Browser an unseren Hosting-Anbieter übermittelt. Diese umfassen:
+                Formularanfragen werden serverseitig verarbeitet und an unser geschäftliches
+                E-Mail-Postfach weitergeleitet. Dabei können wir zur technischen Entgegennahme,
+                Weiterleitung, Zwischenspeicherung und internen Workflow-Steuerung insbesondere
+                folgende Systeme einsetzen:
               </p>
               <ul className="list-disc pl-5 space-y-1 mt-2">
-                <li>IP-Adresse des anfragenden Geräts</li>
-                <li>Datum und Uhrzeit der Anfrage</li>
-                <li>Aufgerufene Seite (URL) und HTTP-Methode</li>
-                <li>HTTP-Statuscode und übertragene Datenmenge</li>
-                <li>Browsertyp, Betriebssystem und Spracheinstellung</li>
-                <li>Referrer-URL (zuvor besuchte Seite, sofern übermittelt)</li>
+                <li>Netlify / serverseitige Website-Funktionen</li>
+                <li>Supabase</li>
+                <li>n8n</li>
+                <li>unser geschäftliches E-Mail-Postfach</li>
               </ul>
               <p className="mt-3">
-                Diese Daten werden nicht mit anderen Datenquellen zusammengeführt und dienen
-                ausschließlich der Sicherstellung eines ordnungsgemäßen Betriebs sowie der Abwehr
-                von Angriffen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Logdaten werden
-                in der Regel nach spätestens 30 Tagen automatisch gelöscht.
+                Die Verarbeitung erfolgt ausschließlich zur Entgegennahme, Strukturierung,
+                Weiterleitung und Bearbeitung Ihrer Anfrage.
+              </p>
+              <p className="mt-3">
+                Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO bzw. Art. 6 Abs. 1 lit. f DSGVO.
               </p>
             </section>
 
-            {/* 8. Cookies */}
+            {/* 7. Chatbot */}
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">8. Cookies</h2>
+              <h2 className="text-xl font-semibold text-foreground mb-3">7. Chatbot</h2>
               <p>
-                Diese Website setzt von sich aus keine Marketing-, Analyse- oder
-                Tracking-Cookies ein.
+                Auf unserer Website stellen wir einen Chatbot zur Verfügung, über den Sie mit uns
+                in Kontakt treten können. Im Rahmen der Nutzung des Chatbots verarbeiten wir die
+                von Ihnen eingegebenen Inhalte sowie technische Metadaten, soweit dies für die
+                Bereitstellung, Bearbeitung und Verbesserung der Kommunikation erforderlich ist.
               </p>
               <p className="mt-3">
-                Im Rahmen der Netzwerksicherheit durch Cloudflare können technisch notwendige
-                Cookies gesetzt werden (z. B. <em>__cf_bm</em> zur Erkennung automatisierter
-                Zugriffe). Diese Cookies sind für den sicheren Betrieb der Website funktional
-                erforderlich und unterliegen keiner Einwilligungspflicht nach § 25 TTDSG, da sie
-                ausschließlich der technischen Bereitstellung des Dienstes dienen.
+                Dabei können insbesondere folgende Daten verarbeitet werden:
+              </p>
+              <ul className="list-disc pl-5 space-y-1 mt-2">
+                <li>eingegebene Nachrichten</li>
+                <li>Zeitpunkte der Kommunikation</li>
+                <li>technische Sitzungs- und Verbindungsdaten</li>
+                <li>ggf. freiwillig von Ihnen genannte Kontaktdaten</li>
+              </ul>
+              <p className="mt-3">
+                Chatverläufe werden gespeichert, soweit dies für die Bearbeitung Ihrer Anfrage,
+                die Fortführung des Gesprächs, die technische Bereitstellung und die
+                Nachvollziehbarkeit geschäftlicher Kommunikation erforderlich ist.
               </p>
               <p className="mt-3">
-                Sofern wir künftig Analyse- oder Marketing-Werkzeuge einsetzen, wird diese
-                Datenschutzerklärung entsprechend aktualisiert und — soweit gesetzlich erforderlich
-                — ein Einwilligungs-Management (Cookie-Banner) implementiert.
+                Für den Betrieb des Chatbots und die Speicherung chatbezogener Daten nutzen wir
+                insbesondere Supabase.
+              </p>
+              <p className="mt-3">
+                Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, soweit die Kommunikation auf
+                vorvertragliche Maßnahmen oder die Anbahnung eines Vertrags gerichtet ist, sowie
+                Art. 6 Abs. 1 lit. f DSGVO auf Grundlage unseres berechtigten Interesses an
+                einer effizienten, nachvollziehbaren und nutzerfreundlichen Kommunikation.
+              </p>
+              <p className="mt-3">
+                Bitte übermitteln Sie über den Chatbot keine sensiblen Informationen, sofern dies
+                nicht zwingend erforderlich ist.
               </p>
             </section>
 
-            {/* 9. Drittlandübermittlung */}
+            {/* 8. Supabase */}
+            <section>
+              <h2 className="text-xl font-semibold text-foreground mb-3">8. Supabase</h2>
+              <p>
+                Wir nutzen Supabase für datenbankbezogene Funktionen und zur technischen
+                Speicherung bestimmter anfrage- oder chatbezogener Daten. Dabei können
+                personenbezogene Daten verarbeitet werden, soweit dies zur Bereitstellung unserer
+                Website-Funktionen, zur Bearbeitung von Anfragen oder zum Betrieb des Chatbots
+                erforderlich ist.
+              </p>
+              <p className="mt-3">
+                Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO bzw.
+                Art. 6 Abs. 1 lit. f DSGVO.
+              </p>
+            </section>
+
+            {/* 9. Server-Logfiles */}
+            <section>
+              <h2 className="text-xl font-semibold text-foreground mb-3">9. Server-Logfiles</h2>
+              <p>
+                Beim Aufruf unserer Website werden automatisch technische Informationen erfasst,
+                die Ihr Browser bzw. Ihr Endgerät übermittelt. Dazu können insbesondere gehören:
+              </p>
+              <ul className="list-disc pl-5 space-y-1 mt-2">
+                <li>IP-Adresse</li>
+                <li>Datum und Uhrzeit des Zugriffs</li>
+                <li>angeforderte Seite / URL</li>
+                <li>Browsertyp und Browserversion</li>
+                <li>Betriebssystem</li>
+                <li>Referrer-URL</li>
+                <li>Statuscodes und technische Protokolldaten</li>
+              </ul>
+              <p className="mt-3">
+                Diese Daten dienen der technischen Bereitstellung, Stabilität, Sicherheit und
+                Fehleranalyse unserer Website.
+              </p>
+              <p className="mt-3">Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO.</p>
+            </section>
+
+            {/* 10. Cookies */}
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">
-                9. Datenübermittlung in Drittländer
+                10. Cookies und ähnliche Technologien
               </h2>
               <p>
-                Beim Betrieb dieser Website werden über Netlify und Cloudflare Daten in die USA
-                übermittelt. Da die USA kein Land mit einem allgemeinen Angemessenheitsbeschluss
-                der EU-Kommission sind, stützen wir Übermittlungen auf Standardvertragsklauseln
-                (SCCs) gemäß Art. 46 Abs. 2 lit. c DSGVO sowie — soweit der jeweilige Anbieter
-                zertifiziert ist — auf den EU-U.S. Data Privacy Framework (DPF).
+                Auf unserer Website setzen wir derzeit keine Analyse-, Marketing- oder
+                Remarketing-Tools ein.
               </p>
               <p className="mt-3">
-                Wir haben den Zertifizierungs- und Vertragsstatus unserer Dienstleister geprüft
-                und werden Änderungen in der Rechtslage und bei den Anbietern fortlaufend
-                beobachten. Bei Bekanntwerden fehlender oder unzureichender Schutzmaßnahmen
-                ergreifen wir unverzüglich geeignete Maßnahmen.
+                Soweit auf unserer Website technisch notwendige Cookies oder vergleichbare
+                Technologien verwendet werden, erfolgt dies ausschließlich, soweit dies für die
+                sichere und technisch ordnungsgemäße Bereitstellung der Website erforderlich ist.
+              </p>
+              <p className="mt-3">
+                Sofern wir künftig Analyse-, Marketing-, Remarketing- oder sonstige
+                einwilligungspflichtige Technologien einsetzen, werden wir diese
+                Datenschutzerklärung entsprechend anpassen und – soweit gesetzlich erforderlich –
+                ein Einwilligungs-/Consent-Management implementieren.
               </p>
             </section>
 
-            {/* 10. Speicherdauer */}
-            <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">10. Speicherdauer</h2>
-              <p>
-                Personenbezogene Daten werden gelöscht, sobald der Zweck ihrer Verarbeitung
-                entfallen ist und keine gesetzlichen Aufbewahrungspflichten entgegenstehen.
-                Kontaktanfragen werden nach abschließender Bearbeitung gelöscht, sofern keine
-                weitergehenden Geschäftsbeziehungen entstanden sind.
-              </p>
-              <p className="mt-3">
-                Gesetzliche Aufbewahrungspflichten nach Handels- und Steuerrecht (in der Regel
-                6 bis 10 Jahre) bleiben in jedem Fall unberührt. Für die Dauer dieser Fristen
-                werden betroffene Daten eingeschränkt verarbeitet und nicht für andere Zwecke
-                genutzt.
-              </p>
-            </section>
-
-            {/* 11. Betroffenenrechte */}
+            {/* 11. Keine Login-/Upload-Funktionen */}
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">
-                11. Ihre Rechte als betroffene Person
+                11. Keine Login- oder Upload-Funktionen
               </h2>
               <p>
-                Ihnen stehen gegenüber Tawano in Bezug auf Ihre personenbezogenen Daten
-                folgende Rechte zu:
+                Derzeit bieten wir auf dieser Website keine Registrierung, kein Benutzerkonto und
+                keine Datei-Upload-Funktion an.
               </p>
-              <ul className="list-disc pl-5 space-y-3 mt-3">
+            </section>
+
+            {/* 12. Empfänger */}
+            <section>
+              <h2 className="text-xl font-semibold text-foreground mb-3">
+                12. Empfänger von Daten
+              </h2>
+              <p>
+                Personenbezogene Daten können an technische Dienstleister und Systeme weitergegeben
+                werden, soweit dies zur Bereitstellung der Website, zur Bearbeitung von Anfragen
+                oder zum Betrieb des Chatbots erforderlich ist. Hierzu können insbesondere gehören:
+              </p>
+              <ul className="list-disc pl-5 space-y-1 mt-2">
+                <li>Hosting- und Infrastruktur-Dienstleister</li>
+                <li>Sicherheits- und CDN-Dienstleister</li>
+                <li>Datenbank- und Backend-Dienstleister</li>
+                <li>interne Automatisierungs- und Workflow-Systeme</li>
+                <li>E-Mail-Dienstleister</li>
+              </ul>
+              <p className="mt-3">
+                Eine darüber hinausgehende Weitergabe erfolgt nur, wenn dies gesetzlich erlaubt
+                ist, Sie eingewilligt haben oder wir rechtlich dazu verpflichtet sind.
+              </p>
+            </section>
+
+            {/* 13. Drittlandübermittlung */}
+            <section>
+              <h2 className="text-xl font-semibold text-foreground mb-3">
+                13. Drittlandübermittlung
+              </h2>
+              <p>
+                Im Rahmen der Nutzung einzelner technischer Dienstleister kann eine Verarbeitung
+                personenbezogener Daten auch in Drittländern, insbesondere in den USA, nicht
+                ausgeschlossen werden.
+              </p>
+              <p className="mt-3">
+                Soweit dabei kein Angemessenheitsbeschluss oder keine unmittelbare gesetzliche
+                Erlaubnis greift, achten wir auf geeignete Garantien, insbesondere vertragliche
+                Schutzmechanismen nach Art. 46 DSGVO, soweit erforderlich.
+              </p>
+            </section>
+
+            {/* 14. Speicherdauer */}
+            <section>
+              <h2 className="text-xl font-semibold text-foreground mb-3">14. Speicherdauer</h2>
+              <p>
+                Wir speichern personenbezogene Daten nur so lange, wie dies für die jeweiligen
+                Zwecke erforderlich ist.
+              </p>
+              <p className="mt-3">Für Kontakt- und Chatanfragen bedeutet dies:</p>
+              <ul className="list-disc pl-5 space-y-2 mt-2">
                 <li>
-                  <span className="font-medium text-foreground">Auskunftsrecht (Art. 15 DSGVO):</span>{" "}
-                  Sie können jederzeit Auskunft darüber verlangen, welche personenbezogenen Daten
-                  wir über Sie verarbeiten, zu welchem Zweck und auf welcher Rechtsgrundlage.
+                  Wir speichern Anfragen und Chatverläufe grundsätzlich nur so lange, wie dies zur
+                  Bearbeitung, Fortführung der Kommunikation, Dokumentation von Geschäftsanbahnungen
+                  oder Erfüllung gesetzlicher Pflichten erforderlich ist.
                 </li>
                 <li>
-                  <span className="font-medium text-foreground">
-                    Recht auf Berichtigung (Art. 16 DSGVO):
-                  </span>{" "}
-                  Sie haben das Recht, die Berichtigung unrichtiger oder die Vervollständigung
-                  unvollständiger Daten zu verlangen.
+                  Wenn sich aus einer Anfrage kein Vertragsverhältnis ergibt, löschen oder
+                  anonymisieren wir die Daten in der Regel nach Wegfall des Zwecks, sofern keine
+                  gesetzlichen Aufbewahrungspflichten entgegenstehen.
                 </li>
                 <li>
-                  <span className="font-medium text-foreground">
-                    Recht auf Löschung (Art. 17 DSGVO):
-                  </span>{" "}
-                  Sie können die Löschung Ihrer personenbezogenen Daten verlangen, soweit keine
-                  gesetzlichen Aufbewahrungspflichten oder sonstige zwingende Gründe entgegenstehen.
+                  Geschäfts- und steuerrechtlich relevante Unterlagen können aufgrund gesetzlicher
+                  Aufbewahrungspflichten länger gespeichert werden.
                 </li>
-                <li>
-                  <span className="font-medium text-foreground">
-                    Recht auf Einschränkung der Verarbeitung (Art. 18 DSGVO):
-                  </span>{" "}
-                  In bestimmten Fällen können Sie verlangen, dass die Verarbeitung Ihrer Daten
-                  vorübergehend eingeschränkt wird.
-                </li>
-                <li>
-                  <span className="font-medium text-foreground">
-                    Recht auf Datenübertragbarkeit (Art. 20 DSGVO):
-                  </span>{" "}
-                  Daten, die Sie uns auf Grundlage einer Einwilligung oder zur Vertragserfüllung
-                  zur Verfügung gestellt haben, können Sie in einem strukturierten, gängigen und
-                  maschinenlesbaren Format erhalten oder an einen anderen Verantwortlichen
-                  übertragen lassen.
-                </li>
-                <li>
-                  <span className="font-medium text-foreground">
-                    Widerspruchsrecht (Art. 21 DSGVO):
-                  </span>{" "}
-                  Sie haben das Recht, der Verarbeitung Ihrer personenbezogenen Daten zu
-                  widersprechen, soweit diese auf berechtigte Interessen gestützt wird. Wir
-                  verarbeiten Ihre Daten in diesem Fall nicht mehr, es sei denn, wir können
-                  zwingende schutzwürdige Gründe für die Verarbeitung nachweisen, die Ihre
-                  Interessen überwiegen.
-                </li>
+              </ul>
+            </section>
+
+            {/* 15. Ihre Rechte */}
+            <section>
+              <h2 className="text-xl font-semibold text-foreground mb-3">15. Ihre Rechte</h2>
+              <p>
+                Sie haben im Rahmen der gesetzlichen Voraussetzungen insbesondere folgende Rechte:
+              </p>
+              <ul className="list-disc pl-5 space-y-1 mt-2">
+                <li>Recht auf Auskunft nach Art. 15 DSGVO</li>
+                <li>Recht auf Berichtigung nach Art. 16 DSGVO</li>
+                <li>Recht auf Löschung nach Art. 17 DSGVO</li>
+                <li>Recht auf Einschränkung der Verarbeitung nach Art. 18 DSGVO</li>
+                <li>Recht auf Datenübertragbarkeit nach Art. 20 DSGVO</li>
+                <li>Recht auf Widerspruch nach Art. 21 DSGVO</li>
+                <li>Recht auf Widerruf einer erteilten Einwilligung mit Wirkung für die Zukunft</li>
               </ul>
               <p className="mt-4">
-                Zur Ausübung Ihrer Rechte wenden Sie sich bitte per E-Mail an:{" "}
+                Zur Ausübung Ihrer Rechte genügt eine Nachricht an:{" "}
                 <a
-                  href="mailto:tawanoai@gmail.com"
+                  href="mailto:info@tawano.de"
                   className="text-primary hover:underline"
                 >
-                  tawanoai@gmail.com
+                  info@tawano.de
                 </a>
               </p>
             </section>
 
-            {/* 12. Aufsichtsbehörde */}
+            {/* 16. Beschwerderecht */}
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">
-                12. Beschwerderecht bei der Aufsichtsbehörde
+                16. Beschwerderecht bei einer Aufsichtsbehörde
               </h2>
               <p>
-                Unbeschadet anderweitiger Rechtsbehelfe haben Sie gemäß Art. 77 DSGVO das Recht,
-                sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren, wenn Sie der Ansicht
-                sind, dass die Verarbeitung Ihrer personenbezogenen Daten gegen die DSGVO verstößt.
+                Sie haben das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren,
+                wenn Sie der Ansicht sind, dass die Verarbeitung Ihrer personenbezogenen Daten
+                gegen Datenschutzrecht verstößt.
               </p>
               <p className="mt-3">
-                Zuständige Aufsichtsbehörde für Tawano (Sitz in Düsseldorf, NRW) ist:
+                Zuständige Aufsichtsbehörde für Nordrhein-Westfalen ist insbesondere:
               </p>
               <div className="mt-3 pl-4 border-l-2 border-primary/30 space-y-1">
                 <p className="font-medium text-foreground">
                   Landesbeauftragte für Datenschutz und Informationsfreiheit
-                  Nordrhein-Westfalen (LDI NRW)
+                  Nordrhein-Westfalen
                 </p>
                 <p>Kavalleriestraße 2–4</p>
                 <p>40213 Düsseldorf</p>
-                <p className="mt-2">Telefon: 0211 / 38424-0</p>
-                <p>E-Mail: poststelle@ldi.nrw.de</p>
-                <p>
-                  Web:{" "}
-                  <a
-                    href="https://www.ldi.nrw.de"
-                    className="text-primary hover:underline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    https://www.ldi.nrw.de
-                  </a>
-                </p>
+                <p>Deutschland</p>
+                <p className="mt-2">E-Mail: poststelle@ldi.nrw.de</p>
               </div>
             </section>
 
-            {/* 13. Aktualität */}
+            {/* 17. Aktualität */}
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">
-                13. Aktualität und Änderungen dieser Erklärung
+                17. Aktualität dieser Datenschutzerklärung
               </h2>
               <p>
-                Diese Datenschutzerklärung hat den Stand April 2026. Wir behalten uns vor, sie
-                bei Änderungen in der Rechtslage, in der eingesetzten Technik oder beim Leistungsangebot
-                anzupassen. Die jeweils aktuelle Fassung ist auf dieser Seite abrufbar. Bei
-                wesentlichen Änderungen werden wir Sie — soweit möglich — gesondert informieren.
+                Wir behalten uns vor, diese Datenschutzerklärung anzupassen, wenn sich unsere
+                Website, unsere Prozesse, die eingesetzten Technologien oder die Rechtslage
+                ändern. Es gilt jeweils die auf dieser Website veröffentlichte aktuelle Fassung.
               </p>
             </section>
 
