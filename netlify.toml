@@ -23,6 +23,17 @@ to = "/manifest.json"
 status = 200
 force = false
 
+[[redirects]]
+from = "/api/demo-booking"
+to = "/.netlify/functions/demo-booking"
+status = 200
+force = true
+
+[[redirects]]
+from = "/handwerker"
+to = "/handwerker.html"
+status = 200
+
 # SPA Fallback - MUST BE LAST
 [[redirects]]
 from = "/*"
