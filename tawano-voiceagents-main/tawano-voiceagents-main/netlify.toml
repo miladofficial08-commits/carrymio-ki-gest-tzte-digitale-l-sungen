@@ -1,0 +1,53 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/call"
+  to = "/.netlify/functions/call"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/demo-booking"
+  to = "/.netlify/functions/demo-booking"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/debug/calls"
+  to = "/.netlify/functions/debug-calls"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/analytics"
+  to = "/.netlify/functions/analytics"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/call/*/end"
+  to = "/.netlify/functions/call"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/tawano"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/handwerker"
+  to = "/handwerker.html"
+  status = 200
+
+[[redirects]]
+  from = "/krankenbefoerderung"
+  to = "/krankenbefoerderung.html"
+  status = 200
+
+[[redirects]]
+  from = "/beautyworlds-dashboard"
+  to = "/beautyworlds-dashboard.html"
+  status = 200

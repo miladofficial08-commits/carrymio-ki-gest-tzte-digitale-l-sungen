@@ -26,7 +26,7 @@ import Footer from "@/components/Footer";
 const navItems = [
   { href: "#home", label: "Home" },
   { href: "#kostenrechner", label: "Kostenrechner" },
-  { href: "#automation", label: "Automation" },
+  { href: "/voice-agents", label: "Voice Agents" },
   { href: "#kontakt", label: "Kontakt" },
 ];
 
@@ -119,6 +119,12 @@ const Index = () => {
   }, []);
 
   const scrollTo = (id: string) => {
+    if (!id) return;
+    // If it's a route path (starts with '/'), navigate to it
+    if (id.startsWith("/")) {
+      window.location.href = id;
+      return;
+    }
     const element = document.querySelector(id);
     if (element) element.scrollIntoView({ behavior: "smooth" });
   };

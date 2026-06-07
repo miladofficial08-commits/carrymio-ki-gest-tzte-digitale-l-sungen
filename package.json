@@ -7,6 +7,7 @@
     "dev": "vite",
     "dev:netlify": "npx netlify dev",
     "build": "vite build",
+    "postbuild": "node ./scripts/copy-voice-agents.cjs",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview"

@@ -6,7 +6,7 @@ const navLinks = [
   { href: "#digital-employees", label: "Digitale Mitarbeiter" },
   { href: "#automation-solutions", label: "Automationsloesungen" },
   { href: "#software-solutions", label: "Softwareloesungen" },
-  { href: "#automation-consulting", label: "Automationsberatung" },
+  { href: "/voice-agents", label: "Voice Agents" },
 ];
 
 export const Navigation = () => {
@@ -16,6 +16,7 @@ export const Navigation = () => {
 
   useEffect(() => {
     const sections = navLinks
+      .filter((link) => typeof link.href === 'string' && link.href.startsWith('#'))
       .map((link) => document.querySelector(link.href))
       .filter(Boolean) as Element[];
 
@@ -52,6 +53,12 @@ export const Navigation = () => {
   }, []);
 
   const scrollToSection = (href: string) => {
+    if (!href) return;
+    // If target is a site route (starts with '/') navigate to it
+    if (href.startsWith('/')) {
+      window.location.href = href;
+      return;
+    }
     const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });

@@ -34,6 +34,18 @@ from = "/handwerker"
 to = "/handwerker.html"
 status = 200
 
+[[redirects]]
+from = "/voice-agents"
+to = "/voice-agents/index.html"
+status = 200
+force = false
+
+[[redirects]]
+from = "/voice-agents/*"
+to = "/voice-agents/:splat"
+status = 200
+force = false
+
 # SPA Fallback - MUST BE LAST
 [[redirects]]
 from = "/*"
