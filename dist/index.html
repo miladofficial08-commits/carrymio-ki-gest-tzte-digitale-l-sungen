@@ -40,6 +40,24 @@
     <!-- Preload critical assets -->
     <link rel="preload" href="/tawano-logo.png" as="image" type="image/png" fetchpriority="high">
 
+    <!-- Leadfeeder B2B visitor analytics -->
+    <script>
+      (function(ss, ex) {
+        window.ldfdr = window.ldfdr || function() {
+          (ldfdr._q = ldfdr._q || []).push([].slice.call(arguments));
+        };
+        (function(d, s) {
+          var fs = d.getElementsByTagName(s)[0];
+          function ce(src) {
+            var cs = d.createElement(s);
+            cs.src = src;
+            cs.async = 1;
+            fs.parentNode.insertBefore(cs, fs);
+          }
+          ce('https://sc.lfeeder.com/lftracker_v1_' + ss + (ex ? '_' + ex : '') + '.js');
+        })(document, 'script');
+      })('JMvZ8gv3Pdda2pOd');
+    </script>
 
     <!-- Open Graph Tags -->
     <meta property="og:title" content="Tawano – Digitale Mitarbeiter & KI-Automatisierung für Unternehmen" />
@@ -252,7 +270,7 @@
       ]
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-DezTXMU7.js"></script>
+    <script type="module" crossorigin src="/assets/index-CmegAtcM.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/vendor-DE0fT8jk.js">
     <link rel="modulepreload" crossorigin href="/assets/radix-ui-LClkeX17.js">
     <link rel="modulepreload" crossorigin href="/assets/icons-DZPkui-h.js">

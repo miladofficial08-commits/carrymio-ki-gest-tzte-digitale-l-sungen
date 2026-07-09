@@ -22,18 +22,76 @@ interface FunnelPayload {
 
 type EmailPayload = ContactPayload | FunnelPayload;
 
-const SENDER_EMAIL = process.env.GMAIL_SENDER_EMAIL!;
-const SENDER_PASS = process.env.GMAIL_SENDER_APP_PASSWORD!;
-const NOTIFICATION_TO = process.env.GMAIL_SENDER_EMAIL!;
+type MailConfig =
+  | {
+      ok: true;
+      from: string;
+      senderEmail: string;
+      notificationTo: string;
+      transport: Record<string, any>;
+    }
+  | { ok: false };
 
-function createTransport() {
-  return nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: SENDER_EMAIL,
-      pass: SENDER_PASS,
-    },
-  });
+function deriveSmtpHost(host?: string) {
+  return host ? host.replace(/^imap\./i, "smtp.") : "";
+}
+
+function cleanEnvValue(value?: string) {
+  if (!value) return "";
+  const trimmed = String(value).trim();
+  if (
+    (trimmed.startsWith("\"") && trimmed.endsWith("\"")) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1);
+  }
+  return trimmed;
+}
+
+function getMailConfig(): MailConfig {
+  const smtpHost = cleanEnvValue(process.env.SMTP_HOST) || deriveSmtpHost(cleanEnvValue(process.env.IMAP_HOST));
+  const smtpUser = cleanEnvValue(process.env.SMTP_USER) || cleanEnvValue(process.env.IMAP_USER) || cleanEnvValue(process.env.GMAIL_SENDER_EMAIL);
+  const smtpPass = cleanEnvValue(process.env.SMTP_PASS) || cleanEnvValue(process.env.IMAP_PASS) || cleanEnvValue(process.env.GMAIL_SENDER_APP_PASSWORD);
+  const smtpSecure = cleanEnvValue(process.env.SMTP_SECURE || "false").toLowerCase() === "true";
+  const smtpPort = Number(cleanEnvValue(process.env.SMTP_PORT) || (smtpSecure ? 465 : 587));
+  const from = cleanEnvValue(process.env.SMTP_FROM) || cleanEnvValue(process.env.MAIL_FROM) || cleanEnvValue(process.env.EMAIL_FROM) || `Tawano <${smtpUser || ""}>`;
+  const notificationTo =
+    cleanEnvValue(process.env.CONTACT_RECEIVER) || cleanEnvValue(process.env.CONTACT_TO_EMAIL) || cleanEnvValue(process.env.BOOKING_NOTIFY_EMAIL) || smtpUser;
+
+  if (smtpHost && smtpUser && smtpPass && notificationTo) {
+    return {
+      ok: true,
+      from,
+      senderEmail: smtpUser,
+      notificationTo,
+      transport: {
+        host: smtpHost,
+        port: smtpPort,
+        secure: smtpSecure,
+        requireTLS: cleanEnvValue(process.env.SMTP_REQUIRE_TLS || "true").toLowerCase() === "true",
+        auth: { user: smtpUser, pass: smtpPass },
+      },
+    };
+  }
+
+  if (cleanEnvValue(process.env.GMAIL_SENDER_EMAIL) && cleanEnvValue(process.env.GMAIL_SENDER_APP_PASSWORD)) {
+    const gmailSender = cleanEnvValue(process.env.GMAIL_SENDER_EMAIL);
+    return {
+      ok: true,
+      from: `Tawano <${gmailSender}>`,
+      senderEmail: gmailSender,
+      notificationTo: notificationTo || gmailSender,
+      transport: {
+        service: "gmail",
+        auth: {
+          user: gmailSender,
+          pass: cleanEnvValue(process.env.GMAIL_SENDER_APP_PASSWORD),
+        },
+      },
+    };
+  }
+
+  return { ok: false };
 }
 
 function buildInternalContactEmail(data: ContactPayload) {
@@ -207,7 +265,9 @@ export const handler = async (event: { httpMethod: string; body: string | null }
     return { statusCode: 405, headers, body: JSON.stringify({ error: "Method not allowed" }) };
   }
 
-  if (!SENDER_EMAIL || !SENDER_PASS) {
+  const mailConfig = getMailConfig();
+
+  if (!mailConfig.ok) {
     return {
       statusCode: 500,
       headers,
@@ -226,7 +286,7 @@ export const handler = async (event: { httpMethod: string; body: string | null }
     return { statusCode: 400, headers, body: JSON.stringify({ error: "Missing required fields" }) };
   }
 
-  const transporter = createTransport();
+  const transporter = nodemailer.createTransport(mailConfig.transport);
 
   try {
     // Build internal notification email
@@ -237,8 +297,8 @@ export const handler = async (event: { httpMethod: string; body: string | null }
 
     // 1. Send internal notification
     await transporter.sendMail({
-      from: `"Tawano Website" <${SENDER_EMAIL}>`,
-      to: NOTIFICATION_TO,
+      from: mailConfig.from,
+      to: mailConfig.notificationTo,
       replyTo: payload.email,
       subject: internal.subject,
       html: internal.html,
@@ -247,9 +307,9 @@ export const handler = async (event: { httpMethod: string; body: string | null }
     // 2. Send customer confirmation
     const confirmation = buildCustomerConfirmationEmail(payload.name, payload.type);
     await transporter.sendMail({
-      from: `"Tawano" <${SENDER_EMAIL}>`,
+      from: mailConfig.from,
       to: payload.email,
-      replyTo: SENDER_EMAIL,
+      replyTo: mailConfig.senderEmail,
       subject: confirmation.subject,
       html: confirmation.html,
     });

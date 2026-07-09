@@ -236,26 +236,58 @@ const Datenschutz = () => {
                 10. Cookies und ähnliche Technologien
               </h2>
               <p>
-                Auf unserer Website setzen wir derzeit keine Analyse-, Marketing- oder
-                Remarketing-Tools ein.
+                Auf unserer Website können technisch notwendige Cookies oder vergleichbare
+                Technologien eingesetzt werden, soweit dies für die sichere und technisch
+                ordnungsgemäße Bereitstellung der Website erforderlich ist.
               </p>
               <p className="mt-3">
-                Soweit auf unserer Website technisch notwendige Cookies oder vergleichbare
-                Technologien verwendet werden, erfolgt dies ausschließlich, soweit dies für die
-                sichere und technisch ordnungsgemäße Bereitstellung der Website erforderlich ist.
+                Darüber hinaus setzen wir, soweit rechtlich zulässig, Technologien zur Analyse von
+                B2B-Websitebesuchen ein. Nähere Informationen hierzu finden Sie im Abschnitt
+                „Leadfeeder".
               </p>
               <p className="mt-3">
-                Sofern wir künftig Analyse-, Marketing-, Remarketing- oder sonstige
+                Sofern wir künftig weitere Analyse-, Marketing-, Remarketing- oder sonstige
                 einwilligungspflichtige Technologien einsetzen, werden wir diese
                 Datenschutzerklärung entsprechend anpassen und – soweit gesetzlich erforderlich –
                 ein Einwilligungs-/Consent-Management implementieren.
               </p>
             </section>
 
-            {/* 11. Keine Login-/Upload-Funktionen */}
+            {/* 11. Leadfeeder */}
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">
-                11. Keine Login- oder Upload-Funktionen
+                11. Leadfeeder
+              </h2>
+              <p>
+                Unsere Website nutzt Technologien von Leadfeeder (Leadfeeder Finland Oy als Teil
+                der Leadfeeder Group GmbH), um das Besucherverhalten auf unserer Website zu
+                analysieren und besser zu verstehen, welche Unternehmen unsere Website besuchen.
+              </p>
+              <p className="mt-3">
+                Dabei kann die IP-Adresse eines Besuchers verarbeitet werden. Zweck der
+                Verarbeitung ist es, B2B-Besuche auf unserer Website zu erkennen und IP-Adressen
+                mit zugehörigen Unternehmensinformationen, zum Beispiel Unternehmensname oder
+                Branchencode, anzureichern.
+              </p>
+              <p className="mt-3">
+                Zu Beginn einer Besuchersitzung werden die IP-Adresse und entsprechende
+                Sitzungsdaten mit einer umfangreichen Whitelist bekannter Unternehmen abgeglichen.
+                Die Auswertung dient ausschließlich dazu, geschäftliche Websitebesuche besser zu
+                verstehen, unsere Inhalte und Angebote zu optimieren und unsere B2B-Kommunikation
+                relevanter zu gestalten.
+              </p>
+              <p className="mt-3">
+                Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Unser berechtigtes Interesse liegt
+                in der Analyse und Optimierung unseres B2B-Online-Angebots, der Erkennung
+                geschäftlicher Besuchergruppen und der Verbesserung unserer Vertriebs- und
+                Marketingprozesse.
+              </p>
+            </section>
+
+            {/* 12. Keine Login-/Upload-Funktionen */}
+            <section>
+              <h2 className="text-xl font-semibold text-foreground mb-3">
+                12. Keine Login- oder Upload-Funktionen
               </h2>
               <p>
                 Derzeit bieten wir auf dieser Website keine Registrierung, kein Benutzerkonto und
@@ -263,10 +295,10 @@ const Datenschutz = () => {
               </p>
             </section>
 
-            {/* 12. Empfänger */}
+            {/* 13. Empfänger */}
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">
-                12. Empfänger von Daten
+                13. Empfänger von Daten
               </h2>
               <p>
                 Personenbezogene Daten können an technische Dienstleister und Systeme weitergegeben
@@ -286,10 +318,10 @@ const Datenschutz = () => {
               </p>
             </section>
 
-            {/* 13. Drittlandübermittlung */}
+            {/* 14. Drittlandübermittlung */}
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">
-                13. Drittlandübermittlung
+                14. Drittlandübermittlung
               </h2>
               <p>
                 Im Rahmen der Nutzung einzelner technischer Dienstleister kann eine Verarbeitung
@@ -303,9 +335,9 @@ const Datenschutz = () => {
               </p>
             </section>
 
-            {/* 14. Speicherdauer */}
+            {/* 15. Speicherdauer */}
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">14. Speicherdauer</h2>
+              <h2 className="text-xl font-semibold text-foreground mb-3">15. Speicherdauer</h2>
               <p>
                 Wir speichern personenbezogene Daten nur so lange, wie dies für die jeweiligen
                 Zwecke erforderlich ist.
@@ -329,9 +361,9 @@ const Datenschutz = () => {
               </ul>
             </section>
 
-            {/* 15. Ihre Rechte */}
+            {/* 16. Ihre Rechte */}
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">15. Ihre Rechte</h2>
+              <h2 className="text-xl font-semibold text-foreground mb-3">16. Ihre Rechte</h2>
               <p>
                 Sie haben im Rahmen der gesetzlichen Voraussetzungen insbesondere folgende Rechte:
               </p>
@@ -355,10 +387,10 @@ const Datenschutz = () => {
               </p>
             </section>
 
-            {/* 16. Beschwerderecht */}
+            {/* 17. Beschwerderecht */}
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">
-                16. Beschwerderecht bei einer Aufsichtsbehörde
+                17. Beschwerderecht bei einer Aufsichtsbehörde
               </h2>
               <p>
                 Sie haben das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren,
@@ -380,10 +412,10 @@ const Datenschutz = () => {
               </div>
             </section>
 
-            {/* 17. Aktualität */}
+            {/* 18. Aktualität */}
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">
-                17. Aktualität dieser Datenschutzerklärung
+                18. Aktualität dieser Datenschutzerklärung
               </h2>
               <p>
                 Wir behalten uns vor, diese Datenschutzerklärung anzupassen, wenn sich unsere

@@ -12,10 +12,10 @@
 html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;background:#FAFAF9;color:#1A1A1A;line-height:1.6;-webkit-font-smoothing:antialiased}
 nav{background:#fff;border-bottom:1px solid #E5E5E3;padding:16px 0;position:sticky;top:0;z-index:100}
-.nav-wrap{max-width:1100px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between}
-.logo{font-size:20px;font-weight:700;color:#1A1A1A;text-decoration:none}
+.nav-wrap{max-width:1180px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center}
+.logo{font-size:20px;font-weight:700;color:#1A1A1A;text-decoration:none;justify-self:start}
 .logo span{color:#2563EB}
-.nav-links{display:flex;gap:24px;align-items:center;flex:1;justify-content:center}
+.nav-links{display:flex;gap:24px;align-items:center;justify-content:center;grid-column:2}
 .nav-links a{font-size:14px;color:#525252;text-decoration:none;font-weight:500;transition:color .2s}
 .nav-links a:hover{color:#1A1A1A}
 .nav-btn{padding:10px 22px;background:#2563EB;color:#fff!important;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;transition:background .2s}
@@ -297,6 +297,23 @@ footer p{font-size:13px;color:#A3A3A3}
   .booking-slots{grid-template-columns:repeat(2,minmax(0,1fr));max-height:240px}
 }
 </style>
+<script>
+(function(ss,ex){
+  window.ldfdr=window.ldfdr||function(){
+    (ldfdr._q=ldfdr._q||[]).push([].slice.call(arguments));
+  };
+  (function(d,s){
+    var fs=d.getElementsByTagName(s)[0];
+    function ce(src){
+      var cs=d.createElement(s);
+      cs.src=src;
+      cs.async=1;
+      fs.parentNode.insertBefore(cs,fs);
+    }
+    ce('https://sc.lfeeder.com/lftracker_v1_'+ss+(ex?'_'+ex:'')+'.js');
+  })(document,'script');
+})('JMvZ8gv3Pdda2pOd');
+</script>
 </head>
 <body>
 
@@ -779,7 +796,12 @@ footer p{font-size:13px;color:#A3A3A3}
   <p class="modal-p">Im Rahmen der Nutzung einzelner technischer Dienstleister kann eine Verarbeitung personenbezogener Daten auch in Drittländern, insbesondere in den USA, nicht ausgeschlossen werden. Soweit dabei kein Angemessenheitsbeschluss greift, achten wir auf geeignete Garantien, insbesondere vertragliche Schutzmechanismen nach Art. 46 DSGVO.</p>
   <div class="modal-h2">9. Speicherdauer</div>
   <p class="modal-p">Wir speichern personenbezogene Daten nur so lange, wie dies für die jeweiligen Zwecke erforderlich ist. Anfragen und Demo-Daten werden gelöscht oder anonymisiert, sobald der Zweck entfällt, sofern keine gesetzlichen Aufbewahrungspflichten entgegenstehen.</p>
-  <div class="modal-h2">10. Ihre Rechte</div>
+  <div class="modal-h2">10. Leadfeeder</div>
+  <p class="modal-p">Unsere Website nutzt Technologien von Leadfeeder (Leadfeeder Finland Oy als Teil der Leadfeeder Group GmbH), um das Besucherverhalten auf unserer Website zu analysieren und besser zu verstehen, welche Unternehmen unsere Website besuchen.</p>
+  <p class="modal-p">Dabei kann die IP-Adresse eines Besuchers verarbeitet werden. Zweck der Verarbeitung ist es, B2B-Besuche auf unserer Website zu erkennen und IP-Adressen mit zugehörigen Unternehmensinformationen, zum Beispiel Unternehmensname oder Branchencode, anzureichern.</p>
+  <p class="modal-p">Zu Beginn einer Besuchersitzung werden die IP-Adresse und entsprechende Sitzungsdaten mit einer umfangreichen Whitelist bekannter Unternehmen abgeglichen. Die Auswertung dient ausschließlich dazu, geschäftliche Websitebesuche besser zu verstehen, unsere Inhalte und Angebote zu optimieren und unsere B2B-Kommunikation relevanter zu gestalten.</p>
+  <p class="modal-p">Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Unser berechtigtes Interesse liegt in der Analyse und Optimierung unseres B2B-Online-Angebots, der Erkennung geschäftlicher Besuchergruppen und der Verbesserung unserer Vertriebs- und Marketingprozesse.</p>
+  <div class="modal-h2">11. Ihre Rechte</div>
   <p class="modal-p">Sie haben im Rahmen der gesetzlichen Voraussetzungen insbesondere folgende Rechte:</p>
   <ul class="modal-list">
     <li>Recht auf Auskunft nach Art. 15 DSGVO</li>
@@ -791,15 +813,19 @@ footer p{font-size:13px;color:#A3A3A3}
     <li>Recht auf Widerruf einer erteilten Einwilligung mit Wirkung für die Zukunft</li>
   </ul>
   <p class="modal-p">Zur Ausübung Ihrer Rechte genügt eine Nachricht an: <a href="mailto:info@tawano.de">info@tawano.de</a></p>
-  <div class="modal-h2">11. Beschwerderecht bei einer Aufsichtsbehörde</div>
+  <div class="modal-h2">12. Beschwerderecht bei einer Aufsichtsbehörde</div>
   <p class="modal-p">Zuständige Aufsichtsbehörde: Landesbeauftragte für Datenschutz und Informationsfreiheit Nordrhein-Westfalen, Kavalleriestraße 2–4, 40213 Düsseldorf, <a href="mailto:poststelle@ldi.nrw.de">poststelle@ldi.nrw.de</a></p>
-  <div class="modal-h2">12. Aktualität dieser Datenschutzerklärung</div>
+  <div class="modal-h2">13. Aktualität dieser Datenschutzerklärung</div>
   <p class="modal-p">Wir behalten uns vor, diese Datenschutzerklärung anzupassen, wenn sich unsere Website, unsere Prozesse, die eingesetzten Technologien oder die Rechtslage ändern. Es gilt jeweils die auf dieser Website veröffentlichte aktuelle Fassung.</p>
 </div>
 
 <script>
 var AGENT_ID = 'tawano-general';
-var BOOKING_API_BASE=(location.hostname==='localhost'||location.hostname==='127.0.0.1')?'http://localhost:4000':'';
+var BOOKING_API_BASE=(function(){
+  if(location.protocol==='file:') return 'https://tawano.de';
+  if(location.hostname==='localhost'||location.hostname==='127.0.0.1') return 'http://localhost:4000';
+  return '';
+})();
 var _callSid = null;
 var _callStatusTimer = null;
 
@@ -818,7 +844,14 @@ async function triggerCall(){
   btn.disabled=true;msg.className='call-msg loading';msg.style.display='block';msg.textContent='Anruf wird aufgebaut…';
   try{
     var res=await fetch(BOOKING_API_BASE+'/api/call',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({agentId:AGENT_ID,phoneNumber:phone})});
-    var data=await res.json();
+    var contentType=res.headers.get('content-type')||'';
+    var data;
+    if(contentType.indexOf('application/json')!==-1){
+      data=await res.json();
+    } else {
+      var text=await res.text();
+      throw new Error(text.indexOf('<!DOCTYPE')!==-1?'API-Route /api/call liefert HTML statt JSON. Bitte Deployment/Netlify-Redirect prüfen.':'API-Route /api/call liefert keine JSON-Antwort.');
+    }
     if(data.ok){
       _callSid=data.callSid||null;
       var _secs=5;
@@ -1181,13 +1214,19 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal()
     var t=document.getElementById(section);
     if(t)t.scrollIntoView({behavior:behavior||'smooth'});
   }
+  function setRoute(section){
+    if(location.protocol==='file:') return;
+    try{
+      if(window.location.pathname!==routes[section]) history.pushState({section:section},'',routes[section]);
+    }catch(e){}
+  }
   document.querySelectorAll('a[data-section]').forEach(function(a){
     a.addEventListener('click',function(e){
       var section=a.getAttribute('data-section');
       if(!section||!routes[section]) return;
       e.preventDefault();
-      if(window.location.pathname!==routes[section]) history.pushState({section:section},'',routes[section]);
       scrollToSection(section,'smooth');
+      setRoute(section);
       if(window.tawanoTrack) window.tawanoTrack('nav_click',{section:section});
     });
   });
