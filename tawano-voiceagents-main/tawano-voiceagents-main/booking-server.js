@@ -10,14 +10,26 @@ const path = require('path');
 const app = express();
 const port = Number(process.env.PORT || 4000);
 
-const smtpHost = process.env.SMTP_HOST;
-const smtpPort = Number(process.env.SMTP_PORT || 587);
-const smtpSecure = String(process.env.SMTP_SECURE || 'false').toLowerCase() === 'true';
-const smtpRequireTLS = String(process.env.SMTP_REQUIRE_TLS || 'true').toLowerCase() === 'true';
-const smtpUser = process.env.SMTP_USER;
-const smtpPass = process.env.SMTP_PASS;
-const smtpFrom = process.env.SMTP_FROM || `Tawano <${smtpUser || ''}>`;
-const notifyEmail = process.env.CONTACT_RECEIVER || smtpUser;
+function cleanEnvValue(value) {
+  if (!value) return '';
+  const trimmed = String(value).trim();
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1);
+  }
+  return trimmed;
+}
+
+const smtpHost = cleanEnvValue(process.env.SMTP_HOST);
+const smtpPort = Number(cleanEnvValue(process.env.SMTP_PORT) || 587);
+const smtpSecure = cleanEnvValue(process.env.SMTP_SECURE || 'false').toLowerCase() === 'true';
+const smtpRequireTLS = cleanEnvValue(process.env.SMTP_REQUIRE_TLS || 'true').toLowerCase() === 'true';
+const smtpUser = cleanEnvValue(process.env.SMTP_USER);
+const smtpPass = cleanEnvValue(process.env.SMTP_PASS);
+const smtpFrom = cleanEnvValue(process.env.SMTP_FROM) || `Tawano <${smtpUser || ''}>`;
+const notifyEmail = cleanEnvValue(process.env.CONTACT_RECEIVER) || smtpUser;
 const allowedOrigin = process.env.ALLOWED_ORIGIN || '*';
 
 // Retell AI config

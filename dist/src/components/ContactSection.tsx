@@ -142,14 +142,14 @@ export const ContactSection = () => {
               <h3 className="text-xl font-bold mb-6">Direkter Kontakt</h3>
               <div className="space-y-4">
                 <a
-                  href="mailto:tawanoai@gmail.com"
+                  href="mailto:info@tawano.de"
                   className="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors group"
-                  aria-label="E-Mail an tawanoai@gmail.com senden"
+                  aria-label="E-Mail an info@tawano.de senden"
                 >
                   <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                     <Mail className="w-5 h-5 text-primary" aria-hidden="true" />
                   </div>
-                  <span>tawanoai@gmail.com</span>
+                  <span>info@tawano.de</span>
                 </a>
                 <div className="flex items-center gap-4 text-muted-foreground">
                   <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center">
@@ -166,7 +166,7 @@ export const ContactSection = () => {
               <p className="text-sm text-foreground/85 leading-6 relative z-10">
                 Schreiben Sie uns kurz Ihr Ziel. Wir melden uns in der Regel innerhalb von 24 Stunden per E-Mail.
               </p>
-              <Button variant="hero" size="sm" className="mt-4 w-full glow-ring relative z-10" onClick={() => window.open("mailto:tawanoai@gmail.com", "_self")}>
+              <Button variant="hero" size="sm" className="mt-4 w-full glow-ring relative z-10" onClick={() => window.open("mailto:info@tawano.de", "_self")}>
                 Jetzt E-Mail senden
               </Button>
             </article>

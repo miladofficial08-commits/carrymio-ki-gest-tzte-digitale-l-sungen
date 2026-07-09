@@ -926,7 +926,7 @@ export const TawanoChatbot = () => {
         error instanceof Error ? error.message : "UNKNOWN_ERROR";
 
       let userError =
-        "Entschuldigung, es gab einen Fehler. Bitte versuchen Sie es erneut oder kontaktieren Sie uns unter tawanoai@gmail.com.";
+        "Entschuldigung, es gab einen Fehler. Bitte versuchen Sie es erneut oder kontaktieren Sie uns unter info@tawano.de.";
       if (
         message === "CHAT_ENDPOINT_NOT_FOUND" ||
         message === "CHAT_NETWORK_ERROR"
@@ -939,7 +939,7 @@ export const TawanoChatbot = () => {
           .toLowerCase();
         if (detail.includes("api key")) {
           userError =
-            "Es gibt ein technisches Problem. Bitte kontaktieren Sie uns unter tawanoai@gmail.com.";
+            "Es gibt ein technisches Problem. Bitte kontaktieren Sie uns unter info@tawano.de.";
         } else {
           userError = `Serverfehler — bitte versuchen Sie es erneut.`;
         }

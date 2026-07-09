@@ -224,7 +224,7 @@ td.phone{font-weight:700;color:#111827;font-size:14px}
   <!-- Settings -->
   <div class="settings-bar">
     <label for="server-url">Server-URL</label>
-    <input type="text" id="server-url" value="" placeholder="https://tawanoai.netlify.app oder http://localhost:4000">
+    <input type="text" id="server-url" value="" placeholder="https://tawano.de oder http://localhost:4000">
     <select id="refresh-interval">
       <option value="0">Kein Auto-Refresh</option>
       <option value="5000">Alle 5 Sek.</option>
@@ -371,7 +371,7 @@ let allCalls = [];
 let activeFilter = 'all';
 let expandedRow = null;
 let refreshTimer = null;
-const LIVE_SERVER_URL = 'https://tawanoai.netlify.app';
+const LIVE_SERVER_URL = 'https://tawano.de';
 
 function defaultServerUrl() {
   const host = location.hostname || '';

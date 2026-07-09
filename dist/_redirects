@@ -1,5 +1,8 @@
 /robots.txt /robots.txt 200
 /sitemap.xml /sitemap.xml 200
 /api/demo-booking /.netlify/functions/demo-booking 200!
+/api/call /.netlify/functions/call 200!
+/api/call/*/end /.netlify/functions/call 200!
+/api/analytics /.netlify/functions/analytics 200!
 /handwerker /handwerker.html 200
 /* /index.html 200

@@ -34,8 +34,8 @@ function cleanEnvValue(value) {
 
 function getMailConfig() {
   const smtpHost = cleanEnvValue(process.env.SMTP_HOST) || deriveSmtpHost(cleanEnvValue(process.env.IMAP_HOST));
-  const smtpUser = cleanEnvValue(process.env.SMTP_USER) || cleanEnvValue(process.env.IMAP_USER) || cleanEnvValue(process.env.GMAIL_SENDER_EMAIL);
-  const smtpPass = cleanEnvValue(process.env.SMTP_PASS) || cleanEnvValue(process.env.IMAP_PASS) || cleanEnvValue(process.env.GMAIL_SENDER_APP_PASSWORD);
+  const smtpUser = cleanEnvValue(process.env.SMTP_USER) || cleanEnvValue(process.env.IMAP_USER);
+  const smtpPass = cleanEnvValue(process.env.SMTP_PASS) || cleanEnvValue(process.env.IMAP_PASS);
   const smtpSecure = cleanEnvValue(process.env.SMTP_SECURE || 'false').toLowerCase() === 'true';
   const smtpPort = Number(cleanEnvValue(process.env.SMTP_PORT) || (smtpSecure ? 465 : 587));
   const smtpFrom = cleanEnvValue(process.env.SMTP_FROM) || cleanEnvValue(process.env.MAIL_FROM) || cleanEnvValue(process.env.EMAIL_FROM) || `Tawano <${smtpUser || ''}>`;
@@ -52,19 +52,6 @@ function getMailConfig() {
         secure: smtpSecure,
         requireTLS: cleanEnvValue(process.env.SMTP_REQUIRE_TLS || 'true').toLowerCase() === 'true',
         auth: { user: smtpUser, pass: smtpPass },
-      },
-    };
-  }
-
-  if (cleanEnvValue(process.env.GMAIL_SENDER_EMAIL) && cleanEnvValue(process.env.GMAIL_SENDER_APP_PASSWORD)) {
-    const gmailSender = cleanEnvValue(process.env.GMAIL_SENDER_EMAIL);
-    return {
-      ok: true,
-      from: `Tawano <${gmailSender}>`,
-      notifyEmail: notifyEmail || gmailSender,
-      transport: {
-        service: 'gmail',
-        auth: { user: gmailSender, pass: cleanEnvValue(process.env.GMAIL_SENDER_APP_PASSWORD) },
       },
     };
   }

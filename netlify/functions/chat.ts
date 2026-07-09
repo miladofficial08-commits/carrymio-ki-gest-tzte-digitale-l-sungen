@@ -58,7 +58,7 @@ function getDirectContactReply(userText: string): string | null {
     (q.includes("kontakt") && q.includes("adresse"));
 
   if (asksEmail) {
-    return "Unsere E-Mail-Adresse ist tawanoai@gmail.com.";
+    return "Unsere E-Mail-Adresse ist info@tawano.de.";
   }
 
   return null;
