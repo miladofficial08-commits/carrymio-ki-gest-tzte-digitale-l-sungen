@@ -30,6 +30,24 @@ status = 200
 force = true
 
 [[redirects]]
+from = "/api/call"
+to = "/.netlify/functions/call"
+status = 200
+force = true
+
+[[redirects]]
+from = "/api/call/*/end"
+to = "/.netlify/functions/call"
+status = 200
+force = true
+
+[[redirects]]
+from = "/api/analytics"
+to = "/.netlify/functions/analytics"
+status = 200
+force = true
+
+[[redirects]]
 from = "/handwerker"
 to = "/handwerker.html"
 status = 200
@@ -42,7 +60,7 @@ force = false
 
 [[redirects]]
 from = "/voice-agents/*"
-to = "/voice-agents/:splat"
+to = "/voice-agents/index.html"
 status = 200
 force = false
 
