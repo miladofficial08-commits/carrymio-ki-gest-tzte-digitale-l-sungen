@@ -191,9 +191,48 @@ const Datenschutz = () => {
               </p>
             </section>
 
-            {/* 8. Supabase */}
+            {/* 8. Live-Testanruf */}
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">8. Supabase</h2>
+              <h2 className="text-xl font-semibold text-foreground mb-3">
+                8. Live-Testanruf auf der Voice-Agent-Seite
+              </h2>
+              <p>
+                Auf unserer Voice-Agent-Seite können Sie einen Live-Testanruf unseres
+                KI-Telefonassistenten auslösen, indem Sie Ihre Telefonnummer eingeben. Mit Klick
+                auf den Button zum Testanruf bestätigen Sie, dass wir Sie unter der eingegebenen
+                Telefonnummer zum Zweck dieses Testanrufs kontaktieren dürfen.
+              </p>
+              <p className="mt-3">
+                Wir verarbeiten die eingegebene Telefonnummer ausschließlich, um den ausgehenden
+                Demo-Anruf aufzubauen, das Gespräch zu führen, das Demo-Erlebnis bereitzustellen,
+                Fehler zu analysieren und die Qualität der Funktion zu sichern. Wir verwenden die
+                Telefonnummer nicht für unerwünschte Werbeanrufe; eine weitere Kontaktaufnahme
+                erfolgt nur, soweit dies zur Bearbeitung Ihrer Anfrage erforderlich ist,
+                gesetzlich erlaubt ist oder Sie uns hierfür eine gesonderte Einwilligung erteilt
+                haben.
+              </p>
+              <p className="mt-3">
+                Im Rahmen des Anrufs können technische Verbindungsdaten, Audioinhalte,
+                automatisch erstellte Transkripte sowie Informationen verarbeitet werden, die Sie
+                dem KI-Assistenten während des Gesprächs mitteilen. Bitte übermitteln Sie im
+                Testanruf keine besonders sensiblen personenbezogenen Daten, insbesondere keine
+                Gesundheitsdaten, politischen Meinungen, religiösen Überzeugungen,
+                Gewerkschaftszugehörigkeit, genetischen oder biometrischen Daten sowie keine
+                Angaben zum Sexualleben oder zur sexuellen Orientierung.
+              </p>
+              <p className="mt-3">
+                Für den Anrufaufbau und die technische Verarbeitung setzen wir Telefonie-,
+                Sprachverarbeitungs-, Hosting- und KI-Dienstleister ein. Dabei kann es zu einer
+                Übermittlung personenbezogener Daten in Drittländer, insbesondere in die USA,
+                kommen. Soweit erforderlich, erfolgt dies auf Grundlage geeigneter Garantien,
+                insbesondere Standardvertragsklauseln, oder eines Angemessenheitsbeschlusses.
+                Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO sowie Art. 6 Abs. 1 lit. f DSGVO.
+              </p>
+            </section>
+
+            {/* 9. Supabase */}
+            <section>
+              <h2 className="text-xl font-semibold text-foreground mb-3">9. Supabase</h2>
               <p>
                 Wir nutzen Supabase für datenbankbezogene Funktionen und zur technischen
                 Speicherung bestimmter anfrage- oder chatbezogener Daten. Dabei können
@@ -207,9 +246,9 @@ const Datenschutz = () => {
               </p>
             </section>
 
-            {/* 9. Server-Logfiles */}
+            {/* 10. Server-Logfiles */}
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">9. Server-Logfiles</h2>
+              <h2 className="text-xl font-semibold text-foreground mb-3">10. Server-Logfiles</h2>
               <p>
                 Beim Aufruf unserer Website werden automatisch technische Informationen erfasst,
                 die Ihr Browser bzw. Ihr Endgerät übermittelt. Dazu können insbesondere gehören:
@@ -230,10 +269,10 @@ const Datenschutz = () => {
               <p className="mt-3">Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO.</p>
             </section>
 
-            {/* 10. Cookies */}
+            {/* 11. Cookies */}
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">
-                10. Cookies und ähnliche Technologien
+                11. Cookies und ähnliche Technologien
               </h2>
               <p>
                 Auf unserer Website können technisch notwendige Cookies oder vergleichbare
@@ -253,10 +292,10 @@ const Datenschutz = () => {
               </p>
             </section>
 
-            {/* 11. Leadfeeder */}
+            {/* 12. Leadfeeder */}
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">
-                11. Leadfeeder
+                12. Leadfeeder
               </h2>
               <p>
                 Unsere Website nutzt Technologien von Leadfeeder (Leadfeeder Finland Oy als Teil
@@ -284,10 +323,10 @@ const Datenschutz = () => {
               </p>
             </section>
 
-            {/* 12. Keine Login-/Upload-Funktionen */}
+            {/* 13. Keine Login-/Upload-Funktionen */}
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">
-                12. Keine Login- oder Upload-Funktionen
+                13. Keine Login- oder Upload-Funktionen
               </h2>
               <p>
                 Derzeit bieten wir auf dieser Website keine Registrierung, kein Benutzerkonto und
@@ -295,10 +334,10 @@ const Datenschutz = () => {
               </p>
             </section>
 
-            {/* 13. Empfänger */}
+            {/* 14. Empfänger */}
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">
-                13. Empfänger von Daten
+                14. Empfänger von Daten
               </h2>
               <p>
                 Personenbezogene Daten können an technische Dienstleister und Systeme weitergegeben
@@ -311,6 +350,7 @@ const Datenschutz = () => {
                 <li>Datenbank- und Backend-Dienstleister</li>
                 <li>interne Automatisierungs- und Workflow-Systeme</li>
                 <li>E-Mail-Dienstleister</li>
+                <li>Telefonie-, Sprachverarbeitungs- und KI-Dienstleister</li>
               </ul>
               <p className="mt-3">
                 Eine darüber hinausgehende Weitergabe erfolgt nur, wenn dies gesetzlich erlaubt
@@ -318,10 +358,10 @@ const Datenschutz = () => {
               </p>
             </section>
 
-            {/* 14. Drittlandübermittlung */}
+            {/* 15. Drittlandübermittlung */}
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">
-                14. Drittlandübermittlung
+                15. Drittlandübermittlung
               </h2>
               <p>
                 Im Rahmen der Nutzung einzelner technischer Dienstleister kann eine Verarbeitung
@@ -335,9 +375,9 @@ const Datenschutz = () => {
               </p>
             </section>
 
-            {/* 15. Speicherdauer */}
+            {/* 16. Speicherdauer */}
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">15. Speicherdauer</h2>
+              <h2 className="text-xl font-semibold text-foreground mb-3">16. Speicherdauer</h2>
               <p>
                 Wir speichern personenbezogene Daten nur so lange, wie dies für die jeweiligen
                 Zwecke erforderlich ist.
@@ -361,9 +401,9 @@ const Datenschutz = () => {
               </ul>
             </section>
 
-            {/* 16. Ihre Rechte */}
+            {/* 17. Ihre Rechte */}
             <section>
-              <h2 className="text-xl font-semibold text-foreground mb-3">16. Ihre Rechte</h2>
+              <h2 className="text-xl font-semibold text-foreground mb-3">17. Ihre Rechte</h2>
               <p>
                 Sie haben im Rahmen der gesetzlichen Voraussetzungen insbesondere folgende Rechte:
               </p>
@@ -387,10 +427,10 @@ const Datenschutz = () => {
               </p>
             </section>
 
-            {/* 17. Beschwerderecht */}
+            {/* 18. Beschwerderecht */}
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">
-                17. Beschwerderecht bei einer Aufsichtsbehörde
+                18. Beschwerderecht bei einer Aufsichtsbehörde
               </h2>
               <p>
                 Sie haben das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren,
@@ -412,10 +452,10 @@ const Datenschutz = () => {
               </div>
             </section>
 
-            {/* 18. Aktualität */}
+            {/* 19. Aktualität */}
             <section>
               <h2 className="text-xl font-semibold text-foreground mb-3">
-                18. Aktualität dieser Datenschutzerklärung
+                19. Aktualität dieser Datenschutzerklärung
               </h2>
               <p>
                 Wir behalten uns vor, diese Datenschutzerklärung anzupassen, wenn sich unsere

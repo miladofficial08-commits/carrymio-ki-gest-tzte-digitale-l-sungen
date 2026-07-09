@@ -38,7 +38,7 @@ exports.handler = async (event) => {
   let body;
   try { body = JSON.parse(event.body || '{}'); } catch(e) { body = {}; }
 
-  const { agentId, phoneNumber } = body;
+  const { agentId, phoneNumber, privacyNoticeAccepted, privacyNoticeVersion, privacyNoticeAcceptedAt } = body;
   const debugId = typeof crypto.randomUUID === 'function'
     ? crypto.randomUUID()
     : crypto.randomBytes(12).toString('hex');
@@ -76,6 +76,9 @@ exports.handler = async (event) => {
         metadata: {
           debug_id: debugId,
           website_agent_id: agentId || 'unknown',
+          privacy_notice_accepted: privacyNoticeAccepted === true ? 'true' : 'false',
+          privacy_notice_version: typeof privacyNoticeVersion === 'string' ? privacyNoticeVersion : '',
+          privacy_notice_accepted_at: typeof privacyNoticeAcceptedAt === 'string' ? privacyNoticeAcceptedAt : '',
         },
       }),
     });
@@ -97,6 +100,9 @@ exports.handler = async (event) => {
           requestedAgentId: agentId || 'tawano-general',
           resolvedAgentId,
           phoneNumber,
+          privacyNoticeAccepted: privacyNoticeAccepted === true,
+          privacyNoticeVersion: typeof privacyNoticeVersion === 'string' ? privacyNoticeVersion : null,
+          privacyNoticeAcceptedAt: typeof privacyNoticeAcceptedAt === 'string' ? privacyNoticeAcceptedAt : null,
           status: data.call_status || 'registered',
           retellStatus: data.call_status || null,
           telephonyIdentifier: data.telephony_identifier || null,
