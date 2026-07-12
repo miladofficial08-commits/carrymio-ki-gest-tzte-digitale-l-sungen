@@ -340,7 +340,7 @@ app.get('/api/call/:callId/status', async (req, res) => {
 });
 
 app.post('/api/demo-booking', async (req, res) => {
-  const { name, company, email, message, sourcePage } = req.body || {};
+  const { name, company, email, message, sourcePage, bookingDate, bookingTime } = req.body || {};
 
   if (!name || !company || !email) {
     return res.status(400).json({ ok: false, message: 'name, company and email are required' });
@@ -350,54 +350,97 @@ app.post('/api/demo-booking', async (req, res) => {
   const now = new Date().toLocaleString('de-DE', { timeZone: 'Europe/Berlin' });
   const cleanSource = typeof sourcePage === 'string' && sourcePage.trim() ? sourcePage.trim() : 'unbekannt';
 
-  const internalSubject = `Neue Buchung/Nachricht: ${name} (${company})`;
+  // Wenn ein konkreter Termin (Datum + Uhrzeit) übergeben wurde, handelt es sich
+  // um eine Kalender-Buchung → Bestätigungs-Mail mit Buchungsdetails.
+  const bookingLabel = buildBookingLabel(bookingDate, bookingTime);
+  const isBooking = Boolean(bookingLabel);
+
+  const internalSubject = isBooking
+    ? `Neue Terminbuchung: ${name} (${company}) — ${bookingLabel}`
+    : `Neue Buchung/Nachricht: ${name} (${company})`;
   const internalTextBody = [
-    'Neue Buchung/Nachricht eingegangen',
+    isBooking ? 'Neue Terminbuchung eingegangen' : 'Neue Buchung/Nachricht eingegangen',
     '----------------------------------',
     `Name: ${name}`,
     `Firma: ${company}`,
     `E-Mail: ${email}`,
+    ...(isBooking ? [`Wunschtermin: ${bookingLabel}`] : []),
     `Nachricht: ${cleanMessage || '-'}`,
     `Seite: ${cleanSource}`,
     `Zeitpunkt: ${now}`,
   ].join('\n');
 
   const internalHtmlBody = `
-    <h2>Neue Buchung/Nachricht</h2>
+    <h2>${isBooking ? 'Neue Terminbuchung' : 'Neue Buchung/Nachricht'}</h2>
     <p><strong>Name:</strong> ${escapeHtml(name)}</p>
     <p><strong>Firma:</strong> ${escapeHtml(company)}</p>
     <p><strong>E-Mail:</strong> ${escapeHtml(email)}</p>
+    ${isBooking ? `<p><strong>Wunschtermin:</strong> ${escapeHtml(bookingLabel)}</p>` : ''}
     <p><strong>Nachricht:</strong> ${escapeHtml(cleanMessage || '-')}</p>
     <p><strong>Seite:</strong> ${escapeHtml(cleanSource)}</p>
     <p><strong>Zeitpunkt:</strong> ${escapeHtml(now)}</p>
   `;
 
   const firstName = name.split(' ')[0];
-  const customerSubject = 'Ihre Anfrage bei Tawano';
-  const customerTextBody = [
-    `Guten Tag ${firstName},`,
-    '',
-    'vielen Dank fuer Ihre Anfrage und Ihr Interesse an Tawano.',
-    '',
-    'Wir haben Ihre Anfrage erhalten und pruefen diese aktuell.',
-    'Unser Team meldet sich in der Regel innerhalb von 24 Stunden persoenlich bei Ihnen.',
-    '',
-    'Falls Sie weitere Informationen ergaenzen moechten, koennen Sie einfach auf diese E-Mail antworten.',
-    '',
-    'Freundliche Gruesse',
-    'Ihr Tawano-Team',
-  ].join('\n');
 
-  const customerHtmlBody = `
-    <p>Guten Tag ${escapeHtml(firstName)},</p>
-    <p>vielen Dank f&uuml;r Ihre Anfrage und Ihr Interesse an Tawano.</p>
-    <p>
-      Wir haben Ihre Anfrage erhalten und pr&uuml;fen diese aktuell.<br>
-      Unser Team meldet sich in der Regel innerhalb von <strong>24 Stunden</strong> pers&ouml;nlich bei Ihnen.
-    </p>
-    <p>Falls Sie weitere Informationen erg&auml;nzen m&ouml;chten, k&ouml;nnen Sie einfach auf diese E-Mail antworten.</p>
-    <p>Freundliche Gr&uuml;&szlig;e<br>Ihr Tawano-Team</p>
-  `;
+  let customerSubject, customerTextBody, customerHtmlBody;
+  if (isBooking) {
+    customerSubject = `Terminbestaetigung: Ihre Tawano-Demo am ${bookingLabel}`;
+    customerTextBody = [
+      `Guten Tag ${firstName},`,
+      '',
+      'vielen Dank fuer Ihre Buchung. Ihr Demo-Termin ist bestaetigt:',
+      '',
+      `  Termin: ${bookingLabel}`,
+      '  Dauer: ca. 15 Minuten',
+      '  Format: Telefonisch / online — die Zugangsdaten erhalten Sie vor dem Termin.',
+      '',
+      'Sie muessen nichts vorbereiten. Sollten Sie den Termin verschieben oder absagen',
+      'wollen, antworten Sie einfach auf diese E-Mail.',
+      '',
+      'Wir freuen uns auf das Gespraech!',
+      '',
+      'Freundliche Gruesse',
+      'Ihr Tawano-Team',
+    ].join('\n');
+    customerHtmlBody = `
+      <p>Guten Tag ${escapeHtml(firstName)},</p>
+      <p>vielen Dank f&uuml;r Ihre Buchung. Ihr Demo-Termin ist <strong>best&auml;tigt</strong>:</p>
+      <table style="border-collapse:collapse;margin:12px 0">
+        <tr><td style="padding:4px 12px 4px 0"><strong>Termin</strong></td><td style="padding:4px 0">${escapeHtml(bookingLabel)}</td></tr>
+        <tr><td style="padding:4px 12px 4px 0"><strong>Dauer</strong></td><td style="padding:4px 0">ca. 15 Minuten</td></tr>
+        <tr><td style="padding:4px 12px 4px 0"><strong>Format</strong></td><td style="padding:4px 0">Telefonisch / online &ndash; Zugangsdaten folgen vor dem Termin</td></tr>
+      </table>
+      <p>Sie m&uuml;ssen nichts vorbereiten. Zum Verschieben oder Absagen antworten Sie einfach auf diese E-Mail.</p>
+      <p>Wir freuen uns auf das Gespr&auml;ch!</p>
+      <p>Freundliche Gr&uuml;&szlig;e<br>Ihr Tawano-Team</p>
+    `;
+  } else {
+    customerSubject = 'Ihre Anfrage bei Tawano';
+    customerTextBody = [
+      `Guten Tag ${firstName},`,
+      '',
+      'vielen Dank fuer Ihre Anfrage und Ihr Interesse an Tawano.',
+      '',
+      'Wir haben Ihre Anfrage erhalten und pruefen diese aktuell.',
+      'Unser Team meldet sich in der Regel innerhalb von 24 Stunden persoenlich bei Ihnen.',
+      '',
+      'Falls Sie weitere Informationen ergaenzen moechten, koennen Sie einfach auf diese E-Mail antworten.',
+      '',
+      'Freundliche Gruesse',
+      'Ihr Tawano-Team',
+    ].join('\n');
+    customerHtmlBody = `
+      <p>Guten Tag ${escapeHtml(firstName)},</p>
+      <p>vielen Dank f&uuml;r Ihre Anfrage und Ihr Interesse an Tawano.</p>
+      <p>
+        Wir haben Ihre Anfrage erhalten und pr&uuml;fen diese aktuell.<br>
+        Unser Team meldet sich in der Regel innerhalb von <strong>24 Stunden</strong> pers&ouml;nlich bei Ihnen.
+      </p>
+      <p>Falls Sie weitere Informationen erg&auml;nzen m&ouml;chten, k&ouml;nnen Sie einfach auf diese E-Mail antworten.</p>
+      <p>Freundliche Gr&uuml;&szlig;e<br>Ihr Tawano-Team</p>
+    `;
+  }
 
   try {
     await transporter.sendMail({
@@ -446,6 +489,19 @@ app.get('/api/analytics', (req, res) => {
 app.listen(port, () => {
   console.log(`Booking mailer running on http://localhost:${port}`);
 });
+
+function buildBookingLabel(bookingDate, bookingTime) {
+  const date = typeof bookingDate === 'string' ? bookingDate.trim() : '';
+  const time = typeof bookingTime === 'string' ? bookingTime.trim() : '';
+  const dateMatch = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(date);
+  const timeMatch = /^(\d{2}):(\d{2})$/.exec(time);
+  if (!dateMatch || !timeMatch) return '';
+  const [, dd, mm, yyyy] = dateMatch;
+  const weekdays = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+  const parsed = new Date(Number(yyyy), Number(mm) - 1, Number(dd));
+  const weekday = Number.isNaN(parsed.getTime()) ? '' : weekdays[parsed.getDay()] + ', ';
+  return `${weekday}${dd}.${mm}.${yyyy} um ${time} Uhr`;
+}
 
 function escapeHtml(value) {
   return String(value)
