@@ -14,12 +14,12 @@ body{font-family:'Inter',sans-serif;background:#FAFAF9;color:#1A1A1A;line-height
 nav{background:#fff;border-bottom:1px solid #E5E5E3;padding:16px 0;position:sticky;top:0;z-index:100}
 .nav-wrap{max-width:1180px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center}
 .logo{font-size:20px;font-weight:700;color:#1A1A1A;text-decoration:none;justify-self:start}
-.logo span{color:#2563EB}
+.logo span{color:#171717}
 .nav-links{display:flex;gap:24px;align-items:center;justify-content:center;grid-column:2}
 .nav-links a{font-size:14px;color:#525252;text-decoration:none;font-weight:500;transition:color .2s}
 .nav-links a:hover{color:#1A1A1A}
-.nav-btn{padding:10px 22px;background:#2563EB;color:#fff!important;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;transition:background .2s}
-.nav-btn:hover{background:#1D4ED8}
+.nav-btn{padding:10px 22px;background:#171717;color:#fff!important;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;transition:background .2s}
+.nav-btn:hover{background:#262626}
 .hero{max-width:780px;margin:0 auto;padding:64px 24px 56px;text-align:center}
 .hero-tag{display:inline-block;background:#EFF6FF;border:1px solid #DBEAFE;color:#2563EB;font-size:13px;font-weight:700;padding:6px 14px;border-radius:999px;margin-bottom:24px}
 .hero h1{font-size:clamp(36px,5.5vw,56px);font-weight:800;line-height:1.1;letter-spacing:-1.5px;color:#0A0A0A;margin-bottom:18px}
@@ -82,21 +82,22 @@ section{padding:72px 24px}
 .step-num{width:48px;height:48px;background:#EFF6FF;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#2563EB;margin:0 auto 16px}
 .step-box h3{font-size:16px;font-weight:700;margin-bottom:8px;color:#1A1A1A}
 .step-box p{font-size:14px;color:#737373;line-height:1.6}
-.live-sec{background:#1A1A1A;border-radius:16px;margin:0 24px;overflow:hidden}
+.live-sec{background:#171717;border:1px solid rgba(255,255,255,.14);box-shadow:0 22px 60px rgba(0,0,0,.22);border-radius:16px;margin:0 24px;overflow:hidden}
 .live-inner{max-width:1100px;margin:0 auto;padding:64px 48px;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
 .live-left h2{font-size:clamp(26px,3.5vw,38px);font-weight:800;letter-spacing:-1px;color:#fff;margin-bottom:16px;line-height:1.15}
+.booking-headline-accent{color:#fff}
 .live-left p{font-size:16px;color:#D4D4D4;line-height:1.65;margin-bottom:28px}
 .check-item{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#F5F5F4;margin-bottom:10px}
-.check-item::before{content:'\2713';color:#3B82F6;font-weight:700;font-size:15px;flex-shrink:0}
+.check-item::before{content:'\2713';color:#fff;font-weight:700;font-size:15px;flex-shrink:0}
 .booking-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 20px}
-.booking-step{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);border-radius:10px;padding:10px 10px 9px}
-.booking-step-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:999px;background:rgba(59,130,246,.18);color:#93C5FD;font-size:11px;font-weight:800;margin-bottom:6px}
+.booking-step{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);border-radius:10px;padding:10px 10px 9px}
+.booking-step-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:999px;background:#F5F5F4;color:#171717;font-size:11px;font-weight:800;margin-bottom:6px}
 .booking-step p{font-size:12px;color:#D4D4D4;line-height:1.45;margin:0}
-.booking-help{margin-top:22px;padding:20px 22px;background:rgba(255,255,255,.06);border-radius:12px;border:1px solid rgba(255,255,255,.1)}
+.booking-help{margin-top:22px;padding:20px 22px;background:rgba(255,255,255,.06);border-radius:12px;border:1px solid rgba(255,255,255,.14)}
 .booking-help-title{font-size:14px;font-weight:700;color:#fff;margin:0 0 6px}
 .booking-help-sub{font-size:13px;color:#A3A3A3;margin:0 0 12px;line-height:1.6}
-.booking-help-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#3B82F6;font-weight:700;cursor:pointer;text-decoration:none;border:1px solid rgba(59,130,246,.35);padding:8px 14px;border-radius:8px;transition:background .2s}
-.booking-help-link:hover{background:rgba(59,130,246,.10)}
+.booking-help-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#F5F5F4;font-weight:700;cursor:pointer;text-decoration:none;border:1px solid rgba(255,255,255,.22);padding:8px 14px;border-radius:8px;transition:background .2s}
+.booking-help-link:hover{background:rgba(255,255,255,.08)}
 .form-container{background:#262626;border-radius:12px;padding:28px;border:1px solid #404040}
 .form-group{margin-bottom:14px}
 .form-label{display:block;font-size:12px;font-weight:700;color:#D4D4D4;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
@@ -238,12 +239,12 @@ footer p{font-size:13px;color:#A3A3A3}
 .trust-card p{font-size:13.5px;color:#1A1A1A;font-weight:600;line-height:1.5;margin:0}
 .about-cta{display:inline-block;padding:14px 32px;background:#2563EB;color:#fff;border-radius:8px;font-size:15px;font-weight:700;text-decoration:none;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:background .2s}
 .about-cta:hover{background:#1D4ED8}
-.cal-embed-shell{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 18px 44px rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.08);max-height:calc(100vh - 80px);display:flex;flex-direction:column;overscroll-behavior:contain}
-.cal-embed-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid #E7E5E4;background:#FAFAF9}
-.cal-embed-title{font-size:14px;font-weight:700;color:#1A1A1A;letter-spacing:-.2px}
-.cal-embed-badge{display:inline-flex;align-items:center;padding:5px 10px;border-radius:999px;background:#EFF6FF;color:#2563EB;font-size:11px;font-weight:700}
-.cal-embed-sub{padding:10px 16px;border-bottom:1px solid #F3F4F6;font-size:12px;color:#737373;background:#fff;flex-shrink:0}
-.cal-embed-frame{width:100%;height:760px;max-height:calc(100vh - 176px);overflow-y:auto;overflow-x:hidden;flex:1;padding:14px 14px 16px;background:#fff}
+.cal-embed-shell{background:#171717;border-radius:14px;overflow:hidden;box-shadow:0 24px 54px rgba(0,0,0,.38);border:1px solid rgba(255,255,255,.14);max-height:calc(100vh - 80px);display:flex;flex-direction:column;overscroll-behavior:contain}
+.cal-embed-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.10);background:#171717}
+.cal-embed-title{font-size:14px;font-weight:700;color:#fff;letter-spacing:-.2px}
+.cal-embed-badge{display:inline-flex;align-items:center;padding:5px 10px;border-radius:999px;background:#262626;color:#F5F5F4;font-size:11px;font-weight:700}
+.cal-embed-sub{padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.10);font-size:12px;color:#D4D4D4;background:#171717;flex-shrink:0}
+.cal-embed-frame{width:100%;height:760px;max-height:calc(100vh - 176px);overflow-y:auto;overflow-x:hidden;flex:1;padding:14px 14px 16px;background:#171717}
 .booking-widget{display:flex;flex-direction:column;gap:12px;min-height:100%;max-height:100%}
 .booking-month{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 2px}
 .booking-month-label{font-size:15px;font-weight:700;color:#111827;letter-spacing:-.2px}
@@ -448,7 +449,7 @@ footer p{font-size:13px;color:#A3A3A3}
     <div class="live-sec">
       <div class="live-inner">
         <div class="live-left">
-          <h2>Erstgespräch buchen — wählen Sie direkt einen Termin.</h2>
+          <h2>Erstgespräch buchen — wählen Sie <span class="booking-headline-accent">direkt einen Termin.</span></h2>
           <p>15 Minuten reichen, um den kompletten Ablauf live zu sehen. Wählen Sie nur Termin und Uhrzeit, den Rest besprechen wir im Call.</p>
           <div class="booking-steps">
             <div class="booking-step">
@@ -919,7 +920,7 @@ if(typeof ns==='string'){cal.ns[ns]=cal.ns[ns]||api;p(cal.ns[ns],ar);p(cal,[L,ns
 p(cal,ar);};})(window,'https://app.cal.com/embed/embed.js','init');
 Cal('init',{origin:'https://cal.com'});
 Cal('inline',{elementOrSelector:'#cal-booking-inline',calLink:'milad-rezaee-yvotro/30min',layout:'month_view'});
-Cal('ui',{theme:'light',hideEventTypeDetails:false,layout:'month_view'});
+Cal('ui',{theme:'dark',styles:{branding:{brandColor:'#FFFFFF'}},hideEventTypeDetails:false,layout:'month_view'});
 
 function openModal(id){
   document.getElementById('modal-content').innerHTML=document.getElementById(id+'-data').innerHTML;
