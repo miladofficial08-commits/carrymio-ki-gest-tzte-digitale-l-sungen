@@ -4,6 +4,7 @@ const path = require('path');
 const projectRoot = path.resolve(__dirname, '..');
 const src = path.join(projectRoot, 'tawano-voiceagents-main', 'tawano-voiceagents-main');
 const dest = path.join(projectRoot, 'dist', 'voice-agents');
+const staleRootConfig = path.join(projectRoot, 'dist', 'netlify.toml');
 
 async function copyDir(srcDir, destDir) {
   await fs.promises.mkdir(destDir, { recursive: true });
@@ -24,6 +25,11 @@ async function copyDir(srcDir, destDir) {
 
 (async () => {
   try {
+    if (fs.existsSync(staleRootConfig)) {
+      await fs.promises.rm(staleRootConfig, { force: true });
+      console.log('removed stale publish config', staleRootConfig);
+    }
+
     if (!fs.existsSync(src)) {
       console.log('Source not found, skipping voice-agents copy:', src);
       process.exit(0);
