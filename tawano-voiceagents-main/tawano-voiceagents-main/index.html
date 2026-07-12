@@ -238,12 +238,12 @@ footer p{font-size:13px;color:#A3A3A3}
 .trust-card p{font-size:13.5px;color:#1A1A1A;font-weight:600;line-height:1.5;margin:0}
 .about-cta{display:inline-block;padding:14px 32px;background:#2563EB;color:#fff;border-radius:8px;font-size:15px;font-weight:700;text-decoration:none;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:background .2s}
 .about-cta:hover{background:#1D4ED8}
-.cal-embed-shell{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 18px 44px rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.08);max-height:calc(100vh - 80px);display:flex;flex-direction:column;overscroll-behavior:contain}
+.cal-embed-shell{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 18px 44px rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;overscroll-behavior:contain}
 .cal-embed-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid #E7E5E4;background:#FAFAF9}
 .cal-embed-title{font-size:14px;font-weight:700;color:#1A1A1A;letter-spacing:-.2px}
 .cal-embed-badge{display:inline-flex;align-items:center;padding:5px 10px;border-radius:999px;background:#EFF6FF;color:#2563EB;font-size:11px;font-weight:700}
 .cal-embed-sub{padding:10px 16px;border-bottom:1px solid #F3F4F6;font-size:12px;color:#737373;background:#fff;flex-shrink:0}
-.cal-embed-frame{width:100%;height:760px;max-height:calc(100vh - 176px);overflow-y:auto;overflow-x:hidden;flex:1;padding:14px 14px 16px;background:#fff}
+.cal-embed-frame{width:100%;min-height:620px;overflow:hidden;background:#fff}
 .booking-widget{display:flex;flex-direction:column;gap:12px;min-height:100%;max-height:100%}
 .booking-month{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 2px}
 .booking-month-label{font-size:15px;font-weight:700;color:#111827;letter-spacing:-.2px}
@@ -254,10 +254,7 @@ footer p{font-size:13px;color:#A3A3A3}
 .booking-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
 .booking-day{height:36px;border:1px solid #E5E7EB;background:#fff;border-radius:8px;font-size:13px;font-weight:600;color:#374151;cursor:pointer}
 .booking-day:hover{border-color:#2563EB}
-.booking-day.muted{color:#9CA3AF;background:#FAFAF9;cursor:not-allowed}
-.booking-day:disabled{cursor:not-allowed}
-.booking-month-btn.muted,.booking-month-btn:disabled{opacity:.4;cursor:not-allowed}
-.booking-slots-empty{grid-column:1/-1;font-size:13px;color:#6B7280;padding:12px 4px;line-height:1.4}
+.booking-day.muted{color:#9CA3AF;background:#FAFAF9}
 .booking-day.active{border-color:#2563EB;background:#EFF6FF;color:#1E40AF}
 .booking-selected{font-size:13px;color:#374151;padding:8px 10px;border:1px solid #E5E7EB;border-radius:10px;background:#FAFAF9}
 .booking-slots-wrap{border:1px solid #E5E7EB;border-radius:10px;padding:10px;background:#fff}
@@ -287,8 +284,7 @@ footer p{font-size:13px;color:#A3A3A3}
   .how-grid{grid-template-columns:1fr}
   .price-grid{grid-template-columns:1fr;gap:32px}
   .trust-grid{grid-template-columns:1fr}
-  .cal-embed-shell{max-height:calc(100vh - 64px)}
-  .cal-embed-frame{height:860px;max-height:calc(100vh - 170px)}
+  .cal-embed-frame{min-height:700px}
   .booking-slots{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:680px){
@@ -301,8 +297,7 @@ footer p{font-size:13px;color:#A3A3A3}
   .modal-box{padding:32px 24px 28px}
   .nav-links{display:none}
   .booking-steps{grid-template-columns:1fr}
-  .cal-embed-shell{max-height:calc(100vh - 24px)}
-  .cal-embed-frame{height:780px;max-height:calc(100vh - 160px)}
+  .cal-embed-frame{min-height:720px}
   .booking-slots{grid-template-columns:repeat(2,minmax(0,1fr));max-height:240px}
 }
 </style>
@@ -481,51 +476,8 @@ footer p{font-size:13px;color:#A3A3A3}
             <span class="cal-embed-title">Demo-Termin buchen</span>
             <span class="cal-embed-badge">15 Minuten</span>
           </div>
-          <div class="cal-embed-sub">Bitte zuerst ein Datum auswählen und danach die passende Uhrzeit wählen. Alle Zeiten werden im 24-Stunden-Format angezeigt.</div>
-          <div id="cal-booking-inline" class="cal-embed-frame">
-            <div class="booking-widget" id="booking-widget">
-              <div class="booking-step-panel active" id="booking-step-select">
-                <div class="booking-month">
-                  <button type="button" class="booking-month-btn" id="booking-prev" aria-label="Vorheriger Monat">‹</button>
-                  <span class="booking-month-label" id="booking-month-label">Mai 2026</span>
-                  <button type="button" class="booking-month-btn" id="booking-next" aria-label="Nächster Monat">›</button>
-                </div>
-                <div class="booking-weekdays" id="booking-weekdays"></div>
-                <div class="booking-days" id="booking-days"></div>
-                <div class="booking-selected" id="booking-selected">Ausgewählter Tag: –</div>
-                <div class="booking-slots-wrap">
-                  <div class="booking-slots-title">Verfügbare Uhrzeiten</div>
-                  <div class="booking-slots" id="booking-slots"></div>
-                </div>
-                <button type="button" id="booking-action" class="booking-action" disabled>Termin anfragen</button>
-              </div>
-              <div class="booking-step-panel" id="booking-step-details">
-                <div class="booking-term-note" id="booking-term-note">Ausgewählter Termin: –</div>
-                <div class="booking-form">
-                  <div class="booking-field">
-                    <label for="booking-name">Ihr Name</label>
-                    <input id="booking-name" type="text" placeholder="Max Mustermann">
-                  </div>
-                  <div class="booking-field">
-                    <label for="booking-company">Firma</label>
-                    <input id="booking-company" type="text" placeholder="Muster GmbH">
-                  </div>
-                  <div class="booking-field">
-                    <label for="booking-email">E-Mail-Adresse</label>
-                    <input id="booking-email" type="email" placeholder="name@firma.de">
-                  </div>
-                  <div class="booking-error" id="booking-error"></div>
-                  <button type="button" id="booking-submit" class="booking-action">Termin anfragen</button>
-                </div>
-              </div>
-              <div class="booking-step-panel" id="booking-step-success">
-                <div class="booking-success">
-                  <h4>Danke — Ihre Terminanfrage wurde übermittelt.</h4>
-                  <p>Wir melden uns persönlich zur Bestätigung.</p>
-                </div>
-              </div>
-            </div>
-          </div>
+          <div class="cal-embed-sub">Wählen Sie Datum und Uhrzeit — Ihr Termin wird sofort verbindlich gebucht und Sie erhalten umgehend eine Bestätigung per E-Mail.</div>
+          <div id="cal-booking-inline" class="cal-embed-frame"></div>
         </div>
       </div>
     </div>
@@ -956,258 +908,16 @@ async function bookDemo(){
   }
 }
 
-// In-page booking UI with German locale and fixed time format
-(function(){
-  var weekdays=['Mo','Di','Mi','Do','Fr','Sa','So'];
-  // Verfügbarkeit an Cal.com angelehnt: 07:00–20:00 Uhr, 30-Minuten-Raster,
-  // 15 Minuten Mindest-Vorlauf. Vergangene Zeiten werden für heute ausgeblendet.
-  var SLOT_START_MIN=7*60;     // 07:00 Uhr
-  var SLOT_END_MIN=20*60;      // 20:00 Uhr (letzter Start 19:30, endet 20:00)
-  var SLOT_STEP_MIN=30;
-  var SLOT_LEAD_MIN=15;
-  function buildSlots(){
-    var out=[];
-    for(var m=SLOT_START_MIN;m+SLOT_STEP_MIN<=SLOT_END_MIN;m+=SLOT_STEP_MIN){
-      out.push(String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'));
-    }
-    return out;
-  }
-  var monthNames=['Januar','Februar','Maerz','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
-  var state={view:new Date(),selectedDate:null,selectedSlot:'',bookingStep:'select'};
-
-  var monthLabel=document.getElementById('booking-month-label');
-  var weekdaysEl=document.getElementById('booking-weekdays');
-  var daysEl=document.getElementById('booking-days');
-  var selectedEl=document.getElementById('booking-selected');
-  var slotsEl=document.getElementById('booking-slots');
-  var prevBtn=document.getElementById('booking-prev');
-  var nextBtn=document.getElementById('booking-next');
-  var actionBtn=document.getElementById('booking-action');
-  var stepSelect=document.getElementById('booking-step-select');
-  var stepDetails=document.getElementById('booking-step-details');
-  var stepSuccess=document.getElementById('booking-step-success');
-  var termNote=document.getElementById('booking-term-note');
-  var submitBtn=document.getElementById('booking-submit');
-  var errorEl=document.getElementById('booking-error');
-  var nameInput=document.getElementById('booking-name');
-  var companyInput=document.getElementById('booking-company');
-  var emailInput=document.getElementById('booking-email');
-  if(!monthLabel||!weekdaysEl||!daysEl||!selectedEl||!slotsEl||!prevBtn||!nextBtn||!actionBtn||!stepSelect||!stepDetails||!stepSuccess||!termNote||!submitBtn||!errorEl||!nameInput||!companyInput||!emailInput) return;
-
-  function formatSlot(slot){
-    var parts=slot.split(':');
-    var d=new Date();
-    d.setHours(Number(parts[0]),Number(parts[1]),0,0);
-    return new Intl.DateTimeFormat('de-DE',{hour:'2-digit',minute:'2-digit',hour12:false}).format(d);
-  }
-
-  function dayLabel(dateObj){
-    var jsDay=dateObj.getDay();
-    var dayIdx=(jsDay+6)%7;
-    var dd=String(dateObj.getDate()).padStart(2,'0');
-    return weekdays[dayIdx]+' '+dd;
-  }
-
-  function renderWeekdays(){
-    weekdaysEl.innerHTML='';
-    weekdays.forEach(function(w){
-      var el=document.createElement('div');
-      el.className='booking-weekday';
-      el.textContent=w;
-      weekdaysEl.appendChild(el);
-    });
-  }
-
-  function sameDay(a,b){
-    return a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();
-  }
-
-  function renderDays(){
-    var year=state.view.getFullYear();
-    var month=state.view.getMonth();
-    var first=new Date(year,month,1);
-    var firstDay=(first.getDay()+6)%7;
-    var daysInMonth=new Date(year,month+1,0).getDate();
-    monthLabel.textContent=monthNames[month]+' '+year;
-    daysEl.innerHTML='';
-
-    for(var i=0;i<firstDay;i++){
-      var empty=document.createElement('button');
-      empty.type='button';
-      empty.className='booking-day muted';
-      empty.textContent='';
-      empty.disabled=true;
-      daysEl.appendChild(empty);
-    }
-
-    var today=new Date();
-    var todayMidnight=new Date(today.getFullYear(),today.getMonth(),today.getDate());
-    for(var d=1;d<=daysInMonth;d++){
-      var dateObj=new Date(year,month,d);
-      var isPast=dateObj<todayMidnight;
-      var btn=document.createElement('button');
-      btn.type='button';
-      btn.className='booking-day'+(sameDay(state.selectedDate,dateObj)?' active':'')+(isPast?' muted':'');
-      btn.textContent=String(d).padStart(2,'0');
-      if(isPast){
-        btn.disabled=true;
-      }else{
-        btn.addEventListener('click',function(date){
-          return function(){
-            state.selectedDate=new Date(date.getFullYear(),date.getMonth(),date.getDate());
-            state.selectedSlot='';
-            renderDays();
-            renderSelection();
-            renderSlots();
-          };
-        }(dateObj));
-      }
-      daysEl.appendChild(btn);
-    }
-    // Navigation in vergangene Monate verhindern
-    var viewingCurrentMonth=(year===today.getFullYear()&&month===today.getMonth());
-    prevBtn.disabled=viewingCurrentMonth;
-    prevBtn.classList.toggle('muted',viewingCurrentMonth);
-  }
-
-  function availableSlots(){
-    var all=buildSlots();
-    if(!state.selectedDate) return all;
-    var now=new Date();
-    if(!sameDay(state.selectedDate,now)) return all;
-    var cutoff=now.getHours()*60+now.getMinutes()+SLOT_LEAD_MIN;
-    return all.filter(function(s){
-      var p=s.split(':');
-      return (Number(p[0])*60+Number(p[1]))>=cutoff;
-    });
-  }
-
-  function renderSlots(){
-    slotsEl.innerHTML='';
-    var list=availableSlots();
-    // Falls der zuvor gewählte Slot nicht mehr verfügbar ist, zurücksetzen
-    if(state.selectedSlot&&list.indexOf(state.selectedSlot)===-1){
-      state.selectedSlot='';
-    }
-    if(list.length===0){
-      var note=document.createElement('div');
-      note.className='booking-slots-empty';
-      note.textContent='Für diesen Tag sind keine Zeiten mehr frei — bitte einen anderen Tag wählen.';
-      slotsEl.appendChild(note);
-      return;
-    }
-    list.forEach(function(slot){
-      var text=formatSlot(slot);
-      var btn=document.createElement('button');
-      btn.type='button';
-      btn.className='booking-slot'+(state.selectedSlot===text?' active':'');
-      btn.textContent=text;
-      btn.addEventListener('click',function(){
-        state.selectedSlot=text;
-        renderSlots();
-        renderSelection();
-      });
-      slotsEl.appendChild(btn);
-    });
-  }
-
-  function renderSelection(){
-    var dateText=state.selectedDate?dayLabel(state.selectedDate):'–';
-    var slotText=state.selectedSlot?(' · '+state.selectedSlot):'';
-    selectedEl.textContent='Ausgewählter Tag: '+dateText+slotText;
-    actionBtn.disabled=!(state.selectedDate&&state.selectedSlot);
-  }
-
-  function setStep(step){
-    state.bookingStep=step;
-    stepSelect.classList.toggle('active',step==='select');
-    stepDetails.classList.toggle('active',step==='details');
-    stepSuccess.classList.toggle('active',step==='success');
-  }
-
-  function selectedTermText(){
-    if(!(state.selectedDate&&state.selectedSlot)) return 'Ausgewählter Termin: –';
-    var dd=String(state.selectedDate.getDate()).padStart(2,'0');
-    var mm=String(state.selectedDate.getMonth()+1).padStart(2,'0');
-    var jsDay=state.selectedDate.getDay();
-    var dayIdx=(jsDay+6)%7;
-    return 'Ausgewählter Termin: '+weekdays[dayIdx]+' '+dd+'.'+mm+'. um '+state.selectedSlot+' Uhr';
-  }
-
-  function showError(msg){
-    errorEl.textContent=msg||'';
-    errorEl.classList.toggle('show',!!msg);
-  }
-
-  prevBtn.addEventListener('click',function(){
-    state.view=new Date(state.view.getFullYear(),state.view.getMonth()-1,1);
-    renderDays();
-  });
-  nextBtn.addEventListener('click',function(){
-    state.view=new Date(state.view.getFullYear(),state.view.getMonth()+1,1);
-    renderDays();
-  });
-
-  actionBtn.addEventListener('click',function(){
-    if(!(state.selectedDate&&state.selectedSlot)) return;
-    termNote.textContent=selectedTermText();
-    showError('');
-    setStep('details');
-  });
-
-  submitBtn.addEventListener('click',async function(){
-    if(!(state.selectedDate&&state.selectedSlot)){
-      showError('Bitte zuerst Datum und Uhrzeit auswählen.');
-      setStep('select');
-      return;
-    }
-    var name=(nameInput.value||'').trim();
-    var company=(companyInput.value||'').trim();
-    var email=(emailInput.value||'').trim();
-    if(!name){showError('Bitte Ihren Namen eingeben.');return;}
-    if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showError('Bitte eine gültige E-Mail-Adresse eingeben.');return;}
-    showError('');
-
-    var dd=String(state.selectedDate.getDate()).padStart(2,'0');
-    var mm=String(state.selectedDate.getMonth()+1).padStart(2,'0');
-    var yyyy=state.selectedDate.getFullYear();
-    var bookingDate=dd+'.'+mm+'.'+yyyy;
-    var message='Terminanfrage (Demo): '+bookingDate+' um '+state.selectedSlot+' Uhr';
-
-    submitBtn.disabled=true;
-    submitBtn.textContent='Wird gesendet...';
-    try{
-      var res=await fetch(BOOKING_API_BASE+'/api/demo-booking',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({
-          name:name,
-          company:company||'–',
-          email:email,
-          message:message,
-          bookingDate:bookingDate,
-          bookingTime:state.selectedSlot,
-          sourcePage:'calendar-inline'
-        })
-      });
-      var data=await res.json().catch(function(){return {};});
-      if(!res.ok||!data.ok) throw new Error(data.message||'Senden fehlgeschlagen');
-      setStep('success');
-    }catch(err){
-      showError('Fehler beim Senden. Bitte erneut versuchen.');
-      submitBtn.disabled=false;
-      submitBtn.textContent='Termin anfragen';
-    }
-  });
-
-  state.view=new Date();
-  state.selectedDate=new Date();
-  setStep('select');
-  renderWeekdays();
-  renderDays();
-  renderSlots();
-  renderSelection();
-})();
+// Cal.com inline embed — echte Terminbuchung mit Live-Verfuegbarkeit & automatischer Bestaetigung durch Cal.com
+(function(C,A,L){var p=function(a,ar){a.q.push(ar);};var d=C.document;
+C.Cal=C.Cal||function(){var cal=C.Cal;var ar=arguments;
+if(!cal.loaded){cal.ns={};cal.q=cal.q||[];d.head.appendChild(d.createElement('script')).src=A;cal.loaded=true;}
+if(ar[0]===L){var api=function(){p(api,arguments);};var ns=ar[1];api.q=api.q||[];
+if(typeof ns==='string'){cal.ns[ns]=cal.ns[ns]||api;p(cal.ns[ns],ar);p(cal,[L,ns,ar[2]]);}else p(cal,ar);return;}
+p(cal,ar);};})(window,'https://app.cal.com/embed/embed.js','init');
+Cal('init',{origin:'https://cal.com'});
+Cal('inline',{elementOrSelector:'#cal-booking-inline',calLink:'milad-rezaee-yvotro/30min',layout:'month_view'});
+Cal('ui',{theme:'light',hideEventTypeDetails:false,layout:'month_view'});
 
 function openModal(id){
   document.getElementById('modal-content').innerHTML=document.getElementById(id+'-data').innerHTML;
