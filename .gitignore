@@ -40,3 +40,6 @@ netlify/functions/manifest.json
 *.njsproj
 *.sln
 *.sw?
+
+# Local Netlify folder
+.netlify
