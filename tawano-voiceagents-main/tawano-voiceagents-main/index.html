@@ -20,6 +20,9 @@ nav{background:#fff;border-bottom:1px solid #E5E5E3;padding:16px 0;position:stic
 .nav-links a:hover{color:#1A1A1A}
 .nav-btn{padding:10px 22px;background:#2563EB;color:#fff!important;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;transition:background .2s}
 .nav-btn:hover{background:#1D4ED8}
+.nav-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px;grid-column:3;justify-self:end}
+.nav-login{padding:9px 18px;background:#fff;border:1px solid #D6D3D1;border-radius:8px;font-size:14px;font-weight:600;color:#1A1A1A;text-decoration:none;transition:border-color .2s,color .2s,background .2s}
+.nav-login:hover{border-color:#2563EB;color:#2563EB;background:#F8FAFF}
 .hero{max-width:780px;margin:0 auto;padding:64px 24px 56px;text-align:center}
 .hero-tag{display:inline-block;background:#EFF6FF;border:1px solid #DBEAFE;color:#2563EB;font-size:13px;font-weight:700;padding:6px 14px;border-radius:999px;margin-bottom:24px}
 .hero h1{font-size:clamp(36px,5.5vw,56px);font-weight:800;line-height:1.1;letter-spacing:-1.5px;color:#0A0A0A;margin-bottom:18px}
@@ -298,6 +301,7 @@ footer p{font-size:13px;color:#A3A3A3}
   .phone-row{flex-direction:column}
   .modal-box{padding:32px 24px 28px}
   .nav-links{display:none}
+  .nav-login{padding:8px 14px;font-size:13px}
   .booking-steps{grid-template-columns:1fr}
   .cal-embed-shell{max-height:calc(100vh - 24px)}
   .cal-embed-frame{height:780px;max-height:calc(100vh - 160px)}
@@ -332,6 +336,9 @@ footer p{font-size:13px;color:#A3A3A3}
       <a href="/voice-agents/kosten" data-section="pricing">Kosten</a>
       <a href="/voice-agents/ueber-uns" data-section="about">Über uns</a>
       <a href="/voice-agents/demo-buchen" data-section="live" class="nav-btn">Demo buchen</a>
+    </div>
+    <div class="nav-actions">
+      <a href="https://app.tawano.de/" class="nav-login">Login</a>
     </div>
   </div>
 </nav>
